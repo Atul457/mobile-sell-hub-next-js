@@ -46,7 +46,7 @@ const useLogout = () => {
       })
 
       dispatch(userActions.resetUser())
-      router.push('/login')
+      router.push('/portal/login')
     } catch (error) {
       utils.toast.error({
         message: utils.error.getMessage(error)
