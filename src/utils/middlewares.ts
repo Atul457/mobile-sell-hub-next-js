@@ -141,7 +141,9 @@ const withUser = async (request: Request, options?: IWithUserOptions) => {
     throw ErrorHandlingService.userNotFound()
   }
 
-  const status = user.toJSON().status
+  const userObj = (user as any).toJSON() as IUserModel
+
+  const status = userObj.status
 
   if (status !== CONST.USER.STATUS.ACTIVE) {
     if (status === CONST.USER.STATUS.DELETED) {
@@ -173,8 +175,7 @@ const withUser = async (request: Request, options?: IWithUserOptions) => {
   return {
     ...authData,
     userId: user._id as any,
-    // @ts-expect-error: Complex union type too large for TS to handle
-    ...user.toJSON(),
+    ...userObj,
     session: session!
   }
 }
