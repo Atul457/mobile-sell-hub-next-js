@@ -2,7 +2,7 @@ import { Typography } from "@mui/material"
 
 const Home = () => {
     return (
-        <Typography>Home</Typography>
+        <Typography>Hello User, manage your Phone Sell Hub operations here.</Typography>
     )
 }
 
