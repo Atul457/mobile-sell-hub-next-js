@@ -1,3 +1,3 @@
-# Novotech Admin
+# Mobile Sell Hub
 
-Admin application for novotech web app
+Application for mobile sell hub
