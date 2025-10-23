@@ -10,7 +10,7 @@
     "build:local": "npm run prepare-local && next build",
     "build:dev": "npm run prepare-dev && next build",
     "build:prod": "npm run prepare-prod && next build",
-    "build": "npm run prepare-dev && next build",
+    "build": "next build",
     "build-new": "next build",
     "start": "npm run prepare-local && node server.js",
     "lint": "next lint",
