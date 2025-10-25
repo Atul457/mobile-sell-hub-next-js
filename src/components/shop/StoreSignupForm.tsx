@@ -4,7 +4,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Divider, IconButton, InputAdornment, Typography } from '@mui/material'
 import clsx from 'clsx'
-import {  useState } from 'react'
+import { useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -15,26 +15,23 @@ import CustomTextField from '@/@core/components/mui/TextField'
 import { commonSchemas } from '@/schemas/common.schemas'
 import { utils } from '@/utils/utils'
 
-
 type FormData = (typeof commonSchemas.storeSchema)['__outputType']
 
-
 const DEFAULT_VALUE: FormData = {
-  firstName:'',
-  lastName:'',
-  email:'',
+  firstName: '',
+  lastName: '',
+  email: '',
   storeName: '',
   password: '',
-  confirmPassword:'',
+  confirmPassword: ''
 }
 
 const StoreSignupForm = () => {
-
   const [loading, setLoading] = useState(false)
-    const [isPasswordShown, setIsPasswordShown] = useState(false)
-    const [isCPasswordShown, setCIsPasswordShown] = useState(false)
- const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-   const handlecClickShowPassword = () => setCIsPasswordShown(show => !show)
+  const [isPasswordShown, setIsPasswordShown] = useState(false)
+  const [isCPasswordShown, setCIsPasswordShown] = useState(false)
+  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  const handlecClickShowPassword = () => setCIsPasswordShown(show => !show)
 
   const {
     control,
@@ -45,11 +42,9 @@ const StoreSignupForm = () => {
     defaultValues: { ...DEFAULT_VALUE }
   })
 
-
-
   const onSubmit: SubmitHandler<FormData> = async data => {
     try {
-    console.log(data)
+      console.debug(data)
     } catch (error) {
       console.error(error)
       utils.toast.error({
@@ -132,7 +127,7 @@ const StoreSignupForm = () => {
             }}
           />
 
-           <Controller
+          <Controller
             name='storeName'
             control={control}
             render={({ field }) => {
@@ -240,13 +235,12 @@ const StoreSignupForm = () => {
               />
             )}
           />
-
         </Box>
       </form>
 
       <div className='is-full flex flex-col space-y-2 webkit-bottom'>
         <CommonButton
-          label="Register"
+          label='Register'
           size='small'
           fullWidth
           loading={loading}
@@ -254,7 +248,7 @@ const StoreSignupForm = () => {
           onClick={handleSubmit(onSubmit)}
         />
       </div>
-      </>
+    </>
   )
 }
 

@@ -1,9 +1,8 @@
-import Report from '@/components/page-wise/reports/[id]/Report'
 
 import { IRequestArgs } from '@/app/api/types'
 
-const Report_ = (args: IRequestArgs<{ id: string }>) => {
-  return <Report id={args.params.id} />
+const Report_ = (_args: IRequestArgs<{ id: string }>) => {
+  return <></>
 }
 
 export default Report_

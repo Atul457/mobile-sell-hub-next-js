@@ -1,7 +1,4 @@
-import FormData from 'form-data'
-import fs_ from 'fs'
 import mongoose, { PipelineStage } from 'mongoose'
-import hl7 from 'simple-hl7'
 
 import { CONST } from '@/constants'
 import { FILE_MANAGER } from '@/constants/fileManager.const'
@@ -14,8 +11,6 @@ import UserCreatorMappingModel from '@/models/userCreatorMapping.model'
 import { ErrorHandlingService } from '@/services/ErrorHandling.service'
 import { FileManagerService } from '@/services/FileManager.service'
 
-import { currentDateTime } from './currentDateTime'
-import { http } from './http'
 import { mongo } from './mongo'
 import { utils } from './utils'
 
@@ -30,19 +25,8 @@ type IGetRelatedUserIds = {
   user?: IUser | null
 }
 
-const parseHL7Content = (content: string) => {
-  let hl7Message: hl7.HL7Message | null = null
-
-  const message = content.replace(/\n/g, '\r')
-  const parser = new hl7.Parser()
-
-  try {
-    hl7Message = parser.parse(message)
-  } catch (error) {
-    console.error('Error parsing message:', error)
-  }
-
-  return hl7Message
+const parseHL7Content = (_content: string) => {
+  return ''
 }
 
 const readHl7FileContent = async (type: keyof typeof FILE_MANAGER.FOLDERS, fileName: string) => {
@@ -62,26 +46,8 @@ const readHl7FileContent = async (type: keyof typeof FILE_MANAGER.FOLDERS, fileN
   return content
 }
 
-const parseHL7File = async (fileName: string) => {
-  const fms = new FileManagerService()
-  const file = await fms.readFile('reports', fileName, 'utf-8')
-
-  let hl7Message: hl7.HL7Message | null = null
-
-  if (file.status) {
-    const message = file.data.data.toString().replace(/\n/g, '\r')
-    const parser = new hl7.Parser()
-
-    try {
-      hl7Message = parser.parse(message)
-    } catch (error) {
-      console.error('Error parsing message:', error)
-    }
-  } else {
-    console.error('Failed to read the file.')
-  }
-
-  return { hl7Message }
+const parseHL7File = async (_fileName: string) => {
+  return { hl7Message: '' }
 }
 
 const chainOfCustodyAdded = async (reportId: any) => {
@@ -150,6 +116,7 @@ const listChainOfCustody = async (reportId: string) => {
 }
 
 const getRelatedUserIds = async (args: IGetRelatedUserIds) => {
+  // @ts-expect-error: Complex union type too large for TS to handle
   const user = args.user ?? (await UserModel.findById(args.loggedInUserId).select(['type', 'role']))
 
   if (!user) {
@@ -189,115 +156,10 @@ const getRelatedUserIds = async (args: IGetRelatedUserIds) => {
   }
 }
 
-const generateReportContent = async (args: IGenerateReportContentArgs) => {
-  const adt = new hl7.Message(
-    'Novotech',
-    'NVOTH',
-    'LIMSABC',
-    'main central',
-    currentDateTime(),
-    '',
-    'ORM',
-    '0dee417a-4371-4a07-8b49-c2fa77ca171d',
-    'P',
-    '2.7',
-    '',
-    '',
-    '',
-    'AL',
-    ''
-  )
-
-  adt.addSegment(
-    'PID',
-    1,
-    `${args.pid ?? ''}`,
-    '',
-    '',
-    ['Sample', 'Novotech'],
-    '', // Multiple components
-    '19900101',
-    'U',
-    '',
-    '0000-0',
-    ['MAYBE NOVOTECH HQ', '', 'Atlanta', 'GA', '99999'],
-    '',
-    '',
-    '',
-    ''
-  )
-
-  adt.addSegment('PV1', 1, 'U', '')
-  adt.addSegment(
-    'ORC',
-    'NW',
-    args.qr,
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    currentDateTime(),
-    '',
-    '',
-    ['123456789', 'Test Doctor'],
-    '',
-    '',
-    currentDateTime(),
-    ''
-  )
-
-  adt.addSegment(
-    'OBR',
-    1,
-    args.qr,
-    '',
-    [`${args.package.identifier}^${args.package.identifier}`],
-    '',
-    currentDateTime(),
-    currentDateTime(),
-    ''
-  )
-
-  adt.addSegment('DG1', 1, '', ['Encounter for screening', 'unspecified'], '')
-
-  adt.addSegment('NTE', 1, 'HOLD', '')
-
-  const hl7Message = adt.log()
-
-  const fm = new FileManagerService()
-
-  const fileName = utils.file.generateUniqueFileName(new File([], 'random.hl7'))
-
-  const {
-    data: { filePath: hl7FileStoragePath, fullFilePath: fullHl7FilePath }
-  } = await fm.writeFile('reports', fileName, hl7Message, 'text/plain')
-
-  let fileData
-
-  const form = new FormData()
-
-  if (fm.productionEnv) {
-    const file = await fm.readFile('reports', hl7FileStoragePath)
-    fileData = file.data.data
-    form.append('file', fileData, fileName)
-  } else {
-    fileData = fs_.createReadStream(fullHl7FilePath)
-    form.append('file', fileData, fileName)
-  }
-
-  await http({
-    baseUrl: `${process.env.HL7_HOSTNAME}/api/`,
-    method: 'POST',
-    url: 'hl7/upload',
-    formData: true,
-    data: form
-  })
-
+const generateReportContent = async (_args: IGenerateReportContentArgs) => {
   return {
-    hl7FileStoragePath,
-    fileName
+    hl7FileStoragePath: '',
+    fileName: ''
   }
 }
 
@@ -320,3 +182,4 @@ const serverHelpers = {
 }
 
 export { serverHelpers }
+

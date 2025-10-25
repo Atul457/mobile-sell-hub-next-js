@@ -1,6 +1,5 @@
 import { GridColDef } from '@mui/x-data-grid'
 import clsx from 'clsx'
-import type { HL7Field, HL7Message, HL7Segment } from 'simple-hl7'
 
 import { ICommonChipProps } from '@/components/common/CommonChip'
 
@@ -264,20 +263,6 @@ const getTransactionStatusVariant = (status: ITransaction['status']): ICommonChi
   }
 }
 
-const getSegmentsFromHl7Message = (hl7Message: HL7Message, name: string) => {
-  return hl7Message.segments.find(segment => {
-    return segment.name === name
-  })
-}
-
-const getObxSegments = (hl7Message: HL7Message) => {
-  return hl7Message.segments.reduce((acc, segment) => {
-    if (segment.name === 'OBX' || segment.name === 'NTE') {
-      acc.push(segment)
-    }
-    return acc
-  }, [] as HL7Segment[])
-}
 
 const getReportIdentifier = (qr: IQr) => {
   return `${qr.qrCode}`
@@ -298,7 +283,7 @@ function formatHl7Date(dateString: string) {
 const getFieldValue = (field: any, options?: IGetFieldValueOptions) => {
   let joinWith = options?.joinWith
   const blocksToSkipFromStart = (options?.blocksToSkip?.start ?? 0) - 1
-  return ((field?.value?.[0] as unknown as HL7Field[]) ?? [])?.reduce((acc, field, index) => {
+  return ((field?.value?.[0] as unknown as any[]) ?? [])?.reduce((acc, field, index) => {
     joinWith = options?.joinWithIndexed?.[index] ?? options?.joinWith ?? '-'
     if (blocksToSkipFromStart < index)
       if (field?.value?.[0]) {
@@ -430,12 +415,10 @@ const transaction = {
 }
 
 const report = {
-  getObxSegments,
   formatHl7Date,
   getFieldValue,
   getReportIdentifier,
   getReportStatusVariant,
-  getSegmentsFromHl7Message
 }
 
 const profiles = {

@@ -10,8 +10,6 @@ import Tab from '@mui/material/Tab'
 import type { ReactElement } from 'react'
 import { useEffect, useState } from 'react'
 
-import Reports from '@/components/page-wise/reports/Reports'
-
 import { IRolePermission } from '@/models/rolePermission.model'
 import { IUser } from '@/models/user.model'
 import { utils } from '@/utils/utils'
@@ -87,7 +85,6 @@ const UserRelations = (props: IUserRelations) => {
       employees: <Users userId={props.id} />
     }),
     profiles: <Profiles userId={props.id} />,
-    reports: <Reports userId={props.id} />,
     transactions: <Transactions userId={props.id} />
   }
 

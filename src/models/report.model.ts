@@ -1,5 +1,4 @@
 import { Document, Model, model, models, Schema } from 'mongoose'
-import { HL7Message } from 'simple-hl7'
 
 import { IFile } from './file.model'
 import { IProfile } from './profile.model'
@@ -32,7 +31,6 @@ export type IReportPopulated = IReport & {
   video?: IFile
   processedReport?: IFile
   report?: IFile
-  hl7Message?: HL7Message
   transaction?: ITransaction
 }
 

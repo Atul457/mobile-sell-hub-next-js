@@ -10,8 +10,6 @@ import Tab from '@mui/material/Tab'
 import type { ReactElement } from 'react'
 import { useState } from 'react'
 
-import Reports from '@/components/page-wise/reports/Reports'
-
 const baseTabs = [
 
     {
@@ -28,7 +26,7 @@ type IViewProfileRelations = {
     id: string
 }
 
-const ViewProfileRelations = (props: IViewProfileRelations) => {
+const ViewProfileRelations = (_props: IViewProfileRelations) => {
 
     const [activeTab, setActiveTab] = useState<string>(baseTabs[0].value); // Start with first tab
 
@@ -41,7 +39,7 @@ const ViewProfileRelations = (props: IViewProfileRelations) => {
 
     // Define the content for each tab
     const tabContentView: { [key: string]: ReactElement } = {
-        reports: <Reports profileId={props.id} />,
+        reports: <></>,
 
     };
 
