@@ -379,6 +379,22 @@ const updateReportStatuswithReason = updateReportStatus.clone().shape({
   rejectionReason: yup.string().nullable()
 })
 
+
+const storeSchema = yup.object().shape({
+  firstName: yup.string().required('Name is a required field'),
+  lastName: yup.string(),
+  email:emailSchema,
+  storeName: yup.string().required('Name is a required field'),
+   password: yup
+    .string()
+    .required('Password is a required field')
+    .min(6, 'Password must be at least 6 characters'), // you can change min length
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password')], 'The passwords do not match')
+    .required('Confirm Password is required')
+})
+
 const commonSchemas = {
   addCardWithTokenRequired,
   login,
@@ -414,7 +430,8 @@ const commonSchemas = {
   generateReportQr,
   updateAdminProfileSchema,
   createAdminUsers,
-  addCategory
+  addCategory,
+  storeSchema
 }
 
 export { commonSchemas }

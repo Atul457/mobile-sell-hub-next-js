@@ -1,5 +1,5 @@
 import ShopFooter from "@/components/shop/ShopFooter"
-import ShopHeader from "@/components/shop/shopHeader"
+import ShopHeader from "@/components/shop/ShopHeader"
 
 const Root = () => {
   return (

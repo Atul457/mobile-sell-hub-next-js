@@ -2,7 +2,7 @@ import type { NextApiRequest } from 'next'
 import { NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
-const unprotectedRoutes = ['/portal/login', '/register']
+const unprotectedRoutes = ['/portal/login', '/shop-register',]
 const protectedRoutes = [
   '/portal',
   '/portal/users',
