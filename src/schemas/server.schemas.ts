@@ -18,6 +18,7 @@ const objectIdSchema = yup
 const addPackage = commonSchemas.addPackage.clone().shape({})
 
 const addCategory = commonSchemas.addCategory.clone().shape({})
+const registerShop = commonSchemas.storeSchema.clone().shape({})
 
 const updateUser = commonSchemas.addUser.clone().shape({
   _id: objectIdSchema.required('User id is a required field')
@@ -110,7 +111,7 @@ const updateRoleStatus = commonSchemas.addRole.clone().shape({
 
 const serverSchemas = {
   payment,
-  storeSchema: commonSchemas.storeSchema,
+  storeSchema:commonSchemas.storeSchema,
   updateRoleStatus,
   updateReportStatus,
   reportsPaginationSchema,
@@ -125,6 +126,7 @@ const serverSchemas = {
   qrsPaginationSchema,
   addPackage,
   addCategory,
+  registerShop,
   updateUser,
   rolesPaginationSchema
 }

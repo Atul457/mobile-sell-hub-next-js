@@ -72,7 +72,7 @@ const Users = (props: IUsersProps) => {
         type: 'alert',
         props: {
           heading: `Confirmation`,
-          description: `Are you sure you want to change the status of this user? Changing the 
+          description: `Are you sure you want to change the status of this user? Changing the
       status of this user will make it [${NUMERIC_STATUS[(user.status === 3) ? 1 : (user.status) ? 0 : 1]}]. `,
           okButtonText: 'Yes',
           okButtonLoadingText: `Processing`,
@@ -257,7 +257,7 @@ const Users = (props: IUsersProps) => {
                     }}
                   >
                     <MenuItem value={0}>All</MenuItem>
-                    <MenuItem value={TYPES.INDIVIDUAL}>{NUMERIC_TYPES[TYPES.INDIVIDUAL]}</MenuItem>
+                    <MenuItem value={TYPES.SHOP}>{NUMERIC_TYPES[TYPES.SHOP]}</MenuItem>
                     <MenuItem value={TYPES.CORPORATE_EMPLOYER}>{NUMERIC_TYPES[TYPES.CORPORATE_EMPLOYER]}</MenuItem>
                     <MenuItem value={TYPES.GOVT_ORGANISATION}>{NUMERIC_TYPES[TYPES.GOVT_ORGANISATION]}</MenuItem>
                     <MenuItem value={TYPES.ORGANIZATION_SUB_USER}>{NUMERIC_TYPES[TYPES.ORGANIZATION_SUB_USER]}</MenuItem>

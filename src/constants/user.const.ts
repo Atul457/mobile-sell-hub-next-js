@@ -36,8 +36,8 @@ const TRANS = {
   VALUE: 3 as IProfile['gender']
 }
 
-const INDIVIDUAL = {
-  LABEL: 'Individual',
+const SHOP = {
+  LABEL: 'shop',
   VALUE: 2 as IUser['type']
 }
 
@@ -129,7 +129,7 @@ const USER = {
   VALID_PROFILE_PICTURE_TYPES: ['image/jpeg', 'image/png', 'image/jpg'],
   DEFAULT_PROFILE_PICTURE: '/images/icons/user-badge.svg',
   TYPES: {
-    INDIVIDUAL: INDIVIDUAL.VALUE,
+    SHOP: SHOP.VALUE,
     ADMIN: ADMIN.VALUE,
     CORPORATE_EMPLOYER: CORPORATE_EMPLOYER.VALUE,
     THIRD_PARTY_ADMINISTRATOR: THIRD_PARTY_ADMINISTRATOR.VALUE,
@@ -139,7 +139,7 @@ const USER = {
   },
   NUMERIC_TYPES: {
     1: ADMIN.LABEL,
-    2: INDIVIDUAL.LABEL,
+    2: SHOP.LABEL,
     3: CORPORATE_EMPLOYER.LABEL,
     4: THIRD_PARTY_ADMINISTRATOR.LABEL,
     5: GOVT_ORGANISATION.LABEL,
@@ -148,7 +148,7 @@ const USER = {
   },
   OBJECT_TYPES: {
     ADMIN,
-    INDIVIDUAL,
+    SHOP,
     CORPORATE_EMPLOYER,
     THIRD_PARTY_ADMINISTRATOR,
     GOVT_ORGANISATION,

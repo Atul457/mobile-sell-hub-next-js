@@ -1,26 +1,20 @@
-import { Document, Model, model, models, Schema } from "mongoose";
+import { Document, Model, model, models, Schema, Types } from "mongoose";
 
 export interface IShopRegister extends Document {
-  firstName: string;
-  lastName?: string;
-  email: string;
   storeName: string;
   slug: string;
-  password: string;
-  image?: string | null;
-  status: 0 | 1 | 2;
+  userId: Types.ObjectId;
 }
 
 const ShopRegisterSchema: Schema<IShopRegister> = new Schema(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String },
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     storeName: { type: String, required: true, unique: true },
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    password: { type: String, required: true },
-    image: { type: String, default: null },
-    status: { type: Number, enum: [0, 1, 2], default: 1 }
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User", // ✅ Reference to User collection
+      required: true,
+    },
   },
   { timestamps: true }
 );

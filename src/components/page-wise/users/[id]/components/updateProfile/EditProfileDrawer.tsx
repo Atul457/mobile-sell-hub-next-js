@@ -28,7 +28,7 @@ type FormData = (typeof commonSchemas.updateProfileSchemaWithType)['__outputType
 
 const USER_TYPES = utils.CONST.USER.TYPES
 const DEFAULT_VALUE = {
-  type: USER_TYPES.INDIVIDUAL,
+  type: USER_TYPES.SHOP,
   firstName: '',
   organizationName: '',
   lastName: '',
