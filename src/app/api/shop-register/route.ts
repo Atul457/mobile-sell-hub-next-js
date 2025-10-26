@@ -1,4 +1,4 @@
-import {  Types } from 'mongoose'
+import { Types } from 'mongoose'
 
 import { dbConfig } from '@/configs/dbConfig'
 import UserModel from '@/models/user.model'
@@ -22,52 +22,48 @@ export async function POST(request: Request) {
     const validatedData = await serverSchemas.storeSchema.validate(body ?? {})
 
     const validatedUserData = await serverSchemas.register.validate(body ?? {})
-    const {firstName, lastName, email, password , phoneNumber} = validatedUserData
+    const { firstName, lastName, email, password, phoneNumber } = validatedUserData
 
     const password_ = await utils.bcrypt.hashPassword(password)
     const existingUser = await UserModel.findOne({
-          $or: [
-            {
-              email: new RegExp(email, 'gi'),
-              status: { $ne: utils.CONST.USER.STATUS.DELETED }
-            },
-            {
-              firstName: new RegExp(validatedUserData.firstName, 'gi'),
-              lastName: new RegExp(validatedUserData.lastName, 'gi'),
-              status: { $ne: utils.CONST.USER.STATUS.DELETED }
-            }
-          ]
-        })
-
-        if (existingUser) {
-          throw ErrorHandlingService.userAlreadyExists({
-            message: utils.CONST.RESPONSE_MESSAGES.USER_ALREADY_EXIST
-          })
+      $or: [
+        {
+          email: new RegExp(email, 'gi'),
+          status: { $ne: utils.CONST.USER.STATUS.DELETED }
+        },
+        {
+          firstName: new RegExp(validatedUserData.firstName, 'gi'),
+          lastName: new RegExp(validatedUserData.lastName, 'gi'),
+          status: { $ne: utils.CONST.USER.STATUS.DELETED }
         }
+      ]
+    })
 
-        const user = await us.createUser({
-          firstName,
-          lastName,
-          phoneNumber,
-          email: email.toLowerCase(),
-          type: utils.CONST.USER.TYPES.SHOP,
-          // roleId: roleId as unknown as IUser['roleId'],
-          status: utils.CONST.USER.STATUS.PENDING,
-          password:password_
-        })
+    if (existingUser) {
+      throw ErrorHandlingService.userAlreadyExists({
+        message: utils.CONST.RESPONSE_MESSAGES.USER_ALREADY_EXIST
+      })
+    }
+
+    const user = await us.createUser({
+      firstName,
+      lastName,
+      phoneNumber,
+      email: email.toLowerCase(),
+      type: utils.CONST.USER.TYPES.SHOP,
+      // roleId: roleId as unknown as IUser['roleId'],
+      status: utils.CONST.USER.STATUS.PENDING,
+      password: password_
+    })
 
     const { storeName } = validatedData
     // // Create the category
-        if(user){
-           await sr.registerShop({
-          storeName,
-          userId: user?._id as Types.ObjectId
-        })
-        }
-
-
-
-    //
+    if (user) {
+      await sr.registerShop({
+        storeName,
+        userId: user?._id as Types.ObjectId
+      })
+    }
 
 
     return Response.json(

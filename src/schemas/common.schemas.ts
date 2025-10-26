@@ -383,6 +383,23 @@ const updateReportStatuswithReason = updateReportStatus.clone().shape({
 const storeSchema = yup.object().shape({
   storeName: yup.string().required('Store name is a required field'),
 })
+const shopRegister = yup.object().shape({
+  firstName: yup.string().required('First name is a required field'),
+  lastName: yup.string().nullable(),
+  email:emailSchema,
+  phoneNumber: phoneNumberSchema,
+  phoneNumber_: phoneNumberSchema_,
+  password: yup
+    .string()
+    .required('New password is a required field')
+    .min(5, 'New password must be at least 5 characters long'),
+  confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('password')], 'The passwords do not match')
+      .required('Confirm Password is a required field'),
+  storeName: yup.string().required('Store name is a required field'),
+  type:yup.number().required('Type is a required field'),
+})
 
 const commonSchemas = {
   addCardWithTokenRequired,
@@ -420,7 +437,8 @@ const commonSchemas = {
   updateAdminProfileSchema,
   createAdminUsers,
   addCategory,
-  storeSchema
+  storeSchema,
+  shopRegister
 }
 
 export { commonSchemas }

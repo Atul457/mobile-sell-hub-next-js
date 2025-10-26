@@ -16,16 +16,14 @@ class ShopRegisterService implements IShopRegisterService {
     this.shopRegisterModel = shopRegisterModel
   }
 
-  async isNameUnique(name: string, excludeId?: string): Promise<boolean> {
-    const query: any = { name }
-    if (excludeId) query._id = { $ne: excludeId }
+  async isNameUnique(name: string,): Promise<boolean> {
+    const query: any = { storeName:name }
     const existing = await this.shopRegisterModel.findOne(query)
     return !existing
   }
 
-  async isSlugUnique(slug: string, excludeId?: string): Promise<boolean> {
+  async isSlugUnique(slug: string): Promise<boolean> {
     const query: any = { slug }
-    if (excludeId) query._id = { $ne: excludeId }
     const existing = await this.shopRegisterModel.findOne(query)
     return !existing
   }
