@@ -110,6 +110,7 @@ const updateRoleStatus = commonSchemas.addRole.clone().shape({
 
 const serverSchemas = {
   payment,
+  storeSchema: commonSchemas.storeSchema,
   updateRoleStatus,
   updateReportStatus,
   reportsPaginationSchema,
