@@ -50,7 +50,8 @@ const RESPONSE_MESSAGES = {
   ACCOUNT_DELETED:
     'It appears that your account has been deleted. You can still create a new account using the same email address.',
   ACCOUNT_INACTIVE: 'Your account has been inactive. Please contact admin for further information.',
-
+ACCOUNT_CREATED:
+    'Your shop account is created.',
   NOT_ADMIN: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.ADMIN]}/${USER.NUMERIC_TYPES[USER.TYPES.SUB_ADMIN]}`,
   NOT_CORPORATE_EMPLOYER: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.CORPORATE_EMPLOYER]}`,
   NOT_GOVT_ORGANISATION: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.GOVT_ORGANISATION]}`,

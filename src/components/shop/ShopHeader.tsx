@@ -15,6 +15,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import React, { useState } from "react";
 
 const pages = ["How it Works", "FAQs", "Contact"];
@@ -47,7 +48,9 @@ const ShopHeader = () => {
               {pages.map((page) => (
                 <Button key={page} color="inherit">{page}</Button>
               ))}
-              <Button variant="contained" color="secondary" sx={{ ml: 2 }} href="/shop-register">Register</Button>
+              <Link href="/shop-register" passHref>
+              <Button variant="contained" color="secondary" sx={{ ml: 2 }}>Register</Button>
+              </Link>
             </Box>
 
             {/* Mobile Menu */}

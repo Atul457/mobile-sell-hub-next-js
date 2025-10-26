@@ -21,6 +21,7 @@ import QrService from './server/Qr.service'
 import sReportService from './server/Report.service'
 import RoleService from './server/Role.service'
 import RolePermissionService from './server/RolePermission.service'
+import sShopRegisterService from './server/ShopRegister.service'
 import TransactionService from './server/Transaction.service'
 import sUserService from './server/User.service'
 import sUserCreatorMappingService from './server/UserCreatorMapping.service'
@@ -40,6 +41,7 @@ export const services = {
     ReportService: sReportService,
     PackageService,
     CategoryService: sCategoryService,
+    ShopRegisterService: sShopRegisterService,
     FileService,
     RolePermissionService,
     UserService: sUserService,

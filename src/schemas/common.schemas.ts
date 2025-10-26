@@ -384,7 +384,7 @@ const storeSchema = yup.object().shape({
   firstName: yup.string().required('Name is a required field'),
   lastName: yup.string(),
   email:emailSchema,
-  storeName: yup.string().required('Name is a required field'),
+  storeName: yup.string().required('Store name is a required field'),
    password: yup
     .string()
     .required('Password is a required field')
