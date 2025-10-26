@@ -1,6 +1,6 @@
 
 import { dbConfig } from '@/configs/dbConfig'
-// import { serverSchemas } from '@/schemas/server.schemas'
+import { serverSchemas } from '@/schemas/server.schemas'
 import { services } from '@/services/index.service'
 import { utils } from '@/utils/utils'
 
@@ -16,21 +16,21 @@ export async function POST(request: Request) {
     const body = await utils.getReqBody(request)
     console.log(body)
     // // Validate the request body
-    // const validatedData = await serverSchemas.registerShop.validate(body ?? {})
-    // console.log('ddd')
-    // const { firstName,
-    // lastName,
-    // email,
-    // storeName,
-    // password } = validatedData
+    const validatedData = await serverSchemas.registerShop.validate(body ?? {})
+    console.log('ddd')
+    const { firstName,
+    lastName,
+    email,
+    storeName,
+    password } = validatedData
 
     // // Create the category
     const register = await sr.registerShop({
-      firstName:'f',
-      lastName:'f',
-      email:'bharat@gmail.com',
-      storeName:'dd',
-      password:'dsadas'
+      firstName,
+      lastName,
+      email,
+      storeName,
+      password
     })
 
     return Response.json(
