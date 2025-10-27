@@ -4,7 +4,7 @@ export interface IMail extends Document {
   /** @info 0 => Pending, 1 => Sent, 2 => Error ,3 => Delete  */
   status: 0 | 1 | 2 | 3
   userId: Schema.Types.ObjectId
-  type: 'report-rejection' | 'report-complete' | 'report-receive'
+  type: string
   data: string
 }
 

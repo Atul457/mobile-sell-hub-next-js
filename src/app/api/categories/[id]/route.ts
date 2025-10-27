@@ -4,6 +4,7 @@ import CategoryModel from '@/models/category.model'
 import { serverSchemas } from '@/schemas/server.schemas'
 import { ErrorHandlingService } from '@/services/ErrorHandling.service'
 import { services } from '@/services/index.service'
+import { ActionValidator } from '@/services/server/ActionValidator.service'
 import { middlewares } from '@/utils/middlewares'
 import { utils } from '@/utils/utils'
 
@@ -13,7 +14,15 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
     await dbConfig()
 
     // Authenticate the user with admin privileges
-    await middlewares.withUser(request)
+    const authData = await middlewares.withUser(request)
+
+    const av = new ActionValidator({
+      roleId: authData.roleId ?? null,
+      module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
+      action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.UPDATE
+    })
+
+    await av.validate()
 
     const cs = services.server.CategoryService
 
@@ -65,7 +74,15 @@ export async function DELETE(request: Request, args: IRequestArgs<{ id: string }
     await dbConfig()
 
     // Authenticate the user with admin privileges
-    await middlewares.withUser(request)
+    const authData = await middlewares.withUser(request)
+
+    const av = new ActionValidator({
+      roleId: authData.roleId ?? null,
+      module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
+      action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.DELETE
+    })
+
+    await av.validate()
 
     const cs = services.server.CategoryService
 

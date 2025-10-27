@@ -9,8 +9,8 @@ export interface IRoleService {
   deleteRole(id: string): Promise<IRole | null>
   findRoleByName(name: string): Promise<IRole | null>
   incrementUsersCount(roleId: string, incrementBy?: number): Promise<IRole | null>
-  setDefaultRole(roleId: string, key: 'defaultUserRole' | 'defaultAdminRole'): Promise<IRole | null>
-  getDefaultRole(key: 'defaultUserRole' | 'defaultAdminRole'): Promise<IRole | null>
+  setDefaultRole(roleId: string, key: 'defaultShopRole' | 'defaultAdminRole'): Promise<IRole | null>
+  getDefaultRole(key: 'defaultShopRole' | 'defaultAdminRole'): Promise<IRole | null>
 }
 
 class RoleService implements IRoleService {
@@ -45,7 +45,7 @@ class RoleService implements IRoleService {
     return this.roleModel.findByIdAndUpdate(roleId, { $inc: { usersCount: incrementBy } }, { new: true })
   }
 
-  async getDefaultRole(key: 'defaultUserRole' | 'defaultAdminRole'): Promise<IRole | null> {
+  async getDefaultRole(key: 'defaultShopRole' | 'defaultAdminRole'): Promise<IRole | null> {
     return this.roleModel.findOne({
       [key]: true
     })
@@ -56,7 +56,7 @@ class RoleService implements IRoleService {
     return this.roleModel.find({}).select('name')
   }
 
-  async setDefaultRole(roleId: string, key: 'defaultUserRole' | 'defaultAdminRole'): Promise<IRole | null> {
+  async setDefaultRole(roleId: string, key: 'defaultShopRole' | 'defaultAdminRole'): Promise<IRole | null> {
     // Remove the default flag from other roles
     await this.roleModel.updateMany({ [key]: true }, { $unset: { [key]: true } })
 

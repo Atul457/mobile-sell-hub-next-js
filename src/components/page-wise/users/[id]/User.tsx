@@ -6,13 +6,11 @@ import { useCallback, useEffect, useState } from 'react'
 import CommonNotFound from '@/components/common/CommonNotFound'
 import Loader from '@/components/Loader'
 
-import { IRolePermission } from '@/models/rolePermission.model'
 import { IUser } from '@/models/user.model'
 import { UsersService } from '@/services/client/Users.service'
 import { utils } from '@/utils/utils'
 
 import UserDetails from './components/UserDetails'
-import UserRelations from './components/UserRelations'
 
 type IUserProps = {
   id: string
@@ -21,7 +19,6 @@ type IUserProps = {
 const User = (props: IUserProps) => {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<IUser | null>(null)
-  const [userModulePermissions, setUserModulePermissions] = useState<IRolePermission['actions']>([])
 
   // Functions
 
@@ -30,7 +27,6 @@ const User = (props: IUserProps) => {
     try {
       const us = new UsersService()
       const response = await us.get(userId)
-      setUserModulePermissions(response.userModulePermissions)
       setUser(response)
       setLoading(false)
     } catch (error) {
@@ -66,9 +62,6 @@ const User = (props: IUserProps) => {
     <Grid container spacing={6}>
       <Grid item xs={12} lg={4} md={5}>
         <UserDetails user={user} />
-      </Grid>
-      <Grid item xs={12} lg={8} md={7}>
-        <UserRelations user={user} id={props.id} userModulePermissions={userModulePermissions} />
       </Grid>
     </Grid>
   )

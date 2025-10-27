@@ -5,10 +5,10 @@ import { IUser } from './user.model'
 
 export interface IRole extends Document {
   name: string
-  /** @info 0 => User, 1 => Admin */
-  type: 0 | 1
+  /** @info 2 => Shop, 1 => Admin */
+  type: 2 | 1
   roleId: IUser['role']
-  defaultUserRole?: boolean
+  defaultShopRole?: boolean
   defaultAdminRole?: boolean
   usersCount: number
 }
@@ -33,7 +33,7 @@ const RoleSchema: Schema<IRole> = new Schema(
       type: Number,
       default: 0
     },
-    defaultUserRole: {
+    defaultShopRole: {
       type: Boolean
     },
     defaultAdminRole: {
@@ -41,7 +41,7 @@ const RoleSchema: Schema<IRole> = new Schema(
     },
     type: {
       type: Number,
-      enum: [0, 1],
+      enum: [2, 1],
       required: true
     },
     roleId: { type: Number, enum: [1, 2, 3, 4] }

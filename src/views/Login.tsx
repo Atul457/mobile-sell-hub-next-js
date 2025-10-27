@@ -12,7 +12,7 @@ import { Box } from '@mui/material'
 // MUI Imports
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
-import { styled } from '@mui/material/styles'
+// import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import clsx from 'clsx'
 import { useSearchParams } from 'next/navigation'
@@ -29,21 +29,21 @@ import { commonSchemas } from '@/schemas/common.schemas'
 import { utils } from '@/utils/utils'
 
 // Styled Custom Components
-const LoginIllustration = styled('img')(({ theme }) => ({
-  zIndex: 2,
-  blockSize: 'auto',
-  maxBlockSize: 680,
-  maxInlineSize: '100%',
-  margin: theme.spacing(12),
-  [theme.breakpoints.down(1536)]: {
-    maxBlockSize: 490
-  },
-  [theme.breakpoints.down('lg')]: {
-    maxBlockSize: 490
-  }
-}))
+// const LoginIllustration = styled('img')(({ theme }) => ({
+//   zIndex: 2,
+//   blockSize: 'auto',
+//   maxBlockSize: 680,
+//   maxInlineSize: '100%',
+//   margin: theme.spacing(12),
+//   [theme.breakpoints.down(1536)]: {
+//     maxBlockSize: 490
+//   },
+//   [theme.breakpoints.down('lg')]: {
+//     maxBlockSize: 490
+//   }
+// }))
 
-const lightIllustration = '/images/blank/Alt Front Image Masked.png'
+// const lightIllustration = '/images/blank/Alt Front Image Masked.png'
 
 type FormData = (typeof commonSchemas.login)['__outputType']
 
@@ -123,7 +123,7 @@ const Login = () => {
   return (
     <div className='flex bs-full justify-center'>
       <div className='flex bs-full items-center justify-center flex-1 bg-custom-gradient min-bs-[calc(100dvh-48px)] relative p-6 max-md:hidden'>
-        <LoginIllustration src={lightIllustration} alt='character-illustration' />
+        {/* <LoginIllustration src={lightIllustration} alt='character-illustration' />  */}
       </div>
       <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
         <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>

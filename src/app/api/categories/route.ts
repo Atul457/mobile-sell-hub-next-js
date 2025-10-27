@@ -5,6 +5,7 @@ import { dbConfig } from '@/configs/dbConfig'
 import CategoryModel from '@/models/category.model'
 import { serverSchemas } from '@/schemas/server.schemas'
 import { services } from '@/services/index.service'
+import { ActionValidator } from '@/services/server/ActionValidator.service'
 import { middlewares } from '@/utils/middlewares'
 import { utils } from '@/utils/utils'
 
@@ -12,7 +13,15 @@ export async function GET(request: NextRequest) {
   return utils.errorHandler(async function () {
     await dbConfig()
 
-    await middlewares.withUser(request)
+    const authData = await middlewares.withUser(request)
+
+    const av = new ActionValidator({
+      roleId: authData.roleId ?? null,
+      module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
+      action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.READ
+    })
+
+    await av.validate()
 
     const body = utils.searchParamsToJson({
       params: request.nextUrl.searchParams
@@ -84,7 +93,15 @@ export async function POST(request: Request) {
     await dbConfig()
 
     // Authenticate the user with admin privileges
-    await middlewares.withUser(request)
+    const authData = await middlewares.withUser(request)
+
+    const av = new ActionValidator({
+      roleId: authData.roleId ?? null,
+      module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
+      action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.CREATE
+    })
+
+    await av.validate()
 
     const cs = services.server.CategoryService
 

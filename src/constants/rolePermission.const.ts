@@ -5,15 +5,8 @@ import { ROLE } from './role.const'
 const ROLE_PERMISSION = {
   MODULES: {
     USER: 'user' as IRolePermission['module'],
-    TRANSACTION: 'transaction' as IRolePermission['module'],
-    PACKAGE: 'package' as IRolePermission['module'],
-    PROFILE: 'profile' as IRolePermission['module'],
+    CATEGORY: 'category' as IRolePermission['module'],
     ROLE: 'role' as IRolePermission['module'],
-    // CARD: 'card' as IRolePermission['module'],
-    REPORT: 'report' as IRolePermission['module'],
-    QR: 'qr' as IRolePermission['module'],
-    // MAIL: 'mail' as IRolePermission['module'],
-    // FILE_MANAGER: 'fileManager' as IRolePermission['module'],
 
   },
   TYPES: ROLE.TYPES,

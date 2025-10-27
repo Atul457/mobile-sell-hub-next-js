@@ -1,6 +1,5 @@
 import { dbConfig } from '@/configs/dbConfig'
 import UserModel from '@/models/user.model'
-import UserCreatorMappingModel from '@/models/userCreatorMapping.model'
 import { commonSchemas } from '@/schemas/common.schemas'
 import { services } from '@/services/index.service'
 import { middlewares } from '@/utils/middlewares'
@@ -76,40 +75,7 @@ export async function DELETE(request: Request) {
       status: utils.CONST.USER.STATUS.DELETED
     })
 
-    const profilesCreated = await UserCreatorMappingModel.aggregate([
-      {
-        $match: {
-          $or: [
-            {
-              mainCreatorId: userId
-            },
-            {
-              creatorId: userId
-            }
-          ]
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          userId: 1
-        }
-      }
-    ])
-
-    const userIdsToDelete = profilesCreated.map(profile => profile.userId)
-
-    await uss.deleteSessionsByUserId(userId)
-
-    await UserModel.updateMany(
-      {
-        _id: { $in: userIdsToDelete },
-        status: { $ne: utils.CONST.USER.STATUS.DELETED }
-      },
-      {
-        status: utils.CONST.USER.STATUS.DELETED
-      }
-    )
+    await uss.deleteSessionsByUserId(userId);
 
     return Response.json(
       utils.generateRes({

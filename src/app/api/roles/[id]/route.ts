@@ -119,7 +119,7 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
 
     if (markDefault) {
       let key: Parameters<typeof rs.setDefaultRole>[1] =
-        role.type === utils.CONST.ROLE.TYPES.USER ? 'defaultUserRole' : 'defaultAdminRole'
+        role.type === utils.CONST.ROLE.TYPES.SHOP ? 'defaultShopRole' : 'defaultAdminRole'
 
       await rs.setDefaultRole(_id, key)
     }

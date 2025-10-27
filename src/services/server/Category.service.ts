@@ -11,6 +11,7 @@ interface ICategoryService {
   updateCategory(id: string, data: Partial<ICategory>): Promise<ICategory | null>
   deleteCategory(id: string): Promise<ICategory | null>
   findCategoryBySlug(slug: string): Promise<ICategory | null>
+  getBaseCategories(): Promise<ICategory[]>
 }
 
 class CategoryService implements ICategoryService {
@@ -38,6 +39,12 @@ class CategoryService implements ICategoryService {
 
   async getCategoryById(id: string): Promise<ICategory | null> {
     return this.categoryModel.findById(id)
+  }
+
+  async getBaseCategories() {
+    return this.categoryModel.find({
+      shopId: { $exists: false }
+    })
   }
 
   async createCategory(data: Partial<ICategory>): Promise<ICategory> {

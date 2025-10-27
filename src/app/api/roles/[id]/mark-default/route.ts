@@ -39,7 +39,7 @@ export async function PATCH(request: NextRequest, args: IRequestArgs<{ id: strin
     let role: IRole | null = null
 
     let key: Parameters<typeof rs.setDefaultRole>[1] =
-      existingRole.type === utils.CONST.ROLE.TYPES.USER ? 'defaultUserRole' : 'defaultAdminRole'
+      existingRole.type === utils.CONST.ROLE.TYPES.SHOP ? 'defaultShopRole' : 'defaultAdminRole'
 
     role = await rs.setDefaultRole(roleId, key)
 

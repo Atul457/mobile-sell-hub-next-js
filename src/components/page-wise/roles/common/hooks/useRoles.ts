@@ -26,7 +26,7 @@ const initialRolesState: IInitialRoleSliceState = {
   data: {
     ...utils.CONST.REDUX.BASE_PAGINATION,
     roles: [],
-    type: 0
+    type: 1
   }
 }
 
@@ -67,9 +67,8 @@ const useRoles = (props: IReportsProps) => {
         limit: args.limit ?? currentRoleStateData.limit,
         sort: args.sort ?? currentRoleStateData.sort,
         order: args.order ?? currentRoleStateData.order,
-        type: args.type ?? currentRoleStateData.type,
         role: args.role ?? currentRoleStateData.roles,
-        ...(type && { type })
+        type: type ? type : args.type ?? currentRoleStateData.type
       }
 
       rolesRef.current = {

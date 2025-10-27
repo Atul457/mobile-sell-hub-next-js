@@ -166,7 +166,7 @@ export async function POST(request: Request) {
 
     if (markDefault) {
       let key: Parameters<typeof rs.setDefaultRole>[1] =
-        role.type === utils.CONST.ROLE.TYPES.USER ? 'defaultUserRole' : 'defaultAdminRole'
+        role.type === utils.CONST.ROLE.TYPES.SHOP ? 'defaultShopRole' : 'defaultAdminRole'
 
       await rs.setDefaultRole(role.id, key)
     }

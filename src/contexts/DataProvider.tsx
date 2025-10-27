@@ -2,10 +2,7 @@
 
 import { createContext, PropsWithChildren, ReactNode, useContext, useRef, useState } from 'react'
 
-import { IProfile } from '@/models/profile.model'
-
 type IDataProviderContextState = {
-  profile?: IProfile
 }
 
 type IDataProviderContext = {
