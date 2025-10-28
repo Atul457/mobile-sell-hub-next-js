@@ -4,7 +4,7 @@ import StoreSignupForm from "@/components/shop/StoreSignupForm"
 
 const Root = () => {
   return (
-    <Box sx={{backgroundColor:"#000", height:"100vh", display:"flex", alignItems:"center"}}>
+    <Box sx={{backgroundColor:"#000", height:"100dvh", display:"flex", alignItems:"center"}}>
     <Container>
       <Grid container spacing={4}>
         {/* First column: text */}
