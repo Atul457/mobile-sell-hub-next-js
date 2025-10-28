@@ -52,11 +52,8 @@ const RESPONSE_MESSAGES = {
   ACCOUNT_INACTIVE: 'Your account has been inactive. Please contact admin for further information.',
 ACCOUNT_CREATED:
     'Your shop account is created.',
-  NOT_ADMIN: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.ADMIN]}/${USER.NUMERIC_TYPES[USER.TYPES.SUB_ADMIN]}`,
-  NOT_CORPORATE_EMPLOYER: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.CORPORATE_EMPLOYER]}`,
-  NOT_GOVT_ORGANISATION: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.GOVT_ORGANISATION]}`,
-  NOT_INDIVIDUAL: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.SHOP]}`,
-  NOT_GOVT_THIRD_PARTY_ADMINISTRATOR: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.THIRD_PARTY_ADMINISTRATOR]}`,
+  NOT_ADMIN: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.ADMIN]}`,
+  NOT_SHOP: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.SHOP]}`,
   NO_RESULTS_FOUND: 'Sorry, no results found. Please check the spellings or try searching for something else.'
 }
 

@@ -16,7 +16,6 @@ import { utils } from '@/utils/utils'
 const NUMERIC_TYPES = utils.CONST.USER.NUMERIC_TYPES
 const NUMERIC_STATUS = utils.CONST.USER.NUMERIC_STATUS
 // const NUMERIC_ROLE_TYPES = utils.CONST.USER.NUMERIC_ROLE_TYPES
-const NUMERIC_DESIGNATION_TYPES = utils.CONST.USER.NUMERIC_DESIGNATION_TYPES
 
 type IUserDetailsProps = {
   user: IUser
@@ -90,34 +89,6 @@ const UserDetails = (props: IUserDetailsProps) => {
                   {...keyProps}
                   value={utils.number.formatNumber(utils.helpers.getValue(user?.phoneNumber))?.toString()}
                 />
-
-                {utils.helpers.user.checkIsOrganiation(user.type) ? (
-                  <>
-                    <CommonKeyValueField {...keyProps} key_='Organization' value={user.organizationName} />
-
-                    <CommonKeyValueField
-                      key_='Designation'
-                      {...keyProps}
-                      value={
-                        NUMERIC_DESIGNATION_TYPES[
-                          utils.helpers.getValue(user.designation) as Exclude<IUser['designation'], undefined>
-                        ]
-                      }
-                    />
-
-                    {/* {typeof user.role === 'number' ? (
-                      <CommonKeyValueField
-                        key_='Role'
-                        {...keyProps}
-                        value={
-                          NUMERIC_ROLE_TYPES[
-                          utils.helpers.getValue(user.role) as Exclude<IUser['designation'], undefined>
-                          ]
-                        }
-                      />
-                    ) : null} */}
-                  </>
-                ) : null}
 
                 <CommonKeyValueField {...keyProps} key_='Address' value={user.address} />
 

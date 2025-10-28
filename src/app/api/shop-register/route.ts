@@ -1,7 +1,7 @@
 import { Types } from 'mongoose'
 
 import { dbConfig } from '@/configs/dbConfig'
-import UserModel from '@/models/user.model'
+import UserModel, { IUser } from '@/models/user.model'
 import { serverSchemas } from '@/schemas/server.schemas'
 import { ErrorHandlingService } from '@/services/ErrorHandling.service'
 import { services } from '@/services/index.service'
@@ -12,8 +12,7 @@ export async function POST(request: Request) {
     // Connect to the database
     await dbConfig()
 
-    const sr = services.server.ShopRegisterService
-    const us = services.server.UserService
+    const { ShopRegisterService: sr, UserService: us, RoleService: rs } = services.server
 
     // Get the request body
     const body = await utils.getReqBody(request)
@@ -45,19 +44,21 @@ export async function POST(request: Request) {
       })
     }
 
+    const roleId = rs.getDefaultRole('defaultShopRole')
+
     const user = await us.createUser({
       firstName,
       lastName,
       phoneNumber,
       email: email.toLowerCase(),
       type: utils.CONST.USER.TYPES.SHOP,
-      // roleId: roleId as unknown as IUser['roleId'],
+      roleId: roleId as unknown as IUser['roleId'],
       status: utils.CONST.USER.STATUS.PENDING,
       password: password_
     })
 
     const { storeName } = validatedData
-    // // Create the category
+
     if (user) {
       await sr.registerShop({
         storeName,
@@ -65,11 +66,10 @@ export async function POST(request: Request) {
       })
     }
 
-
     return Response.json(
       utils.generateRes({
         status: true,
-        message: utils.CONST.RESPONSE_MESSAGES.ACCOUNT_CREATED,
+        message: utils.CONST.RESPONSE_MESSAGES.ACCOUNT_CREATED
       })
     )
   })

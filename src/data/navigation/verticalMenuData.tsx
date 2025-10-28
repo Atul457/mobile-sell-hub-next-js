@@ -10,7 +10,9 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
   {
     label: 'Categories',
     href: '/portal/categories',
-    icon: 'tabler-stack'
+    icon: 'tabler-stack',
+    module: 'category',
+    action: 'read'
   },
   {
     label: 'Platform Users',
@@ -24,62 +26,25 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
         href: '/portal/users/admin'
       },
       {
-        label: 'Users',
+        label: 'Shop Owners',
         href: '/portal/users/appusers'
       }
     ]
   },
   {
-    label: 'Examinee Profiles',
-    href: '/profiles',
-    icon: 'tabler-user-plus',
-    subUrls: ['/profiles/'],
-    module: 'profile',
-    action: 'read',
-  },
-  {
-    label: 'Reports',
-    href: '/reports',
-    icon: 'tabler-file-text',
-    subUrls: ['/reports/'],
-    module: 'report',
-    action: 'read',
-  },
-  {
-    label: 'QR Management',
-    href: '/qrs',
-    icon: 'tabler-qrcode',
-    module: 'qr',
-    action: 'read',
-  },
-  {
-    label: 'Package Management',
-    href: '/packages',
-    icon: 'tabler-packages',
-    module: 'package',
-    action: 'read',
-  },
-  {
-    label: 'Transactions',
-    href: '/transactions',
-    icon: 'tabler-currency-dollar',
-    module: 'transaction',
-    action: 'read',
-  },
-  {
     label: 'Roles',
-    href: '/roles',
+    href: '/portal/roles',
     icon: 'tabler-shield-chevron',
     module: 'role',
     action: 'read',
     options: [
       {
-        label: 'User Roles',
-        href: '/roles/user'
+        label: 'Shop Owner Roles',
+        href: '/portal/roles/user'
       },
       {
-        label: ' Admin Roles',
-        href: '/roles/admin'
+        label: 'Admin Roles',
+        href: '/portal/roles/admin'
       }
     ]
   }

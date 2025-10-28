@@ -30,22 +30,6 @@ nextjs
     // Middleware to handle all requests
     app.all('*', (req, res) => handle(req, res))
 
-    // cron.schedule('*/30 * * * *', async () => {
-    //   console.log('MAIL: Cron', `${host}/api/mails`)
-    //   try {
-    //     const response = await axios.default.post(`${host}/api/mails`)
-    //     if (response) {
-    //       console.debug('MAIL: Cron', `${JSON.stringify(response.data)}`)
-    //     }
-    //   } catch (error) {
-    //     if (error instanceof axios.AxiosError) {
-    //       console.error('MAIL: Cron - Error', error.response?.data)
-    //     } else {
-    //       console.error('MAIL: Cron - Error', error)
-    //     }
-    //   }
-    // })
-
     // Server setup based on environment
     if (local) {
       http.createServer(app).listen(PORT, err => {

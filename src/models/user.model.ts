@@ -8,8 +8,8 @@ export interface IUser extends Document {
   email: string
   stripeCustomerId: string | null
   password: string | null
-  /** @info 1 => ADMIN, 2 => INDIVIDUAL, 3 => CORPORATE_EMPLOYER, 4 => THIRD_PARTY_ADMINISTRATOR, 5 => GOVT_ORGANISATION, 6 => ORGANIZATION_SUB_USER , 7 => Sub Admin*/
-  type: 1 | 2 | 3 | 4 | 5 | 6 | 7
+  /** @info 1 => ADMIN, 2 => Shop Owner */
+  type: 1 | 2
   role?: IRolePermission['role']
   roleId?: IRolePermission['roleId']
   /** @info 1 => DIRECTOR, 2 => MANAGER, 3 => TEST ADMINISTRATOR */
@@ -17,7 +17,6 @@ export interface IUser extends Document {
   /** @info 0 => IN_ACTIVE, 1 => ACTIVE, 2 => DELETED, 3 => PENDING */
   status: 0 | 1 | 2 | 3
   creatorId?: string
-  organizationName?: string
   address: string | null
   addressMeta?: {
     lat: number | null
@@ -51,7 +50,6 @@ const UserSchema: Schema<IUser> = new Schema(
       ref: 'Role'
     },
     role: { type: Number, enum: [1, 2, 3, 4] },
-    organizationName: { type: String },
     address: { type: String, default: null },
     addressMeta: {
       type: {

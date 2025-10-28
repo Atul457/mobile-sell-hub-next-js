@@ -56,16 +56,16 @@ export const rolesColumns = (props: IRolesColumns): GridColDef<IRolePopulated>[]
           flex: 0.1,
           minWidth: 200,
           headerName: 'Default',
-          field: (props.type === utils.CONST.ROLE.TYPES.USER
-            ? 'defaultUserRole'
+          field: (props.type === utils.CONST.ROLE.TYPES.SHOP
+            ? 'defaultShopRole'
             : 'defaultAdminRole') as keyof IRolePopulated,
           sortable: true,
           renderCell: params => (
             <CommonChip
               variant='primary'
               label={
-                (props.type === utils.CONST.ROLE.TYPES.USER
-                  ? params.row.defaultUserRole
+                (props.type === utils.CONST.ROLE.TYPES.SHOP
+                  ? params.row.defaultShopRole
                   : params.row.defaultAdminRole)
                   ? 'Yes'
                   : 'No'

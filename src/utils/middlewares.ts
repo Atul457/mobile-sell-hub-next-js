@@ -164,9 +164,9 @@ const withUser = async (request: Request, options?: IWithUserOptions) => {
     }
   }
 
-  const { ADMIN, SUB_ADMIN } = CONST.USER.TYPES
+  const { ADMIN, SHOP } = CONST.USER.TYPES
 
-  if (![ADMIN, SUB_ADMIN].includes(user.type)) {
+  if (![ADMIN, SHOP].includes(user.type)) {
     throw ErrorHandlingService.unAuthorized({
       message: CONST.RESPONSE_MESSAGES.NOT_ADMIN
     })

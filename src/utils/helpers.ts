@@ -5,16 +5,12 @@ import { ICommonChipProps } from '@/components/common/CommonChip'
 
 import themeConfig from '@/configs/themeConfig'
 import { CONST } from '@/constants'
-import { IQr } from '@/models/qr.model'
-import { IReport } from '@/models/report.model'
 import { IRolePopulated } from '@/models/role.model'
 import { IRolePermission } from '@/models/rolePermission.model'
-import { ITransaction } from '@/models/transaction.model'
 import { IUser } from '@/models/user.model'
 import FileValidatorService from '@/services/FileValidator.service'
 import { file as fileUtil } from '@/utils/file'
 
-import { date as dateUtil } from './date'
 import { string } from './string'
 import { toast } from './toast'
 
@@ -24,36 +20,10 @@ type IProfilePictureChangeArgs = {
   setConverting: Function
 }
 
-type IGetFieldValueOptions = {
-  joinWith?: string
-  joinWithIndexed?: Record<number, string>
-  replacers?: Record<string, string>
-  blocksToSkip?: {
-    start?: number
-    end?: number
-  }
-  log?: boolean
-}
-
 const USER_STATUSES = CONST.USER.STATUS
-const REPORT_STATUSES = CONST.REPORT.STATUS
-const QR_STATUSES = CONST.QR.STATUS
-const TRANSACTION_STATUSES = CONST.TRANSACTION.STATUS
 
 const getFullName = (args: { firstName: IUser['firstName']; lastName: IUser['lastName'] }) => {
   return [string.capitalizeFirstLetter(args?.firstName?.trim?.() ?? ''), args?.lastName?.trim?.()].join(' ')
-}
-
-function generatePid(c: number, includeLowerCase = false): string {
-  let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  if (includeLowerCase) {
-    chars += 'abcdefghijklmnopqrstuvwxyz'
-  }
-  let pid = ''
-  for (let i = 0; i < c; i++) {
-    pid += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
-  return pid
 }
 
 const getStoredEntityUrl = (path: any) => {
@@ -130,20 +100,6 @@ const profilePictureChange = async (args: IProfilePictureChangeArgs) => {
   }
 }
 
-const checkIsOrganiation = (type: IUser['type']) => {
-  return (
-    type === CONST.USER.TYPES.CORPORATE_EMPLOYER ||
-    type === CONST.USER.TYPES.GOVT_ORGANISATION ||
-    type === CONST.USER.TYPES.ORGANIZATION_SUB_USER
-  )
-}
-
-const checkSubAdmin = (type: IUser['type']) => {
-  return (
-    type === CONST.USER.TYPES.SUB_ADMIN
-  )
-}
-
 const checkAdmin = (type: IUser['type']) => {
   return (
     type === CONST.USER.TYPES.ADMIN
@@ -165,7 +121,6 @@ const formatAddress = (addressMeta?: Partial<IUser['addressMeta']>): IUser['addr
 }
 
 const getUserDetails = (user: IUser, forJwt = false) => {
-  const isOrganization = checkIsOrganiation(user.type)
 
   let commonKeysValues: Partial<IUser> = {
     type: user.type,
@@ -182,9 +137,6 @@ const getUserDetails = (user: IUser, forJwt = false) => {
     commonKeysValues['designation'] = user.designation
     commonKeysValues['status'] = user.status
     commonKeysValues['role'] = user.role
-    if (isOrganization) {
-      commonKeysValues['organizationName'] = user.organizationName
-    }
   } else {
     commonKeysValues['id'] = user._id
   }
@@ -204,105 +156,6 @@ const getUserStatusVariant = (status: IUser['status']): ICommonChipProps['varian
     default:
       return 'error'
   }
-}
-
-const getReportStatusVariant = (status: IReport['status']): ICommonChipProps['variant'] => {
-  const { PENDING, DRAFT, SUBMITTED, CHECKED } = REPORT_STATUSES
-  switch (true) {
-    case PENDING === status:
-      return 'yellow'
-    case DRAFT === status:
-      return 'amber'
-    case SUBMITTED === status:
-      return 'cyan'
-    case CHECKED === status:
-      return 'success'
-    default:
-      return 'error'
-  }
-}
-const getQrStatusVariant = (status: IQr['status']): ICommonChipProps['variant'] => {
-  const { ACTIVE, USED } = QR_STATUSES
-  switch (true) {
-    case status === ACTIVE:
-      return 'yellow'
-    case status === USED:
-      return 'success'
-    default:
-      return 'error'
-  }
-}
-
-const getTransactionStatusVariant = (status: ITransaction['status']): ICommonChipProps['variant'] => {
-  const {
-    CANCEL,
-    SUCCEEDED,
-    PROCESSING,
-    REQUIRES_ACTION,
-    REQUIRES_CONFIRMATION,
-    REQUIRES_PAYMENT_METHOD,
-    REQUIRES_CAPTURE
-  } = TRANSACTION_STATUSES
-  switch (true) {
-    case status === CANCEL:
-      return 'error'
-    case status === SUCCEEDED:
-      return 'success'
-    case status === PROCESSING:
-      return 'primary'
-    case status === REQUIRES_ACTION:
-      return 'yellow'
-    case status === REQUIRES_CONFIRMATION:
-      return 'yellow'
-    case status === REQUIRES_PAYMENT_METHOD:
-      return 'yellow'
-    case status === REQUIRES_CAPTURE:
-      return 'yellow'
-    default:
-      return 'error'
-  }
-}
-
-
-const getReportIdentifier = (qr: IQr) => {
-  return `${qr.qrCode}`
-}
-
-function formatHl7Date(dateString: string) {
-  if (!dateString) {
-    return ''
-  }
-  const year = parseInt(dateString.slice(0, 4))
-  const month = parseInt(dateString.slice(4, 6)) - 1
-  const day = parseInt(dateString.slice(6, 8))
-  const date = new Date(year, month, day)
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
-  return dateUtil.formatDate(date.toLocaleDateString('en-US', options))
-}
-
-const getFieldValue = (field: any, options?: IGetFieldValueOptions) => {
-  let joinWith = options?.joinWith
-  const blocksToSkipFromStart = (options?.blocksToSkip?.start ?? 0) - 1
-  return ((field?.value?.[0] as unknown as any[]) ?? [])?.reduce((acc, field, index) => {
-    joinWith = options?.joinWithIndexed?.[index] ?? options?.joinWith ?? '-'
-    if (blocksToSkipFromStart < index)
-      if (field?.value?.[0]) {
-        if (!acc) {
-          acc += field.value?.[0]
-        } else {
-          acc += `${joinWith}${field.value?.[0]}`
-        }
-      } else if (typeof field?.value?.[0] === 'string') {
-        acc += `${joinWith}${field.value?.[0]}`
-      }
-    // if (options?.log) {
-    //     console.debug({
-    //         acc,
-    //         "field.value?.[0]": field.value?.[0]
-    //     })
-    // }
-    return acc
-  }, '')
 }
 
 function getValue(value: any): any {
@@ -391,8 +244,6 @@ const getDataGridColumnsWithSpaces = <T extends {}>(columns: GridColDef<T>[]): G
   })
 }
 const user = {
-  checkIsOrganiation,
-  checkSubAdmin,
   checkAdmin,
   getUserStatusVariant,
   getUserDetails,
@@ -401,42 +252,20 @@ const user = {
   formatAddress
 }
 
-const qr = {
-  getQrStatusVariant
-}
-
 const role = {
   rolePermissionsArrayToObject,
   getPermissions
 }
 
-const transaction = {
-  getTransactionStatusVariant
-}
-
-const report = {
-  formatHl7Date,
-  getFieldValue,
-  getReportIdentifier,
-  getReportStatusVariant,
-}
-
-const profiles = {
-  generatePid
-}
-
 const helpers = {
   getDataGridColumnsWithSpaces,
   user,
-  qr,
   role,
-  transaction,
   getStoredEntityUrl,
   getValue,
-  report,
-  profiles,
   convertArrayOfObjectsToCSV,
   extractAddressDetails
 }
 
 export { helpers }
+

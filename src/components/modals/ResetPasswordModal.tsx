@@ -66,7 +66,7 @@ const ResetPasswordModal = () => {
 
       utils.toast.success({ message: response.message! })
 
-      router.push('/login')
+      router.push('/protal/login')
 
       modalContext.closeModal('resetPassword')
     } catch (error: any) {

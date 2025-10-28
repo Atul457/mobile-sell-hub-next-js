@@ -35,7 +35,6 @@ export interface IUser {
   address: string | null
   type: IUserTypeNumeric
   profilePicture: string | null
-  organizationName?: string
   role: IUserModel['role']
   addressMeta: IUserModel['addressMeta']
 }

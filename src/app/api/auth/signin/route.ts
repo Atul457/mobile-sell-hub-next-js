@@ -15,11 +15,11 @@ export async function POST(request: Request) {
 
         const uss = services.server.UserSessionService
 
-        const { ADMIN, SUB_ADMIN } = utils.CONST.USER.TYPES;
+        const { ADMIN, SHOP } = utils.CONST.USER.TYPES;
 
         const existingUser = await UserModel.findOne({
             email: new RegExp(email, 'gi'),
-            type: { $in: [ADMIN, SUB_ADMIN] }
+            type: { $in: [ADMIN, SHOP] }
         })
 
         if (!existingUser) {

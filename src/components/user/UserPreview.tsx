@@ -1,7 +1,6 @@
 import { Box, BoxProps, Typography } from '@mui/material'
 import Link from 'next/link'
 
-import { IProfile } from '@/models/profile.model'
 import { IUser } from '@/models/user.model'
 import { utils } from '@/utils/utils'
 
@@ -11,7 +10,7 @@ type ICommonUserDetailsProps = {
   containerProps?: BoxProps
   variant?: 'small' | 'data-grid'
   type: 'user' | 'profile'
-  user: Omit<IUser | (IProfile & { profilePicture?: string }), 'email'> & {
+  user: Omit<IUser, 'email'> & {
     email?: IUser['email']
   }
 }

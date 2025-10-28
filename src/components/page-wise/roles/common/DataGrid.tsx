@@ -31,7 +31,7 @@ const RolesDataGrid = (props: IRolesDataGridProps) => {
   const { roles, list, onSearch: onSearch_, update, empty } = useRoles(props)
   const selectedRoleRef = useRef<IRolePopulated | null>(null)
   const { permissions } = useConfigProviderContext()
-  const [rolePermissions] = useState(utils.helpers.role.getPermissions("role", permissions));
+  const [rolePermissions] = useState(utils.helpers.role.getPermissions('role', permissions))
   const modalsContext = useModal()
 
   const dispatch = useAppDispatch()
@@ -55,25 +55,23 @@ const RolesDataGrid = (props: IRolesDataGridProps) => {
     []
   )
 
-  const onRoleBtnClick = useCallback(
-    (args: { role?: IRolePopulated; view?: boolean }) =>
-      modalsContext.openModal({
-        type: 'manageRoles',
-        props: {
-          type: props.type,
-          data: args.role,
-          view: args.view,
-          visible: true,
-          onCreate: () => {
-            list({})
-          },
-          onUpdate: () => {
-            list({})
-          }
+  const onRoleBtnClick = useCallback((args: { role?: IRolePopulated; view?: boolean }) => {
+    modalsContext.openModal({
+      type: 'manageRoles',
+      props: {
+        type: props.type,
+        data: args.role,
+        view: args.view,
+        visible: true,
+        onCreate: () => {
+          list({})
+        },
+        onUpdate: () => {
+          list({})
         }
-      }),
-    []
-  )
+      }
+    })
+  }, [])
 
   const rolesColumns_ = useMemo(() => {
     return rolesColumns({
@@ -142,7 +140,7 @@ const RolesDataGrid = (props: IRolesDataGridProps) => {
               fontSize: theme => theme.typography.h3
             }}
           >
-            {props.type === utils.CONST.ROLE_PERMISSION.TYPES.ADMIN ? 'Admin Roles' : 'List of All Roles'}
+            List of All {props.type === utils.CONST.ROLE_PERMISSION.TYPES.ADMIN ? 'Admin Roles' : 'Shop Owner Roles'}
           </Typography>
         }
         action={
@@ -161,11 +159,8 @@ const RolesDataGrid = (props: IRolesDataGridProps) => {
             <CommonWithDropdown
               iconProps={{ className: 'text-textPrimary' }}
               menuOptions={[
-                ...rolePermissions.create ? [
-                  { label: 'Add', value: 1, onClick: () => onRoleBtnClick({}) }
-                ] : []
+                ...(rolePermissions.create ? [{ label: 'Add', value: 1, onClick: () => onRoleBtnClick({}) }] : [])
               ]}
-
               component={
                 <i className='tabler-list text-xl cursor-pointer hover:text-[var(--mui-palette-hyperlink-main)]' />
               }

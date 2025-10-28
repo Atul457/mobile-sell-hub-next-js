@@ -10,19 +10,12 @@ const agree = yup
 const permissionActionsSchema = yup.string().oneOf(['create', 'read', 'update', 'delete']).required()
 
 const permissionsSchema = yup.object().shape({
-  transaction: yup.array().of(permissionActionsSchema).optional(),
+  category: yup.array().of(permissionActionsSchema).optional(),
   user: yup.array().of(permissionActionsSchema).optional(),
-  qr: yup.array().of(permissionActionsSchema).optional(),
-  report: yup.array().of(permissionActionsSchema).optional(),
   role: yup.array().of(permissionActionsSchema).optional(),
-  package: yup.array().of(permissionActionsSchema).optional(),
-  profile: yup.array().of(permissionActionsSchema).optional(),
-  test: yup.array().of(permissionActionsSchema).optional()
 })
 
 const statusSchema = yup.number().oneOf([0, 1, 3]).nullable()
-
-const qrSchema = yup.string().trim().length(6, 'Invalid Qr code').required('Qr code is a required field')
 
 const addressMetaSchema = yup.object().shape({
   city: yup.string().trim().required('city is a required field'),
@@ -78,11 +71,6 @@ const paginationSchema = yup.object().shape({
   query: yup.string().optional().typeError('Query should be a string').optional()
 })
 
-const designationTypeSchema = yup
-  .number()
-  .oneOf([1, 2, 3], 'Designation is a required field')
-  .required('Designation is a required field')
-
 const nonMandatoryEmailSchema = yup
   .string()
   .min(1, 'Email is a required field')
@@ -98,47 +86,6 @@ const passwordSchema = yup
 
 const resetPassword = yup.object().shape({
   password: passwordSchema
-})
-
-const addProfile = yup.object().shape({
-  firstName: firstNameSchema,
-  lastName: lastNameSchema,
-  email: nonMandatoryEmailSchema,
-  phoneNumber: nonMandatoryPhoneNumberSchema,
-  phoneNumber_: phoneNumberSchema_,
-  gender: yup.number().oneOf([0, 1, 2, 3]).nullable(),
-  dob: yup.date().typeError('Dob must be a valid date').max(new Date(), 'Dob must be before today').nullable()
-})
-
-const generateQr = yup.object().shape({
-  count: yup
-    .number()
-    .min(1, 'Count must be at least 1')
-    .max(10000, 'Count should be less than or equal to 10000')
-    .required('Count is a required field'),
-  qrs: yup
-    .array()
-    .of(yup.string().trim().length(6, 'Invalid Qr code').required('Qr code is a required field'))
-    .nullable()
-    .optional()
-})
-
-const generateReportQr = yup.object().shape({
-  count: yup
-    .number()
-    .min(1, 'Count must be at least 1')
-    .max(10000, 'Count should be less than or equal to 10000')
-    .required('Count is a required field'),
-  qrs: yup
-    .array()
-    .of(
-      yup.object().shape({
-        qrCode: yup.string().required('Qr code is a required field'),
-        status: yup.number().required('status is a required field'),
-        reason: yup.string().nullable()
-      })
-    )
-    .required()
 })
 
 const updatePassword = yup.object().shape({
@@ -188,19 +135,13 @@ const updateProfileSchema = yup.object().shape({
   phoneNumber_: phoneNumberSchema_,
   addressMeta: addressMetaSchema.when('type', (type, schema) => {
     const object = utils.CONST.USER.TYPES
-    const isSubAdminUser = object.SUB_ADMIN === type?.[0]
+    const isSubAdminUser = object.ADMIN === type?.[0]
     return !isSubAdminUser ? schema.nullable().optional() : yup.string().optional().nullable()
   }),
   type: userTypeSchema_,
-  organizationName: yup.string().when('type', (type, schema) => {
-    const object = utils.CONST.USER.TYPES
-    return [object.GOVT_ORGANISATION, object.CORPORATE_EMPLOYER].includes(type?.[0])
-      ? schema.trim().required('Organization name is a required field')
-      : schema
-  }),
   roleId: yup.string().when('address', (type, schema) => {
     const object = utils.CONST.USER.TYPES
-    const isSubAdminUser = object.SUB_ADMIN === type?.[0]
+    const isSubAdminUser = object.ADMIN === type?.[0]
     return isSubAdminUser ? schema.required() : schema.optional().nullable()
   })
 })
@@ -212,13 +153,7 @@ const updateAdminProfileSchema = yup.object().shape({
 })
 
 const updateProfileSchemaWithType = updateProfileSchema.clone().shape({
-  type: userTypeSchema,
-  organizationName: yup.string().when('type', (type, schema) => {
-    const object = utils.CONST.USER.TYPES
-    return [object.GOVT_ORGANISATION, object.CORPORATE_EMPLOYER].includes(type?.[0])
-      ? schema.trim().required('Organization name is a required field')
-      : schema
-  })
+  type: userTypeSchema
 })
 
 const addUser = updateProfileSchema.clone().shape({
@@ -248,28 +183,6 @@ const addUpdateRolePermission = yup.object().shape({
     .required('Actions is a required field')
 })
 
-const addTest = yup.object().shape({
-  _id: yup.string().optional().nullable(),
-  name: yup.string().trim().required('Name is a required field'),
-  price: yup.number().required('Price is a required field'),
-  identifier: yup.string().required('Identifier is a required field'),
-  status: yup.number().oneOf([0, 1, 2]).nullable().optional(),
-  slug: yup.string().oneOf(['coc']).optional()
-})
-
-const addPackage = yup.object().shape({
-  isDefault: yup.number().oneOf(Object.values(utils.CONST.APP_CONST.BOOLEAN_STATUS)).nullable().optional(),
-  withChainOfCustody: yup
-    .number()
-    .oneOf(Object.values(utils.CONST.APP_CONST.BOOLEAN_STATUS))
-    .required('With chain of custody is a required field'),
-  name: yup.string().trim().required('Name is a required field'),
-  price: yup.number().required('Price is a required field'),
-  status: yup.number().oneOf([0, 1, 2]).required('Status is a required field'),
-  description: yup.string().optional().nullable(),
-  identifier: yup.string().required('Identifier is a required field')
-})
-
 const addCategory = yup.object().shape({
   name: yup.string().required('Name is a required field'),
   description: yup.string().optional(),
@@ -277,24 +190,10 @@ const addCategory = yup.object().shape({
   status: yup.number().oneOf([0, 1, 2]).required('Status is a required field'),
 })
 
-const decodeQR = yup.object().shape({
-  qr: qrSchema
-})
-
 const registerStep2 = yup.object().shape({
   type: userTypeSchema,
   firstName: firstNameSchema,
   lastName: lastNameSchema,
-  organizationName: yup.string().when('type', (type, schema) => {
-    const object = utils.CONST.USER.TYPES
-    return [object.GOVT_ORGANISATION, object.CORPORATE_EMPLOYER].includes(type?.[0])
-      ? schema.trim().required('Organization name is a required field')
-      : schema
-  }),
-  designation: yup.number().when('type', (type, schema) => {
-    const object = utils.CONST.USER.TYPES
-    return [object.GOVT_ORGANISATION, object.CORPORATE_EMPLOYER].includes(type?.[0]) ? designationTypeSchema : schema
-  }),
   address: addressSchema,
   phoneNumber: phoneNumberSchema,
   phoneNumber_: phoneNumberSchema_
@@ -312,58 +211,6 @@ const querySchema = yup.object().shape({
   query: yup.string().optional().typeError('Query should be a string').optional()
 })
 
-const addCard = yup.object().shape({
-  token: yup.string().optional(),
-  name: yup.string()?.trim()?.required('Name is a required field'),
-  cardNumber: yup.string().when('token', (token, schema) => {
-    return !token[0]
-      ? schema.typeError('Card number is invalid').required('Card number is a required field')
-      : schema.optional()
-  }),
-  expiryDate: yup.string().when('token', (token, schema) => {
-    return !token[0]
-      ? schema.typeError('Expiry date is invalid').required('Expiry date is a required field')
-      : schema.optional()
-  }),
-  cardCvv: yup.string().when('token', (token, schema) => {
-    return !token[0]
-      ? schema.typeError('Card cvv is invalid').required('Card cvv is a required field')
-      : schema.optional()
-  })
-})
-
-const addCardWithTokenRequired = addCard.clone().shape({
-  token: yup.string().required('Token is a required field')
-})
-
-const payment = yup.object().shape({
-  cardId: yup.string().when('addOnsIncluded', (addOnsIncluded_, schema) => {
-    const addOnsIncluded = addOnsIncluded_?.[0]
-    return addOnsIncluded && Array.isArray(addOnsIncluded) && addOnsIncluded.length > 0
-      ? schema.required('Card id is a required field')
-      : schema.optional().nullable()
-  }),
-  profileId: yup.string().required('Profile id is a required field'),
-  addOnsIncluded: yup.array().of(yup.string().required()).nullable().optional(),
-  qr: qrSchema
-})
-
-const addCustody = yup.object().shape({
-  name: yup.string().trim().required('Name is a required filed'),
-  description: yup.string().optional(),
-  date: yup.date().optional().nullable(),
-  time: yup.date().optional().nullable(),
-  reportId: yup.string().required('Report id is a required field')
-})
-
-const updateReportStatus = yup.object().shape({
-  status: yup
-    .number()
-    .oneOf([...Object.values(utils.CONST.REPORT.STATUS), -1])
-    .notOneOf([utils.CONST.REPORT.STATUS.DRAFT])
-    .required('Status is a required field')
-})
-
 const addRole = yup.object().shape({
   name: yup.string().trim().required('Role name is a required field'),
   roleId: yup.number().oneOf(Object.values(utils.CONST.USER.ROLES)).optional().nullable(),
@@ -373,10 +220,6 @@ const addRole = yup.object().shape({
     .required(),
   permissions: permissionsSchema,
   markDefault: yup.number().oneOf(Object.values(utils.CONST.APP_CONST.BOOLEAN_STATUS)).nullable().optional()
-})
-
-const updateReportStatuswithReason = updateReportStatus.clone().shape({
-  rejectionReason: yup.string().nullable()
 })
 
 
@@ -402,22 +245,16 @@ const shopRegister = yup.object().shape({
 })
 
 const commonSchemas = {
-  addCardWithTokenRequired,
   login,
   querySchema,
-  addProfile,
   addRole,
-  payment,
   agree,
   resetPassword,
   registerStep1,
   registerStep2,
   paginationSchema,
   addUser,
-  addTest,
   statusSchema,
-  updateReportStatus,
-  updateReportStatuswithReason,
   addUpdateRolePermission,
   updateProfileSchemaWithType,
   updateProfileSchema,
@@ -426,14 +263,8 @@ const commonSchemas = {
   resetPasswordWithConfirm,
   updatePasswordWithConfirm,
   updatePassword,
-  decodeQR,
-  addCard,
-  addCustody,
   userTypeSchema,
   userTypeSchema_,
-  generateQr,
-  addPackage,
-  generateReportQr,
   updateAdminProfileSchema,
   createAdminUsers,
   addCategory,

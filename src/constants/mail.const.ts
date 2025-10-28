@@ -37,9 +37,6 @@ type IMail_ = {
   SUBJECTS: {
     FORGOT_PASSWORD: 'Password Reset Request'
     INVITATION: 'Invitation'
-    SAMPLE_RECIEVED: 'Your Sample Has Been Received | MyQuikSal'
-    SAMPLE_REJECTED: 'Your Sample Has Been Rejected | MyQuikSal'
-    REPORT_PROCESSED: 'Your Report is Ready for Download | MyQuikSal'
   }
   MAPPING: IMapping
 }
@@ -86,14 +83,8 @@ const MAIL: IMail_ = {
   SUBJECTS: {
     FORGOT_PASSWORD: 'Password Reset Request',
     INVITATION: 'Invitation',
-    SAMPLE_RECIEVED: 'Your Sample Has Been Received | MyQuikSal',
-    SAMPLE_REJECTED: 'Your Sample Has Been Rejected | MyQuikSal',
-    REPORT_PROCESSED: 'Your Report is Ready for Download | MyQuikSal'
   },
   MAPPING: {
-    'report-rejection': 'reportRejected',
-    'report-complete': 'reportProcessed',
-    'report-receive': 'reportReceived'
   }
 } as const // <- Added `as const` for stricter typing
 

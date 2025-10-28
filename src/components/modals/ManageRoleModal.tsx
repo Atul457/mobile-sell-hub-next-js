@@ -26,21 +26,11 @@ import CommonDialog from '../common/CommonDialog'
 
 type FormData = (typeof commonSchemas.addRole)['__outputType']
 
-const USER = utils.CONST.ROLE.TYPES.USER
+const USER = utils.CONST.ROLE.TYPES.SHOP
 const { NUMERIC_BOOLEAN_STATUS, BOOLEAN_STATUS } = utils.CONST.APP_CONST
 
-let modules: IRolePermission['module'][] = ['user', 'profile', 'report', 'qr', 'package', 'transaction', 'role', 'test']
+let modules: IRolePermission['module'][] = ['user', 'category', 'role']
 const rolePermission: IRolePermission['actions'] = ['read', 'create', 'update', 'delete']
-// let moduleLableMapping: Partial<Record<IRolePermission['module'], string>> = {
-//   user: 'Platform Users',
-//   profile: 'Examinee Profiles',
-//   report: 'Reports',
-//   qr: 'QR Management',
-//   package: 'Package ',
-//   transaction: 'Transactions',
-//   role: 'Roles',
-//   test: 'Test'
-// }
 
 const ManageRoleModal = () => {
   // States
@@ -68,7 +58,7 @@ const ManageRoleModal = () => {
   const modalContext = useModal()
 
   const manageRoles = modalContext.modals.manageRoles
-  const forUser = manageRoles?.type === utils.CONST.ROLE.TYPES.USER
+  const forUser = manageRoles?.type === utils.CONST.ROLE.TYPES.SHOP
   const role = manageRoles?.data ?? null
   const view = manageRoles?.view ?? false
 
@@ -77,7 +67,7 @@ const ManageRoleModal = () => {
     if (manageRoles_) {
       let { permissions = [], ...role } = manageRoles_
       let permissionsObj = {}
-      const markDefault = (role.type === utils.CONST.ROLE.TYPES.USER ? role.defaultUserRole : role.defaultAdminRole)
+      const markDefault = (role.type === utils.CONST.ROLE.TYPES.SHOP ? role.defaultShopRole : role.defaultAdminRole)
         ? 1
         : 0
       permissions.forEach(currentPermission => {
@@ -104,7 +94,7 @@ const ManageRoleModal = () => {
   useEffect(() => {
     let selectAll = false
     if (forUser) {
-      const allUserPermissionsSelected = rolePermission.every(role => watch(`user.${role}.` as any))
+      const allUserPermissionsSelected = rolePermission.every(role => watch(`category.${role}.` as any))
       selectAll = allUserPermissionsSelected
     } else {
       const allPermissionsSelected = modules.every(module => {
@@ -293,10 +283,10 @@ const ManageRoleModal = () => {
               }}
             >
               {modules.map((module_, moduleIndex) => {
-                if (forUser && module_ != 'user') {
+                if (forUser && module_ != 'category') {
                   return null
                 }
-                const isReadChecked = watch(`${module_}.read` as any);
+                const isReadChecked = watch(`${module_}.read` as any)
                 return (
                   <Box
                     key={moduleIndex}
@@ -315,7 +305,6 @@ const ManageRoleModal = () => {
                         fontSize: theme => theme.typography.fontSize
                       }}
                     >
-                      {/* {utils.string.capitalize(moduleLableMapping[module_] ? moduleLableMapping[module_] : module_)} */}
                       {utils.string.capitalize(module_)}
                     </Typography>
                     <Box
@@ -326,9 +315,9 @@ const ManageRoleModal = () => {
                       }}
                     >
                       {rolePermission.map((role, item) => {
-                        const isReadRole = role === 'read';
-                        const isDisabled = !isReadRole && !isReadChecked;
-                        const checked = watch(`${module_}.${role}` as any) ?? false;
+                        const isReadRole = role === 'read'
+                        const isDisabled = !isReadRole && !isReadChecked
+                        const checked = watch(`${module_}.${role}` as any) ?? false
                         return (
                           <LabelStyled
                             key={item}
@@ -345,17 +334,17 @@ const ManageRoleModal = () => {
                                       // Handle "View" (read) checkbox logic
                                       if (isReadRole) {
                                         // If "read" is unchecked, uncheck all others
-                                        rolePermission.forEach((otherRole) => {
+                                        rolePermission.forEach(otherRole => {
                                           if (otherRole !== 'read') {
                                             setValue(`${module_}.${otherRole}` as any, false, {
-                                              shouldValidate: isSubmitted_,
-                                            });
+                                              shouldValidate: isSubmitted_
+                                            })
                                           }
-                                        });
+                                        })
                                       }
                                       setValue(`${module_}.${role}` as any, !checked, {
-                                        shouldValidate: isSubmitted_,
-                                      });
+                                        shouldValidate: isSubmitted_
+                                      })
                                     }}
                                     disabled={isDisabled}
                                     {...field}

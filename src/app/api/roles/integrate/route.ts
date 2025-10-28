@@ -27,7 +27,7 @@ export async function PATCH(request: Request) {
     const us = services.server.UserService
 
     const roles = await RoleModel.find({
-      type: utils.CONST.ROLE.TYPES.USER,
+      type: utils.CONST.ROLE.TYPES.SHOP,
       roleId: {
         $exists: true
       }

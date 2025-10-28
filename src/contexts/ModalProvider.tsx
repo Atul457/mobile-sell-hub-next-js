@@ -7,16 +7,11 @@ import { IModalContext, ModalPropsMap, ModalType } from './types'
 const modals_: IModalContext['modals'] = {
   alert: null,
   info: null,
-  profile: null,
   addUser: null,
   profiles: null,
   updatePassword: null,
   resetPassword: null,
   forgotPassword: null,
-  addCard: null,
-  addCustody: null,
-  manageQrs: null,
-  manageReports: null,
   manageRoles: null
 }
 

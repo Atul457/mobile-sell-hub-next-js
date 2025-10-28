@@ -17,22 +17,20 @@ import { UsersService } from '@/services/client/Users.service'
 import { utils } from '@/utils/utils'
 
 import AddUserDrawer from './[id]/components/updateProfile/AddUserDrawer'
-import EditProfileDrawer from './[id]/components/updateProfile/EditProfileDrawer'
 import useUsers from './hooks/useUsers'
 import { usersColumns } from './usersColumns'
 import useRoles from '../roles/common/hooks/useRoles'
 
 const { NUMERIC_TYPES, NUMERIC_STATUS, TYPES } = utils.CONST.USER
-const { TYPES: ROLE_TYPES, } = utils.CONST.ROLE
+const { TYPES: ROLE_TYPES } = utils.CONST.ROLE
 
 type IUsersProps = {
   userId?: string
-  isSubAdminListing?: boolean
+  isAdminListing?: boolean
 }
 
 const Users = (props: IUsersProps) => {
-
-  const { isSubAdminListing, userId } = props;
+  const { isAdminListing, userId } = props
 
   const deleted = useRef(false)
   const {
@@ -42,17 +40,19 @@ const Users = (props: IUsersProps) => {
     update,
     empty
   } = useUsers({
-    ...isSubAdminListing && {
-      type: TYPES.SUB_ADMIN,
-    },
-    ...userId && { userId }
+    ...(isAdminListing && {
+      type: TYPES.ADMIN
+    }),
+    ...(userId && { userId })
   })
 
   const {
-    roles: { data: { roles } },
-    list: listRoles,
+    roles: {
+      data: { roles }
+    },
+    list: listRoles
   } = useRoles({
-    type: isSubAdminListing ? ROLE_TYPES.ADMIN : ROLE_TYPES.USER
+    type: isAdminListing ? ROLE_TYPES.ADMIN : ROLE_TYPES.SHOP
   })
 
   const selectedUserRef = useRef<IUser | null>(null)
@@ -62,7 +62,7 @@ const Users = (props: IUsersProps) => {
   const [selectedAdminUser, setSelectedAdminUser] = useState<IUser | null>(null)
   const [create, setCreate] = useState(false)
   const { permissions } = useConfigProviderContext()
-  const [userPermissions] = useState(utils.helpers.role.getPermissions("user", permissions));
+  const [userPermissions] = useState(utils.helpers.role.getPermissions('user', permissions))
 
   const addUser = modalsContext.modals.addUser
 
@@ -73,7 +73,7 @@ const Users = (props: IUsersProps) => {
         props: {
           heading: `Confirmation`,
           description: `Are you sure you want to change the status of this user? Changing the
-      status of this user will make it [${NUMERIC_STATUS[(user.status === 3) ? 1 : (user.status) ? 0 : 1]}]. `,
+      status of this user will make it [${NUMERIC_STATUS[user.status === 3 ? 1 : user.status ? 0 : 1]}]. `,
           okButtonText: 'Yes',
           okButtonLoadingText: `Processing`,
           cancelButtonText: null,
@@ -93,7 +93,7 @@ const Users = (props: IUsersProps) => {
   // Handle type change
   const handleTypeChange = (type: IUser['type']) => {
     list({
-      type,
+      type
     })
   }
 
@@ -127,7 +127,7 @@ const Users = (props: IUsersProps) => {
     const us = new UsersService()
     const response = await us.updateStatus(user.id, {
       ...user,
-      status: (user.status === 3) ? 1 : (user.status) ? 0 : 1
+      status: user.status === 3 ? 1 : user.status ? 0 : 1
     })
     onUpdate(response.data?.user)
     list({})
@@ -153,8 +153,7 @@ const Users = (props: IUsersProps) => {
       type: 'alert',
       props: {
         heading: 'Delete User',
-        description:
-          `Are you sure you want to delete this ${isSubAdminListing ? 'admin' : ''} user? This will erase all associated data and restrict  ${isSubAdminListing ? 'admin' : 'user'} to access account.`,
+        description: `Are you sure you want to delete this ${isAdminListing ? 'admin' : ''} user? This will erase all associated data and restrict  ${isAdminListing ? 'admin' : 'user'} to access account.`,
         onOkClick: () => onDeleteConfimation(user),
         // onClose: onAlertClose,
         visible: true,
@@ -167,19 +166,16 @@ const Users = (props: IUsersProps) => {
 
   const usersColumns_ = useMemo(() => {
     return usersColumns({
-      ...((props.userId || !isSubAdminListing) && {
-        for: 'employees'
-      }),
       permissions: userPermissions,
       rolesMap,
       type: ROLE_TYPES.ADMIN,
       onEditButtonClick: user => {
         selectedUserRef.current = user
-        utils.dom.onModalOpen();
-        if (user.type !== 1 && user.type !== 7) {
+        utils.dom.onModalOpen()
+        if (user.type !== 1) {
           setSelected(user)
         } else {
-          setSelectedAdminUser(user);
+          setSelectedAdminUser(user)
         }
       },
       onUserStatusChangeBtnClick: user => {
@@ -214,10 +210,7 @@ const Users = (props: IUsersProps) => {
 
   return (
     <>
-      <EditProfileDrawer users={selected} onUpdate={onUpdate} onClose={onClose} />
-      <AddUserDrawer
-        user={selectedAdminUser}
-        roles={roles} visible={create} onUpdate={onUpdate} onClose={onClose} />
+      <AddUserDrawer user={selectedAdminUser} roles={roles} visible={create} onUpdate={onUpdate} onClose={onClose} />
       <Card style={{ width: '100%' }}>
         <CardHeader
           sx={{ padding: 3 }}
@@ -229,12 +222,12 @@ const Users = (props: IUsersProps) => {
                 fontSize: theme => theme.typography.h3
               }}
             >
-              {props.userId ? 'Employees' : `List of All${isSubAdminListing ? " Admin" : ""} Users`}
+              List of All{isAdminListing ? ' Admin' : ' Shops Owner'}
             </Typography>
           }
           action={
             <div className='flex items-center flex-wrap space-x-2'>
-              {!isSubAdminListing ?
+              {!isAdminListing ? (
                 <FormControl size='small'>
                   <CustomTextField
                     select
@@ -253,20 +246,14 @@ const Users = (props: IUsersProps) => {
                     }}
                     value={users.data.type}
                     onChange={e => {
-                      handleTypeChange(Number(e.target.value) as IUser["type"])
+                      handleTypeChange(Number(e.target.value) as IUser['type'])
                     }}
                   >
                     <MenuItem value={0}>All</MenuItem>
                     <MenuItem value={TYPES.SHOP}>{NUMERIC_TYPES[TYPES.SHOP]}</MenuItem>
-                    <MenuItem value={TYPES.CORPORATE_EMPLOYER}>{NUMERIC_TYPES[TYPES.CORPORATE_EMPLOYER]}</MenuItem>
-                    <MenuItem value={TYPES.GOVT_ORGANISATION}>{NUMERIC_TYPES[TYPES.GOVT_ORGANISATION]}</MenuItem>
-                    <MenuItem value={TYPES.ORGANIZATION_SUB_USER}>{NUMERIC_TYPES[TYPES.ORGANIZATION_SUB_USER]}</MenuItem>
-                    <MenuItem value={TYPES.THIRD_PARTY_ADMINISTRATOR}>
-                      {NUMERIC_TYPES[TYPES.THIRD_PARTY_ADMINISTRATOR]}
-                    </MenuItem>
                   </CustomTextField>
                 </FormControl>
-                :
+              ) : (
                 <FormControl size='small'>
                   <CustomTextField
                     select
@@ -288,12 +275,14 @@ const Users = (props: IUsersProps) => {
                     <MenuItem value={0}>All</MenuItem>
                     {roles.map(currentRole => {
                       return (
-                        <MenuItem key={currentRole.id} value={currentRole.id}>{currentRole.name}</MenuItem>
+                        <MenuItem key={currentRole.id} value={currentRole.id}>
+                          {currentRole.name}
+                        </MenuItem>
                       )
-                    })
-                    }
+                    })}
                   </CustomTextField>
-                </FormControl>}
+                </FormControl>
+              )}
 
               <CustomTextField
                 label={null}
@@ -308,21 +297,17 @@ const Users = (props: IUsersProps) => {
                 placeholder='Enter user name or email'
               />
 
-              {isSubAdminListing ?
+              {isAdminListing ? (
                 <CommonIconWithDropdown
                   iconProps={{ className: 'text-textPrimary' }}
                   menuOptions={[
-                    ...userPermissions.create ? [
-                      { label: 'Add', value: 1, onClick: () => setCreate(true) }
-                    ] : [],
+                    ...(userPermissions.create ? [{ label: 'Add', value: 1, onClick: () => setCreate(true) }] : [])
                   ]}
                   component={
                     <i className='tabler-list text-xl cursor-pointer hover:text-[var(--mui-palette-hyperlink-main)]' />
                   }
-
-                /> :
-                null}
-
+                />
+              ) : null}
             </div>
           }
         />
