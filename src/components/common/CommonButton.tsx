@@ -40,6 +40,7 @@ const CommonButton = (props: ICommonButtonProps) => {
           minHeight: `46px`
         }),
         maxWidth: 350,
+        minWidth:'120px',
         margin: 'auto',
         color: props.btnVariant === 'white' ? 'primary.main' : 'white',
         background: `${props.btnVariant === 'white' ? 'white' : 'primary.main'} !important`,

@@ -12,7 +12,8 @@ import {
   Step,
   StepLabel,
   Stepper,
-  Typography} from '@mui/material'
+  Typography
+} from '@mui/material'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
@@ -257,7 +258,7 @@ export default function MultiStepStoreSignup() {
 
       {/* ---------------- STEP 1: Business ---------------- */}
       {activeStep === 0 && (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap:'4' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Controller
             name="business.companyName"
             control={control}
@@ -285,23 +286,21 @@ export default function MultiStepStoreSignup() {
               />
             )}
           />
+          <Controller
+            name="business.addressStreet"
+            control={control}
+            render={({ field }) => (
+              <CustomTextField
+                {...field}
+                label="Street"
+                placeholder="Street address"
+                error={!!(errors as any)?.business?.addressStreet}
+                helperText={(errors as any)?.business?.addressStreet?.message || ''}
+              />
+            )}
+          />
 
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Controller
-                name="business.addressStreet"
-                control={control}
-                render={({ field }) => (
-                  <CustomTextField
-                    {...field}
-                    label="Street"
-                    placeholder="Street address"
-                    error={!!(errors as any)?.business?.addressStreet}
-                    helperText={(errors as any)?.business?.addressStreet?.message || ''}
-                  />
-                )}
-              />
-            </Grid>
 
             <Grid item xs={12} md={6}>
               <Controller
@@ -310,6 +309,7 @@ export default function MultiStepStoreSignup() {
                 render={({ field }) => (
                   <CustomTextField
                     {...field}
+                    fullWidth
                     label="Suburb"
                     placeholder="Suburb"
                     error={!!(errors as any)?.business?.addressSuburb}
@@ -389,7 +389,7 @@ export default function MultiStepStoreSignup() {
 
       {/* ---------------- STEP 2: Primary Contact / Admin ---------------- */}
       {activeStep === 1 && (
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Controller
             name="admin.firstName"
             control={control}
@@ -523,10 +523,24 @@ export default function MultiStepStoreSignup() {
 
       {/* ---------------- STEP 3: Directors ---------------- */}
       {activeStep === 2 && (
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography sx={{ color: '#000' }}>Directors (up to 3)</Typography>
-            <CommonButton label="Add Director" size="small" onClick={handleAddDirector} />
+            <Box>
+              <IconButton
+                onClick={handleAddDirector}
+                disabled={directorsFields.length === 3}
+                sx={{
+                  color: 'text.primary',
+                  fontSize: '14px'
+
+                }}
+              >
+                <i className='tabler-plus text-[18px] hover:text-[var(--mui-palette-hyperlink-main)] transition-all'></i>
+              </IconButton>
+              Add Director
+            </Box>
+            {/* <CommonButton label="" size="small" onClick={handleAddDirector} /> */}
           </Box>
 
           {directorsFields.length === 0 && (
@@ -584,7 +598,7 @@ export default function MultiStepStoreSignup() {
                   />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={5}>
                   <Controller
                     name={`directors.${idx}.email`}
                     control={control}
@@ -592,6 +606,7 @@ export default function MultiStepStoreSignup() {
                       <CustomTextField
                         {...field}
                         label="Email (optional)"
+                        fullWidth
                         placeholder="Director email"
                         error={!!(errors as any)?.directors?.[idx]?.email}
                         helperText={(errors as any)?.directors?.[idx]?.email?.message || ''}
@@ -609,6 +624,7 @@ export default function MultiStepStoreSignup() {
                         {...field}
                         label="Mobile (optional)"
                         placeholder="Director mobile"
+                        fullWidth
                         inputProps={{ inputMode: 'numeric' }}
                         onChange={e => handlePhoneInputChange(`directors.${idx}.mobile`, e.target.value)}
                         value={getValues(`directors.${idx}.mobile`) || ''}
@@ -618,15 +634,27 @@ export default function MultiStepStoreSignup() {
                     )}
                   />
                 </Grid>
-              </Grid>
-
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                <CommonButton
+                <Grid item xs={12} md={1}>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                    <IconButton
+                      onClick={() => removeDirector(idx)}
+                      sx={{
+                        color: 'text.primary',
+                        fontSize: '14px'
+                      }}
+                    >
+                      <i className='tabler-trash text-[18px] hover:text-[var(--mui-palette-hyperlink-main)] transition-all'></i>
+                    </IconButton>
+                    {/* <CommonButton
                   size="small"
                   label="Remove"
                   onClick={() => removeDirector(idx)}
-                />
-              </Box>
+                /> */}
+                  </Box>
+                </Grid>
+              </Grid>
+
+
             </Box>
           ))}
         </Box>
@@ -634,7 +662,7 @@ export default function MultiStepStoreSignup() {
 
       {/* ---------------- STEP 4: Subscription & Billing ---------------- */}
       {activeStep === 3 && (
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Controller
             name="subscription.plan"
             control={control}
@@ -735,9 +763,9 @@ export default function MultiStepStoreSignup() {
 
         <Box sx={{ marginLeft: 'auto' }}>
           {!isLastStep ? (
-            <CommonButton label="Next" variant="contained" btnVariant="white" size='small' onClick={handleNext} />
+            <CommonButton label="Next" variant="contained" size='small' onClick={handleNext} />
           ) : (
-            <CommonButton loading={loading} label="Submit" variant="contained" size='small' btnVariant="white" onClick={handleSubmit(onSubmit)} />
+            <CommonButton loading={loading} label="Submit" variant="contained" size='small' onClick={handleSubmit(onSubmit)} />
           )}
         </Box>
       </Box>
