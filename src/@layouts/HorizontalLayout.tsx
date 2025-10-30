@@ -1,37 +1,37 @@
 // React Imports
 // Type Imports
-import type { ChildrenType } from '@core/types'
+import type { ChildrenType } from '@core/types';
 // Context Imports
-import { HorizontalNavProvider } from '@menu/contexts/horizontalNavContext'
+import { HorizontalNavProvider } from '@menu/contexts/horizontalNavContext';
 // Third-party Imports
-import classnames from 'classnames'
-import type { ReactNode } from 'react'
+import classnames from 'classnames';
+import type { ReactNode } from 'react';
 
 // Component Imports
-import LayoutContent from './components/horizontal/LayoutContent'
+import LayoutContent from './components/horizontal/LayoutContent';
 // Util Imports
-import { horizontalLayoutClasses } from './utils/layoutClasses'
+import { horizontalLayoutClasses } from './utils/layoutClasses';
 
 type HorizontalLayoutProps = ChildrenType & {
-  header?: ReactNode
-  footer?: ReactNode
-}
+    header?: ReactNode;
+    footer?: ReactNode;
+};
 
 const HorizontalLayout = (props: HorizontalLayoutProps) => {
-  // Props
-  const { header, footer, children } = props
+    // Props
+    const { header, footer, children } = props;
 
-  return (
-    <div className={classnames(horizontalLayoutClasses.root, 'flex flex-auto')}>
-      <HorizontalNavProvider>
-        <div className={classnames(horizontalLayoutClasses.contentWrapper, 'flex flex-col is-full')}>
-          {header || null}
-          <LayoutContent>{children}</LayoutContent>
-          {footer || null}
+    return (
+        <div className={classnames(horizontalLayoutClasses.root, 'flex flex-auto')}>
+            <HorizontalNavProvider>
+                <div className={classnames(horizontalLayoutClasses.contentWrapper, 'flex flex-col is-full')}>
+                    {header || null}
+                    <LayoutContent>{children}</LayoutContent>
+                    {footer || null}
+                </div>
+            </HorizontalNavProvider>
         </div>
-      </HorizontalNavProvider>
-    </div>
-  )
-}
+    );
+};
 
-export default HorizontalLayout
+export default HorizontalLayout;

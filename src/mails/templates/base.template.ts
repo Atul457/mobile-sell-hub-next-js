@@ -1,4 +1,4 @@
-const imageUrl = `${process.env.NEXT_PUBLIC_APP_PROD_HOSTNAME}/Novotech-Logo.svg`
+const imageUrl = `${process.env.NEXT_PUBLIC_APP_PROD_HOSTNAME}/Novotech-Logo.svg`;
 
 const template = `<!DOCTYPE html>
 <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -84,14 +84,14 @@ const template = `<!DOCTYPE html>
   </div>
 </body>
 
-</html>`
+</html>`;
 
 const baseTemplate = {
-  template,
-  keysToReplace: {
-    content: '[MAIL_CONTENT]',
-    subject: '[MAIL_SUBJECT]'
-  }
-}
+    template,
+    keysToReplace: {
+        content: '[MAIL_CONTENT]',
+        subject: '[MAIL_SUBJECT]'
+    }
+};
 
-export { baseTemplate }
+export { baseTemplate };

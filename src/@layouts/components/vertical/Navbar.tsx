@@ -1,63 +1,63 @@
-'use client'
+'use client';
 
 // MUI Imports
 // Config Imports
-import themeConfig from '@configs/themeConfig'
+import themeConfig from '@configs/themeConfig';
 // Hook Imports
-import { useSettings } from '@core/hooks/useSettings'
+import { useSettings } from '@core/hooks/useSettings';
 // Type Imports
-import type { ChildrenType } from '@core/types'
-import type { CSSObject } from '@emotion/styled'
+import type { ChildrenType } from '@core/types';
+import type { CSSObject } from '@emotion/styled';
 // Styled Component Imports
-import StyledHeader from '@layouts/styles/vertical/StyledHeader'
+import StyledHeader from '@layouts/styles/vertical/StyledHeader';
 // Util Imports
-import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
-import { useTheme } from '@mui/material/styles'
+import { verticalLayoutClasses } from '@layouts/utils/layoutClasses';
+import { useTheme } from '@mui/material/styles';
 // Third-party Imports
-import classnames from 'classnames'
+import classnames from 'classnames';
 
 type Props = ChildrenType & {
-  overrideStyles?: CSSObject
-}
+    overrideStyles?: CSSObject;
+};
 
 const Navbar = (props: Props) => {
-  // Props
-  const { children, overrideStyles } = props
+    // Props
+    const { children, overrideStyles } = props;
 
-  // Hooks
-  const { settings } = useSettings()
-  const theme = useTheme()
+    // Hooks
+    const { settings } = useSettings();
+    const theme = useTheme();
 
-  // Vars
-  const { navbarContentWidth } = settings
+    // Vars
+    const { navbarContentWidth } = settings;
 
-  const headerFixed = themeConfig.navbar.type === 'fixed'
-  const headerStatic = themeConfig.navbar.type === 'static'
-  const headerFloating = themeConfig.navbar.floating === true
-  const headerDetached = themeConfig.navbar.detached === true
-  const headerAttached = themeConfig.navbar.detached === false
-  const headerBlur = themeConfig.navbar.blur === true
-  const headerContentCompact = navbarContentWidth === 'compact'
-  const headerContentWide = navbarContentWidth === 'wide'
+    const headerFixed = themeConfig.navbar.type === 'fixed';
+    const headerStatic = themeConfig.navbar.type === 'static';
+    const headerFloating = themeConfig.navbar.floating === true;
+    const headerDetached = themeConfig.navbar.detached === true;
+    const headerAttached = themeConfig.navbar.detached === false;
+    const headerBlur = themeConfig.navbar.blur === true;
+    const headerContentCompact = navbarContentWidth === 'compact';
+    const headerContentWide = navbarContentWidth === 'wide';
 
-  return (
-    <StyledHeader
-      theme={theme}
-      overrideStyles={overrideStyles}
-      className={classnames(verticalLayoutClasses.header, 'flex items-center justify-center is-full', {
-        [verticalLayoutClasses.headerFixed]: headerFixed,
-        [verticalLayoutClasses.headerStatic]: headerStatic,
-        [verticalLayoutClasses.headerFloating]: headerFloating,
-        [verticalLayoutClasses.headerDetached]: !headerFloating && headerDetached,
-        [verticalLayoutClasses.headerAttached]: !headerFloating && headerAttached,
-        [verticalLayoutClasses.headerBlur]: headerBlur,
-        [verticalLayoutClasses.headerContentCompact]: headerContentCompact,
-        [verticalLayoutClasses.headerContentWide]: headerContentWide
-      })}
-    >
-      <div className={classnames(verticalLayoutClasses.navbar, 'flex bs-full')}>{children}</div>
-    </StyledHeader>
-  )
-}
+    return (
+        <StyledHeader
+            theme={theme}
+            overrideStyles={overrideStyles}
+            className={classnames(verticalLayoutClasses.header, 'flex items-center justify-center is-full', {
+                [verticalLayoutClasses.headerFixed]: headerFixed,
+                [verticalLayoutClasses.headerStatic]: headerStatic,
+                [verticalLayoutClasses.headerFloating]: headerFloating,
+                [verticalLayoutClasses.headerDetached]: !headerFloating && headerDetached,
+                [verticalLayoutClasses.headerAttached]: !headerFloating && headerAttached,
+                [verticalLayoutClasses.headerBlur]: headerBlur,
+                [verticalLayoutClasses.headerContentCompact]: headerContentCompact,
+                [verticalLayoutClasses.headerContentWide]: headerContentWide
+            })}
+        >
+            <div className={classnames(verticalLayoutClasses.navbar, 'flex bs-full')}>{children}</div>
+        </StyledHeader>
+    );
+};
 
-export default Navbar
+export default Navbar;

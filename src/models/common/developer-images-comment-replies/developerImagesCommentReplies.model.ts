@@ -1,6 +1,5 @@
-
-import type { Document, Model} from "mongoose";
-import { model, models, Schema } from "mongoose";
+import type { Document, Model } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
 
 export interface IDeveloperImagesCommentReplies extends Document {
     commentId: Schema.Types.ObjectId;
@@ -11,21 +10,21 @@ export interface IDeveloperImagesCommentReplies extends Document {
     reports: number;
     parentId: Schema.Types.ObjectId;
     postId: Schema.Types.ObjectId;
-    repliesCount?: number
+    repliesCount?: number;
 }
 
 const DeveloperImagesCommentReplies: Schema<IDeveloperImagesCommentReplies> = new Schema(
     {
         commentId: {
             type: Schema.Types.ObjectId,
-            ref: "DeveloperImagesComments",
-            required: true,
+            ref: 'DeveloperImagesComments',
+            required: true
         },
         reply: { type: String, required: true },
         userId: {
             type: Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
+            ref: 'User',
+            required: true
         },
         likes: { type: Number, default: 0 },
         dislikes: { type: Number, default: 0 },
@@ -33,21 +32,24 @@ const DeveloperImagesCommentReplies: Schema<IDeveloperImagesCommentReplies> = ne
         repliesCount: { type: Number, default: 0 },
         parentId: {
             type: Schema.Types.ObjectId,
-            ref: "DeveloperImagesCommentReplies",
-            required: false,
+            ref: 'DeveloperImagesCommentReplies',
+            required: false
         },
         postId: {
             type: Schema.Types.ObjectId,
-            ref: "DeveloperImagesPost",
-            required: true,
-        },
+            ref: 'DeveloperImagesPost',
+            required: true
+        }
     },
     { timestamps: true }
 );
 
 const DeveloperImagesCommentRepliesModel =
     (models?.DeveloperImagesCommentReplies as Model<IDeveloperImagesCommentReplies>) ||
-    model<IDeveloperImagesCommentReplies>("DeveloperImagesCommentReplies", DeveloperImagesCommentReplies, "developerImagesCommentReplies");
+    model<IDeveloperImagesCommentReplies>(
+        'DeveloperImagesCommentReplies',
+        DeveloperImagesCommentReplies,
+        'developerImagesCommentReplies'
+    );
 
 export default DeveloperImagesCommentRepliesModel;
-

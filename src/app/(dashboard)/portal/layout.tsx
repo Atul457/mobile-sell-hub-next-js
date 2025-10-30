@@ -1,11 +1,11 @@
-import { ChildrenType } from '@/@core/types'
+import { ChildrenType } from '@/@core/types';
 
 export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_APP_NAME} - Admin`
-}
+    title: `${process.env.NEXT_PUBLIC_APP_NAME} - Admin`
+};
 
 const Layout = async ({ children }: ChildrenType) => {
-  return children
-}
+    return children;
+};
 
-export default Layout
+export default Layout;

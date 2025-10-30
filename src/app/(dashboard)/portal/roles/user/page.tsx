@@ -1,7 +1,7 @@
-import UserRoles from '@/components/page-wise/roles/user/UserRoles'
+import UserRoles from '@/components/page-wise/roles/user/UserRoles';
 
 const UserRoles_ = () => {
-  return <UserRoles />
-}
+    return <UserRoles />;
+};
 
-export default UserRoles_
+export default UserRoles_;

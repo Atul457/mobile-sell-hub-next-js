@@ -1,19 +1,19 @@
-import { IUser } from '@/models/user.model'
+import { IUser } from '@/models/user.model';
 
-import UserPreview from './UserPreview'
-import CommonEntityContainer from '../common/CommonEntityContainer'
+import UserPreview from './UserPreview';
+import CommonEntityContainer from '../common/CommonEntityContainer';
 
 type ICommonUserDetailsProps = {
-  user: IUser
-  title?: string
-}
+    user: IUser;
+    title?: string;
+};
 
 const CommonUserDetails = (props: ICommonUserDetailsProps) => {
-  return (
-    <CommonEntityContainer title={props.title ?? 'User Details'}>
-      <UserPreview type='user' user={props.user} />
-    </CommonEntityContainer>
-  )
-}
+    return (
+        <CommonEntityContainer title={props.title ?? 'User Details'}>
+            <UserPreview type='user' user={props.user} />
+        </CommonEntityContainer>
+    );
+};
 
-export default CommonUserDetails
+export default CommonUserDetails;

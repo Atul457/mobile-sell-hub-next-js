@@ -1,4 +1,4 @@
-import { MAIL } from '@/constants/mail.const'
+import { MAIL } from '@/constants/mail.const';
 
 const template = `<p
 style="font-family: "Vidaloka", serif; mso-line-height-rule: exactly; margin-bottom: 0; font-size: 20px; font-weight: 600;">
@@ -32,19 +32,19 @@ style="font-family: 'Poppins', sans-serif; mso-line-height-rule: exactly; margin
 If you have any questions or need assistance, feel free to reach out to us at <a href="mailto:[APP_EMAIL]" style="font-weight: 600;text-decoration: none;color: #626262;">[APP_EMAIL]</a>.
 </p>
 <br>
-`
+`;
 
 const invitationTemplate = {
-  template,
-  subject: MAIL.SUBJECTS.INVITATION,
-  keysToReplace: {
-    userName: '[USER_NAME]',
-    inviter: '[INVITER]',
-    inviterDesignation: '[INVITER_DESIGNATION]',
-    inviterOrganization: '[INVITER_ORGANIZATION]',
-    completeAccountUrl: '[COMPLETE_ACCOUNT_URL]',
-    appEmail: '[APP_EMAIL]'
-  }
-}
+    template,
+    subject: MAIL.SUBJECTS.INVITATION,
+    keysToReplace: {
+        userName: '[USER_NAME]',
+        inviter: '[INVITER]',
+        inviterDesignation: '[INVITER_DESIGNATION]',
+        inviterOrganization: '[INVITER_ORGANIZATION]',
+        completeAccountUrl: '[COMPLETE_ACCOUNT_URL]',
+        appEmail: '[APP_EMAIL]'
+    }
+};
 
-export { invitationTemplate }
+export { invitationTemplate };

@@ -1,14 +1,14 @@
 // Component Imports
-import LayoutNavbar from '@layouts/components/vertical/Navbar'
+import LayoutNavbar from '@layouts/components/vertical/Navbar';
 
-import NavbarContent from './NavbarContent'
+import NavbarContent from './NavbarContent';
 
 const Navbar = () => {
-  return (
-    <LayoutNavbar>
-      <NavbarContent />
-    </LayoutNavbar>
-  )
-}
+    return (
+        <LayoutNavbar>
+            <NavbarContent />
+        </LayoutNavbar>
+    );
+};
 
-export default Navbar
+export default Navbar;

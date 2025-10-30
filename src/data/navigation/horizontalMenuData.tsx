@@ -1,5 +1,5 @@
 // Type Imports
-import type { HorizontalMenuDataType } from '@/types/menuTypes'
+import type { HorizontalMenuDataType } from '@/types/menuTypes';
 
 const horizontalMenuData = (): HorizontalMenuDataType[] => [
     {
@@ -12,6 +12,6 @@ const horizontalMenuData = (): HorizontalMenuDataType[] => [
         href: '/about',
         icon: 'tabler-info-circle'
     }
-]
+];
 
-export default horizontalMenuData
+export default horizontalMenuData;

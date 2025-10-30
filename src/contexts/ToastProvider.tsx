@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer } from 'react-toastify';
 
 const ToastProvider = () => {
-  return <ToastContainer />
-}
+    return <ToastContainer />;
+};
 
-export default ToastProvider
+export default ToastProvider;

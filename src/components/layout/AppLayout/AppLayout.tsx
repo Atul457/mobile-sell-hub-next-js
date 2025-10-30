@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import { SessionProvider } from 'next-auth/react'
-import type { PropsWithChildren } from 'react'
-import { ToastContainer } from 'react-toastify'
+import { SessionProvider } from 'next-auth/react';
+import type { PropsWithChildren } from 'react';
+import { ToastContainer } from 'react-toastify';
 
-import StoreProvider from '@/store/contexts/StoreProvider'
+import StoreProvider from '@/store/contexts/StoreProvider';
 
-import AuthProvider from '@/contexts/AuthProvider'
+import AuthProvider from '@/contexts/AuthProvider';
 
 const AppLayout = (props: PropsWithChildren) => {
-  return (
-    <>
-      <SessionProvider>
-        <StoreProvider>
-          <AuthProvider>{props.children}</AuthProvider>
-        </StoreProvider>
-      </SessionProvider>
-      <ToastContainer />
-    </>
-  )
-}
+    return (
+        <>
+            <SessionProvider>
+                <StoreProvider>
+                    <AuthProvider>{props.children}</AuthProvider>
+                </StoreProvider>
+            </SessionProvider>
+            <ToastContainer />
+        </>
+    );
+};
 
-export default AppLayout
+export default AppLayout;

@@ -1,8 +1,7 @@
-
-import { IRequestArgs } from '@/app/api/types'
+import { IRequestArgs } from '@/app/api/types';
 
 const Report_ = (_args: IRequestArgs<{ id: string }>) => {
-  return <></>
-}
+    return <></>;
+};
 
-export default Report_
+export default Report_;

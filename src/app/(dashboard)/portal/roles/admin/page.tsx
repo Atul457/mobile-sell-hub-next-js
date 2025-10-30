@@ -1,7 +1,7 @@
-import AdminRoles from '@/components/page-wise/roles/admin/AdminRoles'
+import AdminRoles from '@/components/page-wise/roles/admin/AdminRoles';
 
 const AdminRoles_ = () => {
-  return <AdminRoles />
-}
+    return <AdminRoles />;
+};
 
-export default AdminRoles_
+export default AdminRoles_;

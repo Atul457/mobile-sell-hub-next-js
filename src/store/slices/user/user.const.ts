@@ -1,15 +1,15 @@
-import { IInitialUserSliceState } from '@/store/types'
+import { IInitialUserSliceState } from '@/store/types';
 
 const initialState: IInitialUserSliceState = {
-  data: {
-    user: null
-  },
-  status: 'loading',
-  message: null
-}
+    data: {
+        user: null
+    },
+    status: 'loading',
+    message: null
+};
 
 const USER_CONST = {
-  initialState
-}
+    initialState
+};
 
-export { USER_CONST }
+export { USER_CONST };

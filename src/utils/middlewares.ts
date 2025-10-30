@@ -1,30 +1,30 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-import { CONST } from '@/constants'
-import UserModel, { IUser as IUserModel } from '@/models/user.model'
-import { IUserSession } from '@/models/userSession.model'
-import { ErrorHandlingService } from '@/services/ErrorHandling.service'
-import { services } from '@/services/index.service'
+import { CONST } from '@/constants';
+import UserModel, { IUser as IUserModel } from '@/models/user.model';
+import { IUserSession } from '@/models/userSession.model';
+import { ErrorHandlingService } from '@/services/ErrorHandling.service';
+import { services } from '@/services/index.service';
 
-import { jwt } from './jwt'
-import { IUser } from '../../next-auth'
+import { jwt } from './jwt';
+import { IUser } from '../../next-auth';
 
 /**
  * Interface representing the user details.
  */
 type IUserDetails = {
-  id: IUser['id']
-  type: IUser['type']
-  iat: number
-  exp: number
-}
+    id: IUser['id'];
+    type: IUser['type'];
+    iat: number;
+    exp: number;
+};
 
 /**
  * Interface representing the options for withUser middleware.
  */
 type IWithUserOptions = Partial<{
-  select?: (keyof IUserModel)[]
-}>
+    select?: (keyof IUserModel)[];
+}>;
 
 /**
  * Authenticates the user based on the request.
@@ -33,55 +33,55 @@ type IWithUserOptions = Partial<{
  * @throws {Error} If the authorization header is missing or the session is not found.
  */
 const auth = async (request: Request): Promise<[IUser & { token: string }, IUserSession]> => {
-  try {
-    let token: string = ''
-    const uss = services.server.UserSessionService
-    const authorization = request.headers.get('authorization') ?? ''
-    const tokenParts = authorization.split(' ')
-    let userDetails: IUserDetails | null = null
+    try {
+        let token: string = '';
+        const uss = services.server.UserSessionService;
+        const authorization = request.headers.get('authorization') ?? '';
+        const tokenParts = authorization.split(' ');
+        let userDetails: IUserDetails | null = null;
 
-    let bearerTokenSent = tokenParts.length === 2 && tokenParts[0] === 'Bearer'
+        let bearerTokenSent = tokenParts.length === 2 && tokenParts[0] === 'Bearer';
 
-    if (bearerTokenSent) {
-      token = tokenParts[1]
-      userDetails = jwt.verifyToken(token) as IUserDetails
-    } else {
-      throw ErrorHandlingService.badRequest({
-        data: {
-          logout: true
-        },
-        message: CONST.RESPONSE_MESSAGES.MISSING_AUTH_HEADER
-      })
-    }
-
-    let session = await uss.findSessionByToken(token)
-
-    if (!session) {
-      throw ErrorHandlingService.badRequest({
-        message: CONST.RESPONSE_MESSAGES.TOKEN_INVALID_OR_EXPIRED,
-        data: {
-          logout: true
+        if (bearerTokenSent) {
+            token = tokenParts[1];
+            userDetails = jwt.verifyToken(token) as IUserDetails;
+        } else {
+            throw ErrorHandlingService.badRequest({
+                data: {
+                    logout: true
+                },
+                message: CONST.RESPONSE_MESSAGES.MISSING_AUTH_HEADER
+            });
         }
-      })
-    }
 
-    session = await uss.updateSessionByToken(token, {
-      lastLogin: new Date()
-    })
+        let session = await uss.findSessionByToken(token);
 
-    return [{ ...userDetails, token }, session!]
-  } catch (error) {
-    if (error instanceof ErrorHandlingService) {
-      const token = error.data?.token
-      if (token) {
-        const uss = services.server.UserSessionService
-        await uss.deleteSessionByToken(token)
-        error.data = null
-      }
+        if (!session) {
+            throw ErrorHandlingService.badRequest({
+                message: CONST.RESPONSE_MESSAGES.TOKEN_INVALID_OR_EXPIRED,
+                data: {
+                    logout: true
+                }
+            });
+        }
+
+        session = await uss.updateSessionByToken(token, {
+            lastLogin: new Date()
+        });
+
+        return [{ ...userDetails, token }, session!];
+    } catch (error) {
+        if (error instanceof ErrorHandlingService) {
+            const token = error.data?.token;
+            if (token) {
+                const uss = services.server.UserSessionService;
+                await uss.deleteSessionByToken(token);
+                error.data = null;
+            }
+        }
+        throw error;
     }
-    throw error
-  }
-}
+};
 
 /**
  * Authenticates the user based on the request, but the authentication is optional.
@@ -90,38 +90,38 @@ const auth = async (request: Request): Promise<[IUser & { token: string }, IUser
  * @throws {Error} If the session is not found.
  */
 const optionalAuth = async (request: Request) => {
-  let token: string | null = null
-  const uss = services.server.UserSessionService
-  const authorization = request.headers.get('authorization') ?? ''
-  const tokenParts = authorization.split(' ')
-  let userDetails: IUserDetails | null = null
-  let bearerTokenSent = tokenParts.length === 2 && tokenParts[0] === 'Bearer'
+    let token: string | null = null;
+    const uss = services.server.UserSessionService;
+    const authorization = request.headers.get('authorization') ?? '';
+    const tokenParts = authorization.split(' ');
+    let userDetails: IUserDetails | null = null;
+    let bearerTokenSent = tokenParts.length === 2 && tokenParts[0] === 'Bearer';
 
-  if (bearerTokenSent) {
-    token = tokenParts[1]
-    userDetails = jwt.verifyToken(token) as IUserDetails
-  }
-
-  let session: IUserSession | null = null
-
-  if (token) {
-    session = await uss.findSessionByToken(token)
-
-    if (!session) {
-      throw ErrorHandlingService.badRequest({
-        data: {
-          logout: true
-        }
-      })
+    if (bearerTokenSent) {
+        token = tokenParts[1];
+        userDetails = jwt.verifyToken(token) as IUserDetails;
     }
 
-    session = await uss.updateSessionByToken(token, {
-      lastLogin: new Date()
-    })
-  }
+    let session: IUserSession | null = null;
 
-  return [userDetails, session]
-}
+    if (token) {
+        session = await uss.findSessionByToken(token);
+
+        if (!session) {
+            throw ErrorHandlingService.badRequest({
+                data: {
+                    logout: true
+                }
+            });
+        }
+
+        session = await uss.updateSessionByToken(token, {
+            lastLogin: new Date()
+        });
+    }
+
+    return [userDetails, session];
+};
 
 /**
  * Authenticates the user based on the request and applies additional options.
@@ -131,62 +131,62 @@ const optionalAuth = async (request: Request) => {
  * @throws {Error} If the user is not found or the user type is not as expected.
  */
 const withUser = async (request: Request, options?: IWithUserOptions) => {
-  const [authData, session] = await auth(request)
+    const [authData, session] = await auth(request);
 
-  const select = [...new Set(['email', 'type', 'status', 'role', 'roleId', ...(options?.select ?? [])])]
+    const select = [...new Set(['email', 'type', 'status', 'role', 'roleId', 'shopId', ...(options?.select ?? [])])];
 
-  const user = await UserModel.findById(new mongoose.Types.ObjectId(authData!.id as string)).select(select.join(' '))
+    const user = await UserModel.findById(new mongoose.Types.ObjectId(authData!.id as string)).select(select.join(' '));
 
-  if (!user) {
-    throw ErrorHandlingService.userNotFound()
-  }
-
-  const userObj = (user as any).toJSON() as IUserModel
-
-  const status = userObj.status
-
-  if (status !== CONST.USER.STATUS.ACTIVE) {
-    if (status === CONST.USER.STATUS.DELETED) {
-      throw ErrorHandlingService.unAuthorized({
-        message: CONST.RESPONSE_MESSAGES.ACCOUNT_DELETED,
-        data: {
-          logout: true
-        }
-      })
-    } else if (status === CONST.USER.STATUS.PENDING) {
-    } else {
-      throw ErrorHandlingService.unAuthorized({
-        message: CONST.RESPONSE_MESSAGES.ACCOUNT_INACTIVE,
-        data: {
-          logout: true
-        }
-      })
+    if (!user) {
+        throw ErrorHandlingService.userNotFound();
     }
-  }
 
-  const { ADMIN, SHOP } = CONST.USER.TYPES
+    const userObj = (user as any).toJSON() as IUserModel;
 
-  if (![ADMIN, SHOP].includes(user.type)) {
-    throw ErrorHandlingService.unAuthorized({
-      message: CONST.RESPONSE_MESSAGES.NOT_ADMIN
-    })
-  }
+    const status = userObj.status;
 
-  return {
-    ...authData,
-    userId: user._id as any,
-    ...userObj,
-    session: session!
-  }
-}
+    if (status !== CONST.USER.STATUS.ACTIVE) {
+        if (status === CONST.USER.STATUS.DELETED) {
+            throw ErrorHandlingService.unAuthorized({
+                message: CONST.RESPONSE_MESSAGES.ACCOUNT_DELETED,
+                data: {
+                    logout: true
+                }
+            });
+        } else if (status === CONST.USER.STATUS.PENDING) {
+        } else {
+            throw ErrorHandlingService.unAuthorized({
+                message: CONST.RESPONSE_MESSAGES.ACCOUNT_INACTIVE,
+                data: {
+                    logout: true
+                }
+            });
+        }
+    }
+
+    const { ADMIN, SHOP } = CONST.USER.TYPES;
+
+    if (![ADMIN, SHOP].includes(user.type)) {
+        throw ErrorHandlingService.unAuthorized({
+            message: CONST.RESPONSE_MESSAGES.NOT_ADMIN
+        });
+    }
+
+    return {
+        ...authData,
+        userId: user._id,
+        ...userObj,
+        session: session!
+    } as unknown as IUserModel & { session: IUserSession, userId: any, token: string };
+};
 
 /**
  * Object containing all the middleware functions.
  */
 const middlewares = {
-  optionalAuth,
-  auth,
-  withUser
-}
+    optionalAuth,
+    auth,
+    withUser
+};
 
-export { middlewares }
+export { middlewares };

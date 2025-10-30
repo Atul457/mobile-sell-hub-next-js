@@ -18,105 +18,105 @@
 
 // Third-party Imports
 // Type Imports
-import type { Layout, LayoutComponentPosition, LayoutComponentWidth, Mode, Skin } from '@core/types'
-import type { ToastPosition } from 'react-toastify'
+import type { Layout, LayoutComponentPosition, LayoutComponentWidth, Mode, Skin } from '@core/types';
+import type { ToastPosition } from 'react-toastify';
 
 type Navbar = {
-  type: LayoutComponentPosition
-  contentWidth: LayoutComponentWidth
-  floating: boolean
-  detached: boolean
-  blur: boolean
-}
+    type: LayoutComponentPosition;
+    contentWidth: LayoutComponentWidth;
+    floating: boolean;
+    detached: boolean;
+    blur: boolean;
+};
 
 type Footer = {
-  type: LayoutComponentPosition
-  contentWidth: LayoutComponentWidth
-  detached: boolean
-}
+    type: LayoutComponentPosition;
+    contentWidth: LayoutComponentWidth;
+    detached: boolean;
+};
 
 export type Config = {
-  templateName: string
-  settingsCookieName: string
-  containerSpacing: number
-  mode: Mode
-  skin: Skin
-  containerRadius: number
-  semiDark: boolean
-  layout: Layout
-  layoutPadding: number
-  navbar: Navbar
-  contentWidth: LayoutComponentWidth
-  compactContentWidth: number
-  footer: Footer
-  components: {
-    grid: {
-      fHeaderClass: string
-      lHeaderClass: string
-      fHeaderContentClass: string
-      lHeaderContentClass: string
-    }
-    select: {
-      ITEM_HEIGHT: number
-      ITEM_PADDING_TOP: number
-      MenuProps: {
-        PaperProps: {
-          style: {
-            maxHeight: number
-          }
-        }
-      }
-    }
-  }
-  disableRipple: boolean
-  toastPosition: ToastPosition
-}
+    templateName: string;
+    settingsCookieName: string;
+    containerSpacing: number;
+    mode: Mode;
+    skin: Skin;
+    containerRadius: number;
+    semiDark: boolean;
+    layout: Layout;
+    layoutPadding: number;
+    navbar: Navbar;
+    contentWidth: LayoutComponentWidth;
+    compactContentWidth: number;
+    footer: Footer;
+    components: {
+        grid: {
+            fHeaderClass: string;
+            lHeaderClass: string;
+            fHeaderContentClass: string;
+            lHeaderContentClass: string;
+        };
+        select: {
+            ITEM_HEIGHT: number;
+            ITEM_PADDING_TOP: number;
+            MenuProps: {
+                PaperProps: {
+                    style: {
+                        maxHeight: number;
+                    };
+                };
+            };
+        };
+    };
+    disableRipple: boolean;
+    toastPosition: ToastPosition;
+};
 
 const themeConfig: Config = {
-  templateName: process.env.NEXT_PUBLIC_APP_NAME ?? 'MobileSellHub',
-  settingsCookieName: process.env.NEXT_PUBLIC_APP_PREFIX ?? 'MobileSellHub',
-  mode: 'light', // 'system', 'light', 'dark'
-  skin: 'default', // 'default', 'bordered'
-  semiDark: false, // true, false
-  containerRadius: 12, // in px
-  containerSpacing: 40, // in px
-  layout: 'vertical', // 'vertical', 'collapsed', 'horizontal'
-  layoutPadding: 24, // Common padding for header, content, footer layout components (in px)
-  compactContentWidth: 1440, // in px
-  navbar: {
-    type: 'fixed', // 'fixed', 'static'
-    contentWidth: 'compact', // 'compact', 'wide'
-    floating: true, //! true, false (This will not work in the Horizontal Layout)
-    detached: true, //! true, false (This will not work in the Horizontal Layout or floating navbar is enabled)
-    blur: true // true, false
-  },
-  contentWidth: 'compact', // 'compact', 'wide'
-  footer: {
-    type: 'static', // 'fixed', 'static'
-    contentWidth: 'compact', // 'compact', 'wide'
-    detached: true //! true, false (This will not work in the Horizontal Layout)
-  },
-  components: {
-    grid: {
-      fHeaderClass: 'pl-6',
-      lHeaderClass: 'pr-6',
-      fHeaderContentClass: 'pl-6',
-      lHeaderContentClass: 'pr-6'
+    templateName: process.env.NEXT_PUBLIC_APP_NAME ?? 'MobileSellHub',
+    settingsCookieName: process.env.NEXT_PUBLIC_APP_PREFIX ?? 'MobileSellHub',
+    mode: 'light', // 'system', 'light', 'dark'
+    skin: 'default', // 'default', 'bordered'
+    semiDark: false, // true, false
+    containerRadius: 12, // in px
+    containerSpacing: 40, // in px
+    layout: 'vertical', // 'vertical', 'collapsed', 'horizontal'
+    layoutPadding: 24, // Common padding for header, content, footer layout components (in px)
+    compactContentWidth: 1440, // in px
+    navbar: {
+        type: 'fixed', // 'fixed', 'static'
+        contentWidth: 'compact', // 'compact', 'wide'
+        floating: true, //! true, false (This will not work in the Horizontal Layout)
+        detached: true, //! true, false (This will not work in the Horizontal Layout or floating navbar is enabled)
+        blur: true // true, false
     },
-    select: {
-      ITEM_HEIGHT: 48,
-      ITEM_PADDING_TOP: 8,
-      MenuProps: {
-        PaperProps: {
-          style: {
-            maxHeight: 48 * 4.5 + 8
-          }
+    contentWidth: 'compact', // 'compact', 'wide'
+    footer: {
+        type: 'static', // 'fixed', 'static'
+        contentWidth: 'compact', // 'compact', 'wide'
+        detached: true //! true, false (This will not work in the Horizontal Layout)
+    },
+    components: {
+        grid: {
+            fHeaderClass: 'pl-6',
+            lHeaderClass: 'pr-6',
+            fHeaderContentClass: 'pl-6',
+            lHeaderContentClass: 'pr-6'
+        },
+        select: {
+            ITEM_HEIGHT: 48,
+            ITEM_PADDING_TOP: 8,
+            MenuProps: {
+                PaperProps: {
+                    style: {
+                        maxHeight: 48 * 4.5 + 8
+                    }
+                }
+            }
         }
-      }
-    }
-  },
-  disableRipple: false, // true, false
-  toastPosition: 'top-right' // 'top-right', 'top-center', 'top-left', 'bottom-right', 'bottom-center', 'bottom-left'
-}
+    },
+    disableRipple: false, // true, false
+    toastPosition: 'top-right' // 'top-right', 'top-center', 'top-left', 'bottom-right', 'bottom-center', 'bottom-left'
+};
 
-export default themeConfig
+export default themeConfig;

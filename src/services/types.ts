@@ -1,42 +1,42 @@
-import { IRolePermission } from '@/models/rolePermission.model'
+import { IRolePermission } from '@/models/rolePermission.model';
 
 type IUploadUserProfilePictureArgs = {
-  file: File | null
-  accessToken?: string
-}
+    file: File | null;
+    accessToken?: string;
+};
 
 type IResetPasswordArgs = {
-  password: string
-  accessToken: string
-}
+    password: string;
+    accessToken: string;
+};
 
 type IGetPackageArgs = {
-  qr: string
-}
+    qr: string;
+};
 
 export type IActionValidator = {
-  module: IRolePermission['module']
-  action: IRolePermission['actions'][0]
-  roleId: IRolePermission['roleId'] | null
-  throw?: boolean
-}
+    module: IRolePermission['module'];
+    action: IRolePermission['actions'][0];
+    roleId: IRolePermission['roleId'] | null;
+    throw?: boolean;
+};
 
-type IUploadUserProfilePicture = (data: IUploadUserProfilePictureArgs) => Promise<any>
+type IUploadUserProfilePicture = (data: IUploadUserProfilePictureArgs) => Promise<any>;
 
 export type IUserServiceTypes = {
-  IResetPasswordArgs: IResetPasswordArgs
-  IUploadUserProfilePicture: IUploadUserProfilePicture
-  IUploadUserProfilePictureArgs: IUploadUserProfilePictureArgs
-}
+    IResetPasswordArgs: IResetPasswordArgs;
+    IUploadUserProfilePicture: IUploadUserProfilePicture;
+    IUploadUserProfilePictureArgs: IUploadUserProfilePictureArgs;
+};
 
 export type IPackageServiceTypes = {
-  IGetPackageArgs: IGetPackageArgs
-}
+    IGetPackageArgs: IGetPackageArgs;
+};
 
 export interface IPaginationArgs {
-  query?: string | null
-  page: number
-  limit: number
-  sort?: string | null
-  order?: 'asc' | 'desc' | null
+    query?: string | null;
+    page: number;
+    limit: number;
+    sort?: string | null;
+    order?: 'asc' | 'desc' | null;
 }

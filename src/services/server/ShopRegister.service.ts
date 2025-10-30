@@ -1,51 +1,51 @@
-import { Model } from 'mongoose'
+import { Model } from 'mongoose';
 
-import ShopRegisterModel, { IShopRegister } from '@/models/shopRegister.model'
-import { string } from '@/utils/string'
+import ShopRegisterModel, { IShopRegister } from '@/models/shopRegister.model';
+import { string } from '@/utils/string';
 
-import { ErrorHandlingService } from '../ErrorHandling.service'
+import { ErrorHandlingService } from '../ErrorHandling.service';
 
 interface IShopRegisterService {
-  registerShop(data: Partial<IShopRegister>): Promise<IShopRegister>
+    registerShop(data: Partial<IShopRegister>): Promise<IShopRegister>;
 }
 
 class ShopRegisterService implements IShopRegisterService {
-  private shopRegisterModel: Model<IShopRegister>
+    private shopRegisterModel: Model<IShopRegister>;
 
-  constructor(shopRegisterModel: Model<IShopRegister>) {
-    this.shopRegisterModel = shopRegisterModel
-  }
-
-  async isNameUnique(name: string,): Promise<boolean> {
-    const query: any = { storeName:name }
-    const existing = await this.shopRegisterModel.findOne(query)
-    return !existing
-  }
-
-  async isSlugUnique(slug: string): Promise<boolean> {
-    const query: any = { slug }
-    const existing = await this.shopRegisterModel.findOne(query)
-    return !existing
-  }
-
-  async registerShop(data: Partial<IShopRegister>): Promise<IShopRegister> {
-    if (!data.storeName) {
-      throw ErrorHandlingService.badRequest({ message: 'Shop name is required' })
+    constructor(shopRegisterModel: Model<IShopRegister>) {
+        this.shopRegisterModel = shopRegisterModel;
     }
 
-    if (!(await this.isNameUnique(data.storeName))) {
-      throw ErrorHandlingService.conflict({ message: 'Shop name must be unique' })
+    async isNameUnique(name: string): Promise<boolean> {
+        const query: any = { storeName: name };
+        const existing = await this.shopRegisterModel.findOne(query);
+        return !existing;
     }
 
-    const slug = string.createSlug(data.storeName)
-
-    if (!(await this.isSlugUnique(slug))) {
-      throw ErrorHandlingService.conflict({ message: 'Shop slug must be unique' })
+    async isSlugUnique(slug: string): Promise<boolean> {
+        const query: any = { slug };
+        const existing = await this.shopRegisterModel.findOne(query);
+        return !existing;
     }
 
-    const shop = new this.shopRegisterModel({ ...data, slug })
-    return shop.save()
-  }
+    async registerShop(data: Partial<IShopRegister>): Promise<IShopRegister> {
+        if (!data.storeName) {
+            throw ErrorHandlingService.badRequest({ message: 'Shop name is required' });
+        }
+
+        if (!(await this.isNameUnique(data.storeName))) {
+            throw ErrorHandlingService.conflict({ message: 'Shop name must be unique' });
+        }
+
+        const slug = string.createSlug(data.storeName);
+
+        if (!(await this.isSlugUnique(slug))) {
+            throw ErrorHandlingService.conflict({ message: 'Shop slug must be unique' });
+        }
+
+        const shop = new this.shopRegisterModel({ ...data, slug });
+        return shop.save();
+    }
 }
 
-export default new ShopRegisterService(ShopRegisterModel)
+export default new ShopRegisterService(ShopRegisterModel);

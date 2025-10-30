@@ -10,274 +10,274 @@
 // MUI Imports
 // Type Imports
 import type {
-  CustomInputHorizontalProps,
-  CustomInputImgProps,
-  CustomInputVerticalProps
-} from '@core/components/custom-inputs/types'
-import type { ComponentsOverrides } from '@mui/material/styles'
-import { CSSProperties, Typography } from '@mui/material/styles/createTypography'
+    CustomInputHorizontalProps,
+    CustomInputImgProps,
+    CustomInputVerticalProps
+} from '@core/components/custom-inputs/types';
+import type { ComponentsOverrides } from '@mui/material/styles';
+import { CSSProperties, Typography } from '@mui/material/styles/createTypography';
 
 declare module '@mui/material/styles' {
-  // eslint-disable-next-line lines-around-comment
-  // Theme
+    // eslint-disable-next-line lines-around-comment
+    // Theme
 
-  interface Typography_ extends Typography {
-    body0: CSSProperties
-  }
+    interface Typography_ extends Typography {
+        body0: CSSProperties;
+    }
 
-  interface Theme {
-    typography: Typography_
-    shape: {
-      borderRadius: number
-      customBorderRadius: {
-        xs: number
-        sm: number
-        md: number
-        lg: number
-        xl: number
-      }
+    interface Theme {
+        typography: Typography_;
+        shape: {
+            borderRadius: number;
+            customBorderRadius: {
+                xs: number;
+                sm: number;
+                md: number;
+                lg: number;
+                xl: number;
+            };
+        };
+        customShadows: {
+            xs: string;
+            sm: string;
+            md: string;
+            lg: string;
+            xl: string;
+            primary: {
+                sm: string;
+                md: string;
+                lg: string;
+            };
+            secondary: {
+                sm: string;
+                md: string;
+                lg: string;
+            };
+            error: {
+                sm: string;
+                md: string;
+                lg: string;
+            };
+            warning: {
+                sm: string;
+                md: string;
+                lg: string;
+            };
+            info: {
+                sm: string;
+                md: string;
+                lg: string;
+            };
+            success: {
+                sm: string;
+                md: string;
+                lg: string;
+            };
+        };
+        mainColorChannels: {
+            light: string;
+            dark: string;
+            lightShadow: string;
+            darkShadow: string;
+        };
     }
-    customShadows: {
-      xs: string
-      sm: string
-      md: string
-      lg: string
-      xl: string
-      primary: {
-        sm: string
-        md: string
-        lg: string
-      }
-      secondary: {
-        sm: string
-        md: string
-        lg: string
-      }
-      error: {
-        sm: string
-        md: string
-        lg: string
-      }
-      warning: {
-        sm: string
-        md: string
-        lg: string
-      }
-      info: {
-        sm: string
-        md: string
-        lg: string
-      }
-      success: {
-        sm: string
-        md: string
-        lg: string
-      }
+    interface ThemeOptions {
+        shape?: {
+            borderRadius?: number;
+            customBorderRadius?: {
+                xs?: number;
+                sm?: number;
+                md?: number;
+                lg?: number;
+                xl?: number;
+            };
+        };
+        customShadows?: {
+            xs?: string;
+            sm?: string;
+            md?: string;
+            lg?: string;
+            xl?: string;
+            primary?: {
+                sm?: string;
+                md?: string;
+                lg?: string;
+            };
+            secondary?: {
+                sm?: string;
+                md?: string;
+                lg?: string;
+            };
+            error?: {
+                sm?: string;
+                md?: string;
+                lg?: string;
+            };
+            warning?: {
+                sm?: string;
+                md?: string;
+                lg?: string;
+            };
+            info?: {
+                sm?: string;
+                md?: string;
+                lg?: string;
+            };
+            success?: {
+                sm?: string;
+                md?: string;
+                lg?: string;
+            };
+        };
+        mainColorChannels?: {
+            light?: string;
+            dark?: string;
+            lightShadow?: string;
+            darkShadow?: string;
+        };
     }
-    mainColorChannels: {
-      light: string
-      dark: string
-      lightShadow: string
-      darkShadow: string
-    }
-  }
-  interface ThemeOptions {
-    shape?: {
-      borderRadius?: number
-      customBorderRadius?: {
-        xs?: number
-        sm?: number
-        md?: number
-        lg?: number
-        xl?: number
-      }
-    }
-    customShadows?: {
-      xs?: string
-      sm?: string
-      md?: string
-      lg?: string
-      xl?: string
-      primary?: {
-        sm?: string
-        md?: string
-        lg?: string
-      }
-      secondary?: {
-        sm?: string
-        md?: string
-        lg?: string
-      }
-      error?: {
-        sm?: string
-        md?: string
-        lg?: string
-      }
-      warning?: {
-        sm?: string
-        md?: string
-        lg?: string
-      }
-      info?: {
-        sm?: string
-        md?: string
-        lg?: string
-      }
-      success?: {
-        sm?: string
-        md?: string
-        lg?: string
-      }
-    }
-    mainColorChannels?: {
-      light?: string
-      dark?: string
-      lightShadow?: string
-      darkShadow?: string
-    }
-  }
 
-  // Palette Color
-  interface PaletteColor {
-    lighterOpacity?: string
-    lightOpacity?: string
-    mainOpacity?: string
-    darkOpacity?: string
-    darkerOpacity?: string
-  }
-  interface SimplePaletteColorOptions {
-    lighterOpacity?: string
-    lightOpacity?: string
-    mainOpacity?: string
-    darkOpacity?: string
-    darkerOpacity?: string
-  }
+    // Palette Color
+    interface PaletteColor {
+        lighterOpacity?: string;
+        lightOpacity?: string;
+        mainOpacity?: string;
+        darkOpacity?: string;
+        darkerOpacity?: string;
+    }
+    interface SimplePaletteColorOptions {
+        lighterOpacity?: string;
+        lightOpacity?: string;
+        mainOpacity?: string;
+        darkOpacity?: string;
+        darkerOpacity?: string;
+    }
 
-  // Palette
-  interface Palette {
-    icon: Palette['primary']
-    hyperlink: Palette['primary']
-    subTitle: {
-      web: string
-      mob: string
+    // Palette
+    interface Palette {
+        icon: Palette['primary'];
+        hyperlink: Palette['primary'];
+        subTitle: {
+            web: string;
+            mob: string;
+        };
+        background: {
+            default: string;
+            paper: string;
+            defaultChannel: string;
+            paperChannel: string;
+        };
+        customColors: {
+            textGray40: string;
+            success: string;
+            errorLight: string;
+            error: string;
+            primary: string;
+            primaryLight: string;
+            yellow: string;
+            yellowLight: string;
+            amber: string;
+            amberLight: string;
+            cyan: string;
+            cyanLight: string;
+            successLight: string;
+            textGray60: string;
+            textGray84: string;
+            textGray100: string;
+            placeholder: string;
+            placeholderLight: string;
+            bodyBg: string;
+            chatBg: string;
+            greyLightBg: string;
+            inputBorder: string;
+            tableHeaderBg: string;
+            tooltipText: string;
+            trackBg: string;
+        };
     }
-    background: {
-      default: string
-      paper: string
-      defaultChannel: string
-      paperChannel: string
+    interface PaletteOptions {
+        background?: {
+            default?: string;
+            paper?: string;
+            defaultChannel?: string;
+            paperChannel?: string;
+        };
+        customColors?: {
+            bodyBg?: string;
+            chatBg?: string;
+            greyLightBg?: string;
+            inputBorder?: string;
+            tableHeaderBg?: string;
+            tooltipText?: string;
+            trackBg?: string;
+        };
     }
-    customColors: {
-      textGray40: string
-      success: string
-      errorLight: string
-      error: string
-      primary: string
-      primaryLight: string
-      yellow: string
-      yellowLight: string
-      amber: string
-      amberLight: string
-      cyan: string
-      cyanLight: string
-      successLight: string
-      textGray60: string
-      textGray84: string
-      textGray100: string
-      placeholder: string
-      placeholderLight: string
-      bodyBg: string
-      chatBg: string
-      greyLightBg: string
-      inputBorder: string
-      tableHeaderBg: string
-      tooltipText: string
-      trackBg: string
+    interface PalettePaperChannel {
+        paperChannel: string;
     }
-  }
-  interface PaletteOptions {
-    background?: {
-      default?: string
-      paper?: string
-      defaultChannel?: string
-      paperChannel?: string
-    }
-    customColors?: {
-      bodyBg?: string
-      chatBg?: string
-      greyLightBg?: string
-      inputBorder?: string
-      tableHeaderBg?: string
-      tooltipText?: string
-      trackBg?: string
-    }
-  }
-  interface PalettePaperChannel {
-    paperChannel: string
-  }
-  interface TypeBackground extends PalettePaperChannel {}
+    interface TypeBackground extends PalettePaperChannel {}
 
-  // Components
-  interface ComponentNameToClassKey {
-    MuiCustomInputHorizontal: 'root' | 'title' | 'meta' | 'content' | 'input'
-    MuiCustomInputVertical: 'root' | 'title' | 'content' | 'input'
-    MuiCustomImage: 'root' | 'image' | 'input'
-  }
+    // Components
+    interface ComponentNameToClassKey {
+        MuiCustomInputHorizontal: 'root' | 'title' | 'meta' | 'content' | 'input';
+        MuiCustomInputVertical: 'root' | 'title' | 'content' | 'input';
+        MuiCustomImage: 'root' | 'image' | 'input';
+    }
 
-  interface ComponentsPropsList {
-    MuiCustomInputHorizontal: CustomInputHorizontalProps
-    MuiCustomInputVertical: CustomInputVerticalProps
-    MuiCustomImage: CustomInputImgProps
-  }
+    interface ComponentsPropsList {
+        MuiCustomInputHorizontal: CustomInputHorizontalProps;
+        MuiCustomInputVertical: CustomInputVerticalProps;
+        MuiCustomImage: CustomInputImgProps;
+    }
 
-  interface Components {
-    MuiCustomInputHorizontal?: {
-      defaultProps?: ComponentsPropsList['MuiCustomInputHorizontal']
-      styleOverrides?: ComponentsOverrides<Theme>['MuiCustomInputHorizontal']
+    interface Components {
+        MuiCustomInputHorizontal?: {
+            defaultProps?: ComponentsPropsList['MuiCustomInputHorizontal'];
+            styleOverrides?: ComponentsOverrides<Theme>['MuiCustomInputHorizontal'];
+        };
+        MuiCustomInputVertical?: {
+            defaultProps?: ComponentsPropsList['MuiCustomInputVertical'];
+            styleOverrides?: ComponentsOverrides<Theme>['MuiCustomInputVertical'];
+        };
+        MuiCustomImage?: {
+            defaultProps?: ComponentsPropsList['MuiCustomImage'];
+            styleOverrides?: ComponentsOverrides<Theme>['MuiCustomImage'];
+        };
     }
-    MuiCustomInputVertical?: {
-      defaultProps?: ComponentsPropsList['MuiCustomInputVertical']
-      styleOverrides?: ComponentsOverrides<Theme>['MuiCustomInputVertical']
-    }
-    MuiCustomImage?: {
-      defaultProps?: ComponentsPropsList['MuiCustomImage']
-      styleOverrides?: ComponentsOverrides<Theme>['MuiCustomImage']
-    }
-  }
 }
 
 declare module '@mui/material/Button' {
-  interface ButtonPropsVariantOverrides {
-    tonal: true
-  }
+    interface ButtonPropsVariantOverrides {
+        tonal: true;
+    }
 }
 
 declare module '@mui/material/ButtonGroup' {
-  interface ButtonGroupPropsVariantOverrides {
-    tonal: true
-  }
+    interface ButtonGroupPropsVariantOverrides {
+        tonal: true;
+    }
 }
 
 declare module '@mui/material/Chip' {
-  interface ChipPropsVariantOverrides {
-    tonal: true
-  }
+    interface ChipPropsVariantOverrides {
+        tonal: true;
+    }
 }
 
 declare module '@mui/material/Pagination' {
-  interface PaginationPropsVariantOverrides {
-    tonal: true
-  }
+    interface PaginationPropsVariantOverrides {
+        tonal: true;
+    }
 }
 
 declare module '@mui/material/PaginationItem' {
-  interface PaginationItemPropsVariantOverrides {
-    tonal: true
-  }
+    interface PaginationItemPropsVariantOverrides {
+        tonal: true;
+    }
 }
 
 declare module '@mui/lab/TimelineDot' {
-  interface TimelineDotPropsVariantOverrides {
-    tonal: true
-  }
+    interface TimelineDotPropsVariantOverrides {
+        tonal: true;
+    }
 }

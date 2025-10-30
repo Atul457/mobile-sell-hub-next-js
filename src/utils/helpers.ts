@@ -1,271 +1,269 @@
-import { GridColDef } from '@mui/x-data-grid'
-import clsx from 'clsx'
+import { GridColDef } from '@mui/x-data-grid';
+import clsx from 'clsx';
 
-import { ICommonChipProps } from '@/components/common/CommonChip'
+import { ICommonChipProps } from '@/components/common/CommonChip';
 
-import themeConfig from '@/configs/themeConfig'
-import { CONST } from '@/constants'
-import { IRolePopulated } from '@/models/role.model'
-import { IRolePermission } from '@/models/rolePermission.model'
-import { IUser } from '@/models/user.model'
-import FileValidatorService from '@/services/FileValidator.service'
-import { file as fileUtil } from '@/utils/file'
+import themeConfig from '@/configs/themeConfig';
+import { CONST } from '@/constants';
+import { IRolePopulated } from '@/models/role.model';
+import { IRolePermission } from '@/models/rolePermission.model';
+import { IUser } from '@/models/user.model';
+import FileValidatorService from '@/services/FileValidator.service';
+import { file as fileUtil } from '@/utils/file';
 
-import { string } from './string'
-import { toast } from './toast'
+import { string } from './string';
+import { toast } from './toast';
 
 type IProfilePictureChangeArgs = {
-  e: React.ChangeEvent<HTMLInputElement>
-  setProfilePicture: Function
-  setConverting: Function
-}
+    e: React.ChangeEvent<HTMLInputElement>;
+    setProfilePicture: Function;
+    setConverting: Function;
+};
 
-const USER_STATUSES = CONST.USER.STATUS
+const USER_STATUSES = CONST.USER.STATUS;
 
 const getFullName = (args: { firstName: IUser['firstName']; lastName: IUser['lastName'] }) => {
-  return [string.capitalizeFirstLetter(args?.firstName?.trim?.() ?? ''), args?.lastName?.trim?.()].join(' ')
-}
+    return [string.capitalizeFirstLetter(args?.firstName?.trim?.() ?? ''), args?.lastName?.trim?.()].join(' ');
+};
 
 const getStoredEntityUrl = (path: any) => {
-  const STORAGE_PATH = CONST.APP_CONST.CONFIG.STORAGE_PATH
-  const path_ = path ? `${STORAGE_PATH}${path}` : undefined
-  return path_
-}
+    const STORAGE_PATH = CONST.APP_CONST.CONFIG.STORAGE_PATH;
+    const path_ = path ? `${STORAGE_PATH}${path}` : undefined;
+    return path_;
+};
 
 // ** Converts table to CSV
 export const convertArrayOfObjectsToCSV = (array: any[]) => {
-  let result = ''
+    let result = '';
 
-  const columnDelimiter = ','
-  const lineDelimiter = '\n'
-  const keys = Object.keys(array[0])
+    const columnDelimiter = ',';
+    const lineDelimiter = '\n';
+    const keys = Object.keys(array[0]);
 
-  result = ''
-  result += keys.join(columnDelimiter)
-  result += lineDelimiter
+    result = '';
+    result += keys.join(columnDelimiter);
+    result += lineDelimiter;
 
-  array.forEach(item => {
-    let ctr = 0
-    keys.forEach(key => {
-      if (ctr > 0) result += columnDelimiter
+    array.forEach((item) => {
+        let ctr = 0;
+        keys.forEach((key) => {
+            if (ctr > 0) result += columnDelimiter;
 
-      result += item[key]
+            result += item[key];
 
-      ctr++
-    })
-    result += lineDelimiter
-  })
+            ctr++;
+        });
+        result += lineDelimiter;
+    });
 
-  return result
-}
+    return result;
+};
 
 const profilePictureChange = async (args: IProfilePictureChangeArgs) => {
-  let updated = false
-  try {
-    let file = args.e.target.files?.[0] ?? null
-    args.e.target.value = ''
+    let updated = false;
+    try {
+        let file = args.e.target.files?.[0] ?? null;
+        args.e.target.value = '';
 
-    const { MAX_PROFILE_PICTURE_SIZE, VALID_PROFILE_PICTURE_TYPES } = CONST.USER
+        const { MAX_PROFILE_PICTURE_SIZE, VALID_PROFILE_PICTURE_TYPES } = CONST.USER;
 
-    if (!file) {
-      return updated
+        if (!file) {
+            return updated;
+        }
+
+        const response = await FileValidatorService.validateFileData(
+            { file },
+            {
+                maxFileSize: fileUtil.convertValue(MAX_PROFILE_PICTURE_SIZE, 'MB', 'B'),
+                validFileTypes: VALID_PROFILE_PICTURE_TYPES
+            }
+        );
+
+        if (response.message) {
+            toast.info({ message: response.message });
+            return updated;
+        }
+
+        args.setConverting(true);
+
+        const base64 = await fileUtil.fileObjToBase64(file);
+        args.setProfilePicture({
+            src: base64 as string,
+            file
+        });
+
+        updated = true;
+    } catch (error) {
+        console.error(error);
+    } finally {
+        args.setConverting(false);
     }
-
-    const response = await FileValidatorService.validateFileData(
-      { file },
-      {
-        maxFileSize: fileUtil.convertValue(MAX_PROFILE_PICTURE_SIZE, 'MB', 'B'),
-        validFileTypes: VALID_PROFILE_PICTURE_TYPES
-      }
-    )
-
-    if (response.message) {
-      toast.info({ message: response.message })
-      return updated
-    }
-
-    args.setConverting(true)
-
-    const base64 = await fileUtil.fileObjToBase64(file)
-    args.setProfilePicture({
-      src: base64 as string,
-      file
-    })
-
-    updated = true
-  } catch (error) {
-    console.error(error)
-  } finally {
-    args.setConverting(false)
-  }
-}
+};
 
 const checkAdmin = (type: IUser['type']) => {
-  return (
-    type === CONST.USER.TYPES.ADMIN
-  )
-}
-
+    return type === CONST.USER.TYPES.ADMIN;
+};
 
 const formatAddress = (addressMeta?: Partial<IUser['addressMeta']>): IUser['addressMeta'] => {
-  let addressMeta_ = (addressMeta ?? {}) as IUser['addressMeta']
-  return {
-    city: addressMeta_?.city ?? '',
-    appartment: addressMeta_?.appartment ?? null,
-    country: addressMeta_?.country ?? null,
-    state: addressMeta_?.state ?? '',
-    zipCode: addressMeta_?.zipCode ?? '',
-    lat: addressMeta_?.lat ?? null,
-    long: addressMeta_?.long ?? null
-  }
-}
+    let addressMeta_ = (addressMeta ?? {}) as IUser['addressMeta'];
+    return {
+        city: addressMeta_?.city ?? '',
+        appartment: addressMeta_?.appartment ?? null,
+        country: addressMeta_?.country ?? null,
+        state: addressMeta_?.state ?? '',
+        zipCode: addressMeta_?.zipCode ?? '',
+        lat: addressMeta_?.lat ?? null,
+        long: addressMeta_?.long ?? null
+    };
+};
 
 const getUserDetails = (user: IUser, forJwt = false) => {
+    let commonKeysValues: Partial<IUser> = {
+        type: user.type,
+        profilePicture: user.profilePicture ?? null,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email
+    };
 
-  let commonKeysValues: Partial<IUser> = {
-    type: user.type,
-    profilePicture: user.profilePicture ?? null,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email
-  }
+    if (!forJwt) {
+        commonKeysValues['address'] = user.address ?? null;
+        commonKeysValues['phoneNumber'] = user.phoneNumber;
+        commonKeysValues['addressMeta'] = formatAddress(user.addressMeta);
+        commonKeysValues['designation'] = user.designation;
+        commonKeysValues['status'] = user.status;
+        commonKeysValues['role'] = user.role;
+        commonKeysValues['shopId'] = user.shopId;
+    } else {
+        commonKeysValues['id'] = user._id;
+    }
 
-  if (!forJwt) {
-    commonKeysValues['address'] = user.address ?? null
-    commonKeysValues['phoneNumber'] = user.phoneNumber
-    commonKeysValues['addressMeta'] = formatAddress(user.addressMeta)
-    commonKeysValues['designation'] = user.designation
-    commonKeysValues['status'] = user.status
-    commonKeysValues['role'] = user.role
-  } else {
-    commonKeysValues['id'] = user._id
-  }
-
-  return commonKeysValues
-}
+    return commonKeysValues;
+};
 
 const getUserStatusVariant = (status: IUser['status']): ICommonChipProps['variant'] => {
-  const { PENDING, ACTIVE, INACTIVE } = USER_STATUSES
-  switch (true) {
-    case status === INACTIVE:
-      return 'error'
-    case status === PENDING:
-      return 'yellow'
-    case status === ACTIVE:
-      return 'success'
-    default:
-      return 'error'
-  }
-}
+    const { PENDING, ACTIVE, INACTIVE } = USER_STATUSES;
+    switch (true) {
+        case status === INACTIVE:
+            return 'error';
+        case status === PENDING:
+            return 'yellow';
+        case status === ACTIVE:
+            return 'success';
+        default:
+            return 'error';
+    }
+};
 
 function getValue(value: any): any {
-  return value ? value : CONST.APP_CONST.VALUE_NOT_PROVIDED
+    return value ? value : CONST.APP_CONST.VALUE_NOT_PROVIDED;
 }
 
 const extractAddressDetails = (place: google.maps.places.PlaceResult) => {
-  let city: string | null = null
-  let route: string | null = null
-  let country: string | null = null
-  let postal_code: string | null = null
-  let country_code: string | null = null
-  let administrative_area_level_1: string | null = null
-  let administrative_area_level_2: string | null = null
-  let components = place?.address_components ?? []
-  let { lat: latFn, lng } = place.geometry?.location ?? {}
-  let lat = latFn?.() ?? null
-  let long = lng?.() ?? null
+    let city: string | null = null;
+    let route: string | null = null;
+    let country: string | null = null;
+    let postal_code: string | null = null;
+    let country_code: string | null = null;
+    let administrative_area_level_1: string | null = null;
+    let administrative_area_level_2: string | null = null;
+    let components = place?.address_components ?? [];
+    let { lat: latFn, lng } = place.geometry?.location ?? {};
+    let lat = latFn?.() ?? null;
+    let long = lng?.() ?? null;
 
-  for (let i = 0; i < components.length; i++) {
-    let component = components[i]
-    if (component.types.includes('country')) {
-      country = component.long_name
-      country_code = component.short_name
-    } else if (component.types.includes('postal_code')) {
-      postal_code = component.long_name
-    } else if (component.types.includes('locality')) {
-      city = component.long_name
-    } else if (component.types.includes('route')) {
-      route = component.long_name
-    } else if (component.types.includes('administrative_area_level_1')) {
-      administrative_area_level_1 = component.long_name
-    } else if (component.types.includes('administrative_area_level_2')) {
-      administrative_area_level_2 = component.long_name
+    for (let i = 0; i < components.length; i++) {
+        let component = components[i];
+        if (component.types.includes('country')) {
+            country = component.long_name;
+            country_code = component.short_name;
+        } else if (component.types.includes('postal_code')) {
+            postal_code = component.long_name;
+        } else if (component.types.includes('locality')) {
+            city = component.long_name;
+        } else if (component.types.includes('route')) {
+            route = component.long_name;
+        } else if (component.types.includes('administrative_area_level_1')) {
+            administrative_area_level_1 = component.long_name;
+        } else if (component.types.includes('administrative_area_level_2')) {
+            administrative_area_level_2 = component.long_name;
+        }
     }
-  }
 
-  return {
-    lat,
-    long,
-    country,
-    postal_code,
-    country_code,
-    city,
-    route,
-    administrative_area_level_1,
-    administrative_area_level_2,
-    formatted_address: place?.formatted_address ?? '',
-    location: place?.geometry?.location ?? '',
-    place_id: place?.place_id ?? ''
-  }
-}
+    return {
+        lat,
+        long,
+        country,
+        postal_code,
+        country_code,
+        city,
+        route,
+        administrative_area_level_1,
+        administrative_area_level_2,
+        formatted_address: place?.formatted_address ?? '',
+        location: place?.geometry?.location ?? '',
+        place_id: place?.place_id ?? ''
+    };
+};
 const rolePermissionsArrayToObject = (permissions: IRolePermission[]): IRolePopulated['cpermissions'] => {
-  const permissions_: IRolePopulated['cpermissions'] = permissions.reduce(
-    (acc: IRolePopulated['cpermissions'], curr: IRolePermission) => {
-      const module_ = curr.module
-      acc[module_] = curr.actions
-      return acc
-    },
-    {} as IRolePopulated['cpermissions']
-  )
-  return permissions_
-}
+    const permissions_: IRolePopulated['cpermissions'] = permissions.reduce(
+        (acc: IRolePopulated['cpermissions'], curr: IRolePermission) => {
+            const module_ = curr.module;
+            acc[module_] = curr.actions;
+            return acc;
+        },
+        {} as IRolePopulated['cpermissions']
+    );
+    return permissions_;
+};
 
-
-const getPermissions = (module_: keyof IRolePopulated["cpermissions"], permissions: Partial<IRolePopulated["cpermissions"]>) => {
-  return {
-    create: permissions[module_]?.includes("create") ?? false,
-    update: permissions[module_]?.includes("update") ?? false,
-    read: permissions[module_]?.includes("read") ?? false,
-    delete: permissions[module_]?.includes("delete") ?? false,
-  }
-}
+const getPermissions = (
+    module_: keyof IRolePopulated['cpermissions'],
+    permissions: Partial<IRolePopulated['cpermissions']>
+) => {
+    return {
+        create: permissions[module_]?.includes('create') ?? false,
+        update: permissions[module_]?.includes('update') ?? false,
+        read: permissions[module_]?.includes('read') ?? false,
+        delete: permissions[module_]?.includes('delete') ?? false
+    };
+};
 
 const getDataGridColumnsWithSpaces = <T extends {}>(columns: GridColDef<T>[]): GridColDef<T>[] => {
-  const { fHeaderClass, lHeaderClass, fHeaderContentClass, lHeaderContentClass } = themeConfig.components.grid
-  return columns.map((column, index) => {
-    if (!index || index === columns.length - 1) {
-      return {
-        ...column,
-        headerClassName: clsx(column.headerClassName, !index ? fHeaderClass : lHeaderClass),
-        cellClassName: clsx(column.cellClassName, !index ? fHeaderContentClass : lHeaderContentClass)
-      }
-    }
-    return column
-  })
-}
+    const { fHeaderClass, lHeaderClass, fHeaderContentClass, lHeaderContentClass } = themeConfig.components.grid;
+    return columns.map((column, index) => {
+        if (!index || index === columns.length - 1) {
+            return {
+                ...column,
+                headerClassName: clsx(column.headerClassName, !index ? fHeaderClass : lHeaderClass),
+                cellClassName: clsx(column.cellClassName, !index ? fHeaderContentClass : lHeaderContentClass)
+            };
+        }
+        return column;
+    });
+};
 const user = {
-  checkAdmin,
-  getUserStatusVariant,
-  getUserDetails,
-  getFullName,
-  profilePictureChange,
-  formatAddress
-}
+    checkAdmin,
+    getUserStatusVariant,
+    getUserDetails,
+    getFullName,
+    profilePictureChange,
+    formatAddress
+};
 
 const role = {
-  rolePermissionsArrayToObject,
-  getPermissions
-}
+    rolePermissionsArrayToObject,
+    getPermissions
+};
 
 const helpers = {
-  getDataGridColumnsWithSpaces,
-  user,
-  role,
-  getStoredEntityUrl,
-  getValue,
-  convertArrayOfObjectsToCSV,
-  extractAddressDetails
-}
+    getDataGridColumnsWithSpaces,
+    user,
+    role,
+    getStoredEntityUrl,
+    getValue,
+    convertArrayOfObjectsToCSV,
+    extractAddressDetails
+};
 
-export { helpers }
-
+export { helpers };

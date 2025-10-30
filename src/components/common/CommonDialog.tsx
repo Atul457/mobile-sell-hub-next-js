@@ -1,7 +1,7 @@
-import { Dialog, DialogProps, IconButton, Slide } from '@mui/material'
-import { TransitionProps } from '@mui/material/transitions'
-import { styled } from '@mui/system'
-import React from 'react'
+import { Dialog, DialogProps, IconButton, Slide } from '@mui/material';
+import { TransitionProps } from '@mui/material/transitions';
+import { styled } from '@mui/system';
+import React from 'react';
 
 const CommonDialogStyled = styled(Dialog)<DialogProps>(({ theme }) => ({
     '& .MuiDialog-container': {
@@ -22,7 +22,7 @@ const CommonDialogStyled = styled(Dialog)<DialogProps>(({ theme }) => ({
         overflow: 'unset',
         [theme.breakpoints.down('md')]: {
             height: 'fit-content !important',
-            minHeight: 300,
+            minHeight: 300
         },
         marginInline: 0,
         marginBottom: 0,
@@ -32,25 +32,25 @@ const CommonDialogStyled = styled(Dialog)<DialogProps>(({ theme }) => ({
             borderBottomLeftRadius: 20,
             borderBottomRightRadius: 20
         },
-        position: 'relative', // Add this line to position the icon within the dialog
+        position: 'relative' // Add this line to position the icon within the dialog
     }
-}))
+}));
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
-        children: React.ReactElement<any, any>
+        children: React.ReactElement<any, any>;
     },
     ref: React.Ref<unknown>
 ) {
-    return <Slide direction='up' ref={ref} {...props} />
-})
+    return <Slide direction='up' ref={ref} {...props} />;
+});
 
 type ICommonDialogProps = {
-    onClose: () => void
-} & DialogProps
+    onClose: () => void;
+} & DialogProps;
 
 const CommonDialog = (props: ICommonDialogProps) => {
-    const { maxWidth = 'sm', ...rest } = props
+    const { maxWidth = 'sm', ...rest } = props;
 
     return (
         <CommonDialogStyled maxWidth={maxWidth} fullWidth TransitionComponent={Transition} {...rest}>
@@ -61,7 +61,7 @@ const CommonDialog = (props: ICommonDialogProps) => {
                     position: 'absolute', // Position the icon within the dialog
                     right: 8,
                     padding: '4px !important',
-                    zIndex: theme => theme.zIndex.modal + 1,
+                    zIndex: (theme) => theme.zIndex.modal + 1,
                     top: { xs: -32, lg: 6 }, // Adjusted top position to be inside the dialog
                     '&:hover': {
                         top: { xs: -34, lg: 8 }
@@ -90,7 +90,7 @@ const CommonDialog = (props: ICommonDialogProps) => {
             </IconButton>
             {rest.children}
         </CommonDialogStyled>
-    )
-}
+    );
+};
 
-export default CommonDialog
+export default CommonDialog;

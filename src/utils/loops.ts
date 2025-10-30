@@ -18,6 +18,6 @@ const asyncWhileLoop: IAsyncWhileLoopFn = async (args) => {
 
 const loops = {
     asyncWhileLoop
-}
+};
 
-export { loops }
+export { loops };

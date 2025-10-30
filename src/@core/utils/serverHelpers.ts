@@ -1,60 +1,60 @@
-import demoConfigs from '@configs/demoConfigs'
+import demoConfigs from '@configs/demoConfigs';
 // Config Imports
-import themeConfig from '@configs/themeConfig'
+import themeConfig from '@configs/themeConfig';
 // Type Imports
-import type { Settings } from '@core/contexts/settingsContext'
-import type { DemoName, SystemMode } from '@core/types'
+import type { Settings } from '@core/contexts/settingsContext';
+import type { DemoName, SystemMode } from '@core/types';
 // Next Imports
-import { cookies, headers } from 'next/headers'
-import 'server-only'
+import { cookies, headers } from 'next/headers';
+import 'server-only';
 
 export const getDemoName = (): DemoName => {
-  const headersList = headers()
+    const headersList = headers();
 
-  return headersList.get('X-server-header') as DemoName | null
-}
+    return headersList.get('X-server-header') as DemoName | null;
+};
 
 export const getSettingsFromCookie = (): Settings => {
-  const cookieStore = cookies()
+    const cookieStore = cookies();
 
-  const demoName = getDemoName()
+    const demoName = getDemoName();
 
-  const cookieName = demoName
-    ? themeConfig.settingsCookieName.replace('demo-1', demoName)
-    : themeConfig.settingsCookieName
+    const cookieName = demoName
+        ? themeConfig.settingsCookieName.replace('demo-1', demoName)
+        : themeConfig.settingsCookieName;
 
-  return JSON.parse(cookieStore.get(cookieName)?.value || '{}')
-}
+    return JSON.parse(cookieStore.get(cookieName)?.value || '{}');
+};
 
 export const getMode = () => {
-  const settingsCookie = getSettingsFromCookie()
+    const settingsCookie = getSettingsFromCookie();
 
-  const demoName = getDemoName()
+    const demoName = getDemoName();
 
-  // Get mode from cookie or fallback to theme config
-  const _mode = settingsCookie.mode || (demoName && demoConfigs[demoName].mode) || themeConfig.mode
+    // Get mode from cookie or fallback to theme config
+    const _mode = settingsCookie.mode || (demoName && demoConfigs[demoName].mode) || themeConfig.mode;
 
-  return _mode
-}
+    return _mode;
+};
 
 export const getSystemMode = (): SystemMode => {
-  const cookieStore = cookies()
-  const mode = getMode()
+    const cookieStore = cookies();
+    const mode = getMode();
 
-  const colorPrefCookie = (cookieStore.get('colorPref')?.value || 'light') as SystemMode
+    const colorPrefCookie = (cookieStore.get('colorPref')?.value || 'light') as SystemMode;
 
-  return (mode === 'system' ? colorPrefCookie : mode) || 'light'
-}
+    return (mode === 'system' ? colorPrefCookie : mode) || 'light';
+};
 
 export const getServerMode = () => {
-  const mode = getMode()
-  const systemMode = getSystemMode()
+    const mode = getMode();
+    const systemMode = getSystemMode();
 
-  return mode === 'system' ? systemMode : mode
-}
+    return mode === 'system' ? systemMode : mode;
+};
 
 export const getSkin = () => {
-  const settingsCookie = getSettingsFromCookie()
+    const settingsCookie = getSettingsFromCookie();
 
-  return settingsCookie.skin || 'default'
-}
+    return settingsCookie.skin || 'default';
+};

@@ -1,65 +1,68 @@
-'use client'
+'use client';
 
 // Third-party Imports
 // Config Imports
-import themeConfig from '@configs/themeConfig'
+import themeConfig from '@configs/themeConfig';
 // Hook Imports
-import { useSettings } from '@core/hooks/useSettings'
-import styled from '@emotion/styled'
+import { useSettings } from '@core/hooks/useSettings';
+import styled from '@emotion/styled';
 // Util Imports
-import { horizontalLayoutClasses } from '@layouts/utils/layoutClasses'
-import useHorizontalNav from '@menu/hooks/useHorizontalNav'
-import classnames from 'classnames'
+import { horizontalLayoutClasses } from '@layouts/utils/layoutClasses';
+import useHorizontalNav from '@menu/hooks/useHorizontalNav';
+import classnames from 'classnames';
 
 // Component Imports
-import HorizontalMenu from './HorizontalMenu'
+import HorizontalMenu from './HorizontalMenu';
 
 type StyledDivProps = {
-  isContentCompact: boolean
-  isBreakpointReached?: boolean
-}
+    isContentCompact: boolean;
+    isBreakpointReached?: boolean;
+};
 
 const StyledDiv = styled.div<StyledDivProps>`
-  ${({ isContentCompact, isBreakpointReached }) =>
-    !isBreakpointReached &&
-    `
+    ${({ isContentCompact, isBreakpointReached }) =>
+        !isBreakpointReached &&
+        `
     padding: ${themeConfig.layoutPadding}px;
 
     ${
-      isContentCompact &&
-      `
+        isContentCompact &&
+        `
       margin-inline: auto;
       max-inline-size: ${themeConfig.compactContentWidth}px;
     `
     }
   `}
-`
+`;
 
 const Navigation = () => {
-  // Hooks
-  const { settings } = useSettings()
-  const { isBreakpointReached } = useHorizontalNav()
+    // Hooks
+    const { settings } = useSettings();
+    const { isBreakpointReached } = useHorizontalNav();
 
-  // Vars
-  const headerContentCompact = settings.navbarContentWidth === 'compact'
+    // Vars
+    const headerContentCompact = settings.navbarContentWidth === 'compact';
 
-  return (
-    <div
-      {...(!isBreakpointReached && {
-        className: classnames(horizontalLayoutClasses.navigation, 'relative flex border-bs')
-      })}
-    >
-      <StyledDiv
-        isContentCompact={headerContentCompact}
-        isBreakpointReached={isBreakpointReached}
-        {...(!isBreakpointReached && {
-          className: classnames(horizontalLayoutClasses.navigationContentWrapper, 'flex items-center is-full plb-2')
-        })}
-      >
-        <HorizontalMenu />
-      </StyledDiv>
-    </div>
-  )
-}
+    return (
+        <div
+            {...(!isBreakpointReached && {
+                className: classnames(horizontalLayoutClasses.navigation, 'relative flex border-bs')
+            })}
+        >
+            <StyledDiv
+                isContentCompact={headerContentCompact}
+                isBreakpointReached={isBreakpointReached}
+                {...(!isBreakpointReached && {
+                    className: classnames(
+                        horizontalLayoutClasses.navigationContentWrapper,
+                        'flex items-center is-full plb-2'
+                    )
+                })}
+            >
+                <HorizontalMenu />
+            </StyledDiv>
+        </div>
+    );
+};
 
-export default Navigation
+export default Navigation;

@@ -1,31 +1,31 @@
-import { ICapitalize } from './types'
+import { ICapitalize } from './types';
 
 // Returns initials from string
 const getInitials = (string: string) =>
-  string.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), '')
+    string.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), '');
 
-const ensurePrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str : `${prefix}${str}`)
+const ensurePrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str : `${prefix}${str}`);
 
-const withoutSuffix = (str: string, suffix: string) => (str.endsWith(suffix) ? str.slice(0, -suffix.length) : str)
+const withoutSuffix = (str: string, suffix: string) => (str.endsWith(suffix) ? str.slice(0, -suffix.length) : str);
 
-const withoutPrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str.slice(prefix.length) : str)
+const withoutPrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str.slice(prefix.length) : str);
 
 function capitalizeFirstLetter(str: string, dontLowerCaseRest?: boolean): string {
-  // Check if str is undefined or not a string
-  if (typeof str !== 'string') {
-    return '' // or handle it as needed
-  }
+    // Check if str is undefined or not a string
+    if (typeof str !== 'string') {
+        return ''; // or handle it as needed
+    }
 
-  str = str.trim()
+    str = str.trim();
 
-  if (dontLowerCaseRest !== true) {
-    str = str.toLowerCase()
-  }
+    if (dontLowerCaseRest !== true) {
+        str = str.toLowerCase();
+    }
 
-  return str
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+    return str
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,59 +43,59 @@ function capitalizeFirstLetter(str: string, dontLowerCaseRest?: boolean): string
  * if `args.fullyCapitalize` is `true` then all the letters of the passed string would be capitalized.
  */
 const capitalize: ICapitalize = (valueToCapitalize = '', args) => {
-  let splittedString: string[] = []
-  let { returnValueIfNotString, capitalizeAll = true, fullyCapitalize = false } = args ?? {}
+    let splittedString: string[] = [];
+    let { returnValueIfNotString, capitalizeAll = true, fullyCapitalize = false } = args ?? {};
 
-  if (typeof valueToCapitalize !== 'string') {
-    if (returnValueIfNotString) return returnValueIfNotString
-    else return ''
-  }
+    if (typeof valueToCapitalize !== 'string') {
+        if (returnValueIfNotString) return returnValueIfNotString;
+        else return '';
+    }
 
-  splittedString = valueToCapitalize?.split(' ')
+    splittedString = valueToCapitalize?.split(' ');
 
-  if (capitalizeAll)
-    splittedString = splittedString.map(currChunk => {
-      return currChunk.length ? `${currChunk.substring(0, 1).toUpperCase()}${currChunk.substring(1)}` : currChunk
-    })
-  else if (splittedString?.[0])
-    splittedString[0] = splittedString[0].length
-      ? `${splittedString[0].substring(0, 1).toUpperCase()}${splittedString[0].substring(1)}`
-      : splittedString[0].toUpperCase()
+    if (capitalizeAll)
+        splittedString = splittedString.map((currChunk) => {
+            return currChunk.length ? `${currChunk.substring(0, 1).toUpperCase()}${currChunk.substring(1)}` : currChunk;
+        });
+    else if (splittedString?.[0])
+        splittedString[0] = splittedString[0].length
+            ? `${splittedString[0].substring(0, 1).toUpperCase()}${splittedString[0].substring(1)}`
+            : splittedString[0].toUpperCase();
 
-  return fullyCapitalize ? splittedString.join(' ')?.toUpperCase() : splittedString.join(' ')
-}
+    return fullyCapitalize ? splittedString.join(' ')?.toUpperCase() : splittedString.join(' ');
+};
 
 function generateUniqueId(length = 36) {
-  // Function to generate a random 4-character hex string
-  const randomHex = () =>
-    Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1)
+    // Function to generate a random 4-character hex string
+    const randomHex = () =>
+        Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
 
-  // Get the current timestamp in milliseconds
-  const timestamp = Date.now().toString(16)
+    // Get the current timestamp in milliseconds
+    const timestamp = Date.now().toString(16);
 
-  // Generate a base pattern using the timestamp and random hex values
-  let base = randomHex() + randomHex() + timestamp + randomHex() + randomHex()
+    // Generate a base pattern using the timestamp and random hex values
+    let base = randomHex() + randomHex() + timestamp + randomHex() + randomHex();
 
-  // Remove hyphens and adjust the length
-  base = base.replace(/-/g, '').substring(0, length)
+    // Remove hyphens and adjust the length
+    base = base.replace(/-/g, '').substring(0, length);
 
-  // Insert hyphens back at the appropriate positions for standard UUID length
-  if (length > 8 && length <= 36) {
-    base =
-      base.slice(0, 8) +
-      '-' +
-      base.slice(8, 12) +
-      '-' +
-      base.slice(12, 16) +
-      '-' +
-      base.slice(16, 20) +
-      '-' +
-      base.slice(20, length + 4)
-  }
+    // Insert hyphens back at the appropriate positions for standard UUID length
+    if (length > 8 && length <= 36) {
+        base =
+            base.slice(0, 8) +
+            '-' +
+            base.slice(8, 12) +
+            '-' +
+            base.slice(12, 16) +
+            '-' +
+            base.slice(16, 20) +
+            '-' +
+            base.slice(20, length + 4);
+    }
 
-  return base.substring(0, length)
+    return base.substring(0, length);
 }
 
 /**
@@ -105,47 +105,47 @@ function generateUniqueId(length = 36) {
  * @returns The cleaned value with only numeric characters and a maximum of one decimal point.
  */
 function removeNonNumeric(value: any): string {
-  // Remove any non-numeric characters except for the decimal point
-  let valueToReturn = '0'
-  const cleanedValue = value.replace(/[^0-9.]/g, '')
+    // Remove any non-numeric characters except for the decimal point
+    let valueToReturn = '0';
+    const cleanedValue = value.replace(/[^0-9.]/g, '');
 
-  // Ensure only one decimal point is allowed
-  const parts = cleanedValue.split('.')
+    // Ensure only one decimal point is allowed
+    const parts = cleanedValue.split('.');
 
-  if (parts.length >= 2) {
-    // If there are multiple decimal points, keep only the first one
-    valueToReturn = `${Number(parts[0])}.${parts.slice(1).join('')}`
-  } else if (parts.length === 1) {
-    valueToReturn = Number(parts[0]).toString()
-  }
+    if (parts.length >= 2) {
+        // If there are multiple decimal points, keep only the first one
+        valueToReturn = `${Number(parts[0])}.${parts.slice(1).join('')}`;
+    } else if (parts.length === 1) {
+        valueToReturn = Number(parts[0]).toString();
+    }
 
-  return valueToReturn
+    return valueToReturn;
 }
 
 function removeLeadingSlash(str: string): string {
-  if (str.startsWith('/')) {
-    return str.slice(1)
-  }
-  return str
+    if (str.startsWith('/')) {
+        return str.slice(1);
+    }
+    return str;
 }
 
 function createSlug(text: string): string {
-  return text
-    .toLowerCase() // Convert to lowercase
-    .trim() // Trim whitespace
-    .replace(/[\s\W-]+/g, '-') // Replace spaces and non-word chars with hyphen
-    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+    return text
+        .toLowerCase() // Convert to lowercase
+        .trim() // Trim whitespace
+        .replace(/[\s\W-]+/g, '-') // Replace spaces and non-word chars with hyphen
+        .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
 }
 
 export const string = {
-  createSlug,
-  removeLeadingSlash,
-  getInitials,
-  ensurePrefix,
-  capitalizeFirstLetter,
-  removeNonNumeric,
-  generateUniqueId,
-  withoutSuffix,
-  withoutPrefix,
-  capitalize
-}
+    createSlug,
+    removeLeadingSlash,
+    getInitials,
+    ensurePrefix,
+    capitalizeFirstLetter,
+    removeNonNumeric,
+    generateUniqueId,
+    withoutSuffix,
+    withoutPrefix,
+    capitalize
+};

@@ -8,13 +8,7 @@ const StripeInputWrapper = forwardRef<any, StripeInputWrapperProps>(function Str
     { component: Component, options, ...rest },
     ref
 ) {
-    return (
-        <Component
-            ref={ref}
-            options={options}
-            {...rest}
-        />
-    );
+    return <Component ref={ref} options={options} {...rest} />;
 });
 
 export default StripeInputWrapper;

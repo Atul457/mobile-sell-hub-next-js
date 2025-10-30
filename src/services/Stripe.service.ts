@@ -11,7 +11,7 @@ class StripeService {
     async createCustomer(email: string, name: string): Promise<Stripe.Customer> {
         return this.stripe.customers.create({
             email,
-            name,
+            name
         });
     }
 
@@ -72,7 +72,7 @@ class StripeService {
     async listCards(customerId: string): Promise<Stripe.ApiList<Stripe.PaymentMethod>> {
         return this.stripe.paymentMethods.list({
             customer: customerId,
-            type: 'card',
+            type: 'card'
         });
     }
 
@@ -85,7 +85,7 @@ class StripeService {
         try {
             const paymentIntent = await this.stripe.paymentIntents.create({
                 amount: data.amount,
-                currency: "usd",
+                currency: 'usd',
                 customer: data.customerId,
                 payment_method: data.cardId,
                 confirm: true, // Confirm the payment immediately
@@ -108,9 +108,9 @@ class StripeService {
             const { customerId, ...rest } = cardDetails;
             const token = await this.stripe.tokens.create({
                 ...(customerId && {
-                    customer: customerId,
+                    customer: customerId
                 }),
-                card: rest,
+                card: rest
             });
 
             return token.id;

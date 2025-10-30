@@ -1,13 +1,13 @@
 export type IGenerateResFn = {
-    status: boolean
-    message?: string | null
-    data?: Record<any, any> | null
-}
+    status: boolean;
+    message?: string | null;
+    data?: Record<any, any> | null;
+};
 
 export type IGenerateResReturn = IGenerateResFn & {
-    message: Exclude<IGenerateResFn['message'], undefined>
-    data: any
-}
+    message: Exclude<IGenerateResFn['message'], undefined>;
+    data: any;
+};
 
 /**
  * @param args IGenerateResFn
@@ -15,12 +15,12 @@ export type IGenerateResReturn = IGenerateResFn & {
  */
 
 const generateRes = (args: IGenerateResFn): IGenerateResReturn => {
-    const { status, message = null, data = null } = args
+    const { status, message = null, data = null } = args;
     return {
         status,
         message,
         data
-    }
-}
+    };
+};
 
-export { generateRes }
+export { generateRes };

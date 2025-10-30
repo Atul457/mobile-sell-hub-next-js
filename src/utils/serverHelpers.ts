@@ -1,7 +1,7 @@
-const user = {}
+const user = {};
 
 const serverHelpers = {
-  user
-}
+    user
+};
 
-export { serverHelpers }
+export { serverHelpers };

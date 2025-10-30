@@ -1,4 +1,4 @@
-import { MAIL } from '@/constants/mail.const'
+import { MAIL } from '@/constants/mail.const';
 
 const template = `<p
 style="font-family: "Vidaloka", serif; mso-line-height-rule: exactly; margin-bottom: 0; font-size: 20px; font-weight: 600;">
@@ -30,15 +30,15 @@ style="font-family: 'Poppins', sans-serif; mso-line-height-rule: exactly; margin
 If this was a mistake, just ignore this email and nothing will happen.
 </p>
 <br>
-`
+`;
 
 const forgotPasswordTemplate = {
-  template,
-  subject: MAIL.SUBJECTS.FORGOT_PASSWORD,
-  keysToReplace: {
-    userName: '[USER_NAME]',
-    resetPasswordUrl: '[RESET_PASSWORD_URL]'
-  }
-}
+    template,
+    subject: MAIL.SUBJECTS.FORGOT_PASSWORD,
+    keysToReplace: {
+        userName: '[USER_NAME]',
+        resetPasswordUrl: '[RESET_PASSWORD_URL]'
+    }
+};
 
-export { forgotPasswordTemplate }
+export { forgotPasswordTemplate };

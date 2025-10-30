@@ -1,115 +1,121 @@
-import { IRequestArgs } from '@/app/api/types'
-import { dbConfig } from '@/configs/dbConfig'
-import CategoryModel from '@/models/category.model'
-import { serverSchemas } from '@/schemas/server.schemas'
-import { ErrorHandlingService } from '@/services/ErrorHandling.service'
-import { services } from '@/services/index.service'
-import { ActionValidator } from '@/services/server/ActionValidator.service'
-import { middlewares } from '@/utils/middlewares'
-import { utils } from '@/utils/utils'
+import { IRequestArgs } from '@/app/api/types';
+import { dbConfig } from '@/configs/dbConfig';
+import CategoryModel from '@/models/category.model';
+import { serverSchemas } from '@/schemas/server.schemas';
+import { ErrorHandlingService } from '@/services/ErrorHandling.service';
+import { services } from '@/services/index.service';
+import { ActionValidator } from '@/services/server/ActionValidator.service';
+import { middlewares } from '@/utils/middlewares';
+import { utils } from '@/utils/utils';
 
 export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>) {
-  return utils.errorHandler(async function () {
-    // Connect to the database
-    await dbConfig()
+    return utils.errorHandler(async function () {
+        // Connect to the database
+        await dbConfig();
 
-    // Authenticate the user with admin privileges
-    const authData = await middlewares.withUser(request)
+        // Authenticate the user with admin privileges
+        const authData = await middlewares.withUser(request);
 
-    const av = new ActionValidator({
-      roleId: authData.roleId ?? null,
-      module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
-      action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.UPDATE
-    })
+        const av = new ActionValidator({
+            roleId: authData.roleId ?? null,
+            module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
+            action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.UPDATE
+        });
 
-    await av.validate()
+        await av.validate();
 
-    const cs = services.server.CategoryService
+        const cs = services.server.CategoryService;
 
-    // Get the request body
-    const body = await utils.getReqBody(request)
+        // Get the request body
+        const body = await utils.getReqBody(request);
 
-    // Validate the request body
-    await serverSchemas.objectIdSchema.required().validate(args.params.id)
+        // Validate the request body
+        await serverSchemas.objectIdSchema.required().validate(args.params.id);
 
-    const validatedData = await serverSchemas.addCategory.validate(body ?? {})
+        const validatedData = await serverSchemas.addCategory.validate(body ?? {});
 
-    const { name, image, description } = validatedData
+        const { name, image, description } = validatedData;
 
-    const existingCategory = await CategoryModel.findOne({
-      _id: args.params.id,
-      status: {
-        $ne: utils.CONST.CATEGORY.STATUS.DELETED
-      }
-    })
+        const existingCategory = await CategoryModel.findOne({
+            _id: args.params.id,
+            ...(authData.shopId && {
+                shopId: authData.shopId
+            }),
+            status: {
+                $ne: utils.CONST.CATEGORY.STATUS.DELETED
+            }
+        });
 
-    if (!existingCategory) {
-      throw ErrorHandlingService.notFound({
-        message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Category')
-      })
-    }
-
-    // Update the category
-    const category = await cs.updateCategory(args.params.id, {
-      name,
-      image,
-      description
-    })
-
-    return Response.json(
-      utils.generateRes({
-        status: true,
-        message: utils.CONST.RESPONSE_MESSAGES._UPDATED_SUCCESSFULLY.replace('[ITEM]', 'Category'),
-        data: {
-          category
+        if (!existingCategory) {
+            throw ErrorHandlingService.notFound({
+                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Category')
+            });
         }
-      })
-    )
-  })
+
+        // Update the category
+        const category = await cs.updateCategory(args.params.id, {
+            name,
+            image,
+            description
+        });
+
+        return Response.json(
+            utils.generateRes({
+                status: true,
+                message: utils.CONST.RESPONSE_MESSAGES._UPDATED_SUCCESSFULLY.replace('[ITEM]', 'Category'),
+                data: {
+                    category
+                }
+            })
+        );
+    });
 }
 
 export async function DELETE(request: Request, args: IRequestArgs<{ id: string }>) {
-  return utils.errorHandler(async function () {
-    // Connect to the database
-    await dbConfig()
+    return utils.errorHandler(async function () {
+        // Connect to the database
+        await dbConfig();
 
-    // Authenticate the user with admin privileges
-    const authData = await middlewares.withUser(request)
+        // Authenticate the user with admin privileges
+        const authData = await middlewares.withUser(request);
 
-    const av = new ActionValidator({
-      roleId: authData.roleId ?? null,
-      module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
-      action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.DELETE
-    })
+        const av = new ActionValidator({
+            roleId: authData.roleId ?? null,
+            module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
+            action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.DELETE
+        });
 
-    await av.validate()
+        await av.validate();
 
-    const cs = services.server.CategoryService
+        const cs = services.server.CategoryService;
 
-    const category = await CategoryModel.findOne({
-      _id: args.params.id,
-      status: {
-        $ne: utils.CONST.CATEGORY.STATUS.DELETED
-      }
-    })
+        const category = await CategoryModel.findOne({
+            _id: args.params.id,
+            ...(authData.shopId && {
+                shopId: authData.shopId
+            }),
+            status: {
+                $ne: utils.CONST.CATEGORY.STATUS.DELETED
+            }
+        });
 
-    if (!category) {
-      throw ErrorHandlingService.notFound({
-        message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Category')
-      })
-    }
-
-    // Delete the category
-    await cs.deleteCategory(args.params.id)
-
-    return Response.json(
-      utils.generateRes({
-        status: true,
-        message: utils.CONST.RESPONSE_MESSAGES._DELETED_SUCCESSFULLY.replace('[ITEM]', 'Category'),
-        data: {
-          category
+        if (!category) {
+            throw ErrorHandlingService.notFound({
+                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Category')
+            });
         }
-      })
-    )
-  })
+
+        // Delete the category
+        await cs.deleteCategory(args.params.id);
+
+        return Response.json(
+            utils.generateRes({
+                status: true,
+                message: utils.CONST.RESPONSE_MESSAGES._DELETED_SUCCESSFULLY.replace('[ITEM]', 'Category'),
+                data: {
+                    category
+                }
+            })
+        );
+    });
 }

@@ -1,44 +1,44 @@
 // UserService.ts
 
-import { Model } from 'mongoose'
+import { Model } from 'mongoose';
 
-import UserModel, { IUser } from '@/models/user.model'
+import UserModel, { IUser } from '@/models/user.model';
 
 interface IUserService {
-  createUser(data: Partial<IUser>): Promise<IUser>
-  findUserByEmail(email: string): Promise<IUser | null>
-  updateUser(id: string, data: Partial<IUser>): Promise<IUser | null>
-  deleteUser(id: string): Promise<IUser | null>
-  getUserById(id: string): Promise<IUser | null>
+    createUser(data: Partial<IUser>): Promise<IUser>;
+    findUserByEmail(email: string): Promise<IUser | null>;
+    updateUser(id: string, data: Partial<IUser>): Promise<IUser | null>;
+    deleteUser(id: string): Promise<IUser | null>;
+    getUserById(id: string): Promise<IUser | null>;
 }
 
 class UserService implements IUserService {
-  private userModel: Model<IUser>
+    private userModel: Model<IUser>;
 
-  constructor(userModel: Model<IUser>) {
-    this.userModel = userModel
-  }
+    constructor(userModel: Model<IUser>) {
+        this.userModel = userModel;
+    }
 
-  async createUser(data: Partial<IUser>): Promise<IUser> {
-    const user = new this.userModel(data)
-    return user.save()
-  }
+    async createUser(data: Partial<IUser>): Promise<IUser> {
+        const user = new this.userModel(data);
+        return user.save();
+    }
 
-  async findUserByEmail(email: string): Promise<IUser | null> {
-    return this.userModel.findOne({ email: new RegExp(email, 'gi') })
-  }
+    async findUserByEmail(email: string): Promise<IUser | null> {
+        return this.userModel.findOne({ email: new RegExp(email, 'gi') });
+    }
 
-  async updateUser(id: string, data: Partial<IUser>): Promise<IUser | null> {
-    return this.userModel.findByIdAndUpdate(id, data, { new: true })
-  }
+    async updateUser(id: string, data: Partial<IUser>): Promise<IUser | null> {
+        return this.userModel.findByIdAndUpdate(id, data, { new: true });
+    }
 
-  async deleteUser(id: string): Promise<IUser | null> {
-    return this.userModel.findByIdAndDelete(id)
-  }
+    async deleteUser(id: string): Promise<IUser | null> {
+        return this.userModel.findByIdAndDelete(id);
+    }
 
-  async getUserById(id: string): Promise<IUser | null> {
-    return this.userModel.findById(id)
-  }
+    async getUserById(id: string): Promise<IUser | null> {
+        return this.userModel.findById(id);
+    }
 }
 
-export default new UserService(UserModel)
+export default new UserService(UserModel);
