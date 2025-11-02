@@ -6,7 +6,7 @@ export interface IRolePermission extends Document {
     /** @info 1 => ADMIN, 2 => MANAGER, 3 => STAFF, 4 => TEST ADMINISTRATOR */
     role?: 1 | 2 | 3 | 4;
     roleId: Schema.Types.ObjectId;
-    module: 'user' | 'role' | 'category';
+    module: 'user' | 'role' | 'category' | 'tags';
     actions: IRolePermissionActions[];
 }
 
@@ -23,7 +23,7 @@ const RolePermissionSchema: Schema<IRolePermission> = new Schema(
         },
         module: {
             type: String,
-            enum: ['user', 'role', 'category'],
+            enum: ['user', 'role', 'category', 'tags'],
             required: true
         },
         actions: {

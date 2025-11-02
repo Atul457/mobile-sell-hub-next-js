@@ -7,6 +7,7 @@ import { REDUX } from './redux.const';
 import { RESPONSE_MESSAGES } from './responseMessages.const';
 import { ROLE } from './role.const';
 import { ROLE_PERMISSION } from './rolePermission.const';
+import { TAG } from './tag.const';
 import { USER } from './user.const';
 
 const CONST = {
@@ -14,6 +15,7 @@ const CONST = {
     ROLE,
     REDUX,
     CATEGORY,
+    TAG,
     MAIL,
     APP_CONST,
     FILE_MANAGER,

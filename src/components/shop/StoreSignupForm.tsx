@@ -49,7 +49,6 @@ const StoreSignupForm = () => {
 
     const isSubmitted_ = isSubmitted;
 
-    console.debug({ errors });
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         try {
             setLoading(true);

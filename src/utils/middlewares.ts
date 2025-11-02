@@ -24,6 +24,7 @@ type IUserDetails = {
  */
 type IWithUserOptions = Partial<{
     select?: (keyof IUserModel)[];
+    allowedUserTypes?: IUserModel['type'][];
 }>;
 
 /**
@@ -133,7 +134,10 @@ const optionalAuth = async (request: Request) => {
 const withUser = async (request: Request, options?: IWithUserOptions) => {
     const [authData, session] = await auth(request);
 
-    const select = [...new Set(['email', 'type', 'status', 'role', 'roleId', 'shopId', ...(options?.select ?? [])])];
+    let { select = [], allowedUserTypes = [] } = options ?? {};
+    select = [
+        ...new Set(['email', 'type', 'status', 'role', 'roleId', 'shopId', ...(select ?? [])])
+    ] as (keyof IUserModel)[];
 
     const user = await UserModel.findById(new mongoose.Types.ObjectId(authData!.id as string)).select(select.join(' '));
 
@@ -164,11 +168,9 @@ const withUser = async (request: Request, options?: IWithUserOptions) => {
         }
     }
 
-    const { ADMIN, SHOP } = CONST.USER.TYPES;
-
-    if (![ADMIN, SHOP].includes(user.type)) {
+    if (allowedUserTypes.length && !allowedUserTypes.includes(user.type)) {
         throw ErrorHandlingService.unAuthorized({
-            message: CONST.RESPONSE_MESSAGES.NOT_ADMIN
+            message: CONST.RESPONSE_MESSAGES.NOT_ALLOWED_TO_PERFORM_THIS_ACTION
         });
     }
 
@@ -177,7 +179,7 @@ const withUser = async (request: Request, options?: IWithUserOptions) => {
         userId: user._id,
         ...userObj,
         session: session!
-    } as unknown as IUserModel & { session: IUserSession, userId: any, token: string };
+    } as unknown as IUserModel & { session: IUserSession; userId: any; token: string };
 };
 
 /**

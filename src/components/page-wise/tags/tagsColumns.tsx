@@ -2,20 +2,19 @@ import { Box, IconButton, Typography } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import CommonChip from '@/components/common/CommonChip';
-import Link from '@/components/Link';
 
-import { ICategory } from '@/models/category.model';
+import { ITagPopulated } from '@/models/tag.model';
 import { helpers } from '@/utils/helpers';
 import { utils } from '@/utils/utils';
 
-const NUMERIC_STATUS = utils.CONST.CATEGORY.NUMERIC_STATUS;
+const NUMERIC_STATUS = utils.CONST.TAG.NUMERIC_STATUS;
 
-type ICategoriesColumns = {
-    onEditClick: (category: ICategory) => void;
+type ITagsColumns = {
+    onEditClick: (tag: ITagPopulated) => void;
     permissions: ReturnType<typeof utils.helpers.role.getPermissions>;
 };
 
-export const categoriesColumns = (props: ICategoriesColumns): GridColDef<ICategory>[] => {
+export const tagsColumns = (props: ITagsColumns): GridColDef<ITagPopulated>[] => {
     return helpers.getDataGridColumnsWithSpaces([
         {
             flex: 0.3,
@@ -31,50 +30,48 @@ export const categoriesColumns = (props: ICategoriesColumns): GridColDef<ICatego
                         alignItems: 'center'
                     }}
                 >
-                    <Link href={`/portal/categories/${params.row.id}`} className='custom-link primary'>
-                        <Typography
-                            variant='body2'
-                            className='ellipsis'
-                            sx={{
-                                color: 'primary.main',
-                                fontSize: (theme) => theme.typography.body2.fontSize
-                            }}
-                            title={utils.helpers.getValue(params.row.id)}
-                        >
-                            {utils.helpers.getValue(params.row.name)}
-                        </Typography>
-                    </Link>
+                    <Typography
+                        variant='body2'
+                        className='ellipsis'
+                        sx={{
+                            color: 'text.primary',
+                            fontSize: (theme) => theme.typography.body2.fontSize
+                        }}
+                        title={utils.helpers.getValue(params.row.name)}
+                    >
+                        {utils.helpers.getValue(params.row.name)}
+                    </Typography>
                 </Box>
             )
         },
-        //   {
-        //   flex: 0.3,
-        //   minWidth: 200,
-        //   headerName: 'Image',
-        //   field: 'Image',
-        //   sortable: true,
-        //   renderCell: params => (
-        //     <Box
-        //       sx={{
-        //         height: '100%',
-        //         display: 'flex',
-        //         alignItems: 'center'
-        //       }}
-        //     >
-        //       <Typography
-        //         variant='body2'
-        //         className='ellipsis'
-        //         sx={{
-        //           color: 'text.primary',
-        //           fontSize: theme => theme.typography.body2.fontSize
-        //         }}
-        //         title={utils.helpers.getValue(params.row.image)}
-        //       >
-        //         {utils.helpers.getValue(params.row.image)}
-        //       </Typography>
-        //     </Box>
-        //   )
-        // },
+        {
+            flex: 0.3,
+            minWidth: 80,
+            headerName: 'Category Name',
+            field: 'category.name',
+            sortable: true,
+            renderCell: (params) => (
+                <Box
+                    sx={{
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Typography
+                        variant='body2'
+                        className='ellipsis'
+                        sx={{
+                            color: 'primary.main',
+                            fontSize: (theme) => theme.typography.body2.fontSize
+                        }}
+                        title={utils.helpers.getValue(params.row.categoryId)}
+                    >
+                        {utils.helpers.getValue(params.row.category?.name ?? "")}
+                    </Typography>
+                </Box>
+            )
+        },
         {
             flex: 0.2,
             minWidth: 200,
@@ -168,6 +165,6 @@ export const categoriesColumns = (props: ICategoriesColumns): GridColDef<ICatego
                       )
                   }
               ]
-            : []) as GridColDef<ICategory>[])
-    ] as GridColDef<ICategory>[]);
+            : []) as GridColDef<ITagPopulated>[])
+    ] as GridColDef<ITagPopulated>[]);
 };

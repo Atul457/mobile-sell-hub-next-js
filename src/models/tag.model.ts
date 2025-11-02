@@ -1,21 +1,26 @@
 import { Document, Model, model, models, Schema } from 'mongoose';
 
-import { IShopRegister } from './shopRegister.model';
+import { ICategory } from './category.model';
 
-export interface ICategory extends Document {
+export interface ITag extends Document {
     name: string;
     description?: string;
-    shopId: IShopRegister['_id'];
+    shopId?: Schema.Types.ObjectId;
+    categoryId: ICategory['id'];
     image?: string | null;
     /** @info 0 => Inactive, 1 => Active, 2 => Deleted  */
     status: 0 | 1 | 2;
 }
 
 /** @TODO - */
-// Store productCount, and tagsCount
+// Store productCount
 /** @TODO - */
 
-const CategorySchema: Schema<ICategory> = new Schema(
+export interface ITagPopulated extends ITag {
+    category: ICategory;
+}
+
+const TagSchema: Schema<ITag> = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String },
@@ -24,12 +29,16 @@ const CategorySchema: Schema<ICategory> = new Schema(
         shopId: {
             type: Schema.Types.ObjectId,
             ref: 'ShopRegister'
+        },
+        categoryId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Category',
+            required: true
         }
     },
     { timestamps: true }
 );
 
-const CategoryModel =
-    (models?.Category as Model<ICategory>) || model<ICategory>('Category', CategorySchema, 'categories');
+const TagModel = (models?.Tag as Model<ITag>) || model<ITag>('Tag', TagSchema, 'tags');
 
-export default CategoryModel;
+export default TagModel;

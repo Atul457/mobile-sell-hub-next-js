@@ -1,7 +1,9 @@
+import Tags from '@/components/page-wise/tags/Tags';
+
 import { IRequestArgs } from '@/app/api/types';
 
-const Report_ = (_args: IRequestArgs<{ id: string }>) => {
-    return <></>;
+const Cattegory = (args: IRequestArgs<{ id: string }>) => {
+    return <Tags categoryId={args.params.id}/>;
 };
 
-export default Report_;
+export default Cattegory;

@@ -1,6 +1,6 @@
 import { IRequestArgs } from '@/app/api/types';
 import { dbConfig } from '@/configs/dbConfig';
-import CategoryModel, { ICategory } from '@/models/category.model';
+import TagModel, { ITag } from '@/models/tag.model';
 import { serverSchemas } from '@/schemas/server.schemas';
 import { ErrorHandlingService } from '@/services/ErrorHandling.service';
 import { services } from '@/services/index.service';
@@ -18,13 +18,13 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
 
         const av = new ActionValidator({
             roleId: authData.roleId ?? null,
-            module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
+            module: utils.CONST.ROLE_PERMISSION.MODULES.TAGS,
             action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.UPDATE
         });
 
         await av.validate();
 
-        const cs = services.server.CategoryService;
+        const cs = services.server.TagService;
 
         // Get the request body
         const body = await utils.getReqBody(request);
@@ -32,40 +32,41 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
         // Validate the request body
         await serverSchemas.objectIdSchema.required().validate(args.params.id);
 
-        const validatedData = await serverSchemas.addCategory.validate(body ?? {});
+        const validatedData = await serverSchemas.addTag.validate(body ?? {});
 
-        const { name, image, description, status } = validatedData;
+        const { name, image, description, status, categoryId } = validatedData;
 
-        const existingCategory = await CategoryModel.findOne({
+        const existingTag = await TagModel.findOne({
             _id: args.params.id,
             ...(authData.shopId && {
                 shopId: authData.shopId
             }),
             status: {
-                $ne: utils.CONST.CATEGORY.STATUS.DELETED
+                $ne: utils.CONST.TAG.STATUS.DELETED
             }
         });
 
-        if (!existingCategory) {
+        if (!existingTag) {
             throw ErrorHandlingService.notFound({
-                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Category')
+                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Tag')
             });
         }
 
-        // Update the category
-        const category = await cs.updateCategory(args.params.id, {
+        // Update the tag
+        const tag = await cs.updateTag(args.params.id, {
             name,
             image,
             description,
-            status: status as ICategory['status']
+            status: status as ITag["status"],
+            categoryId
         });
 
         return Response.json(
             utils.generateRes({
                 status: true,
-                message: utils.CONST.RESPONSE_MESSAGES._UPDATED_SUCCESSFULLY.replace('[ITEM]', 'Category'),
+                message: utils.CONST.RESPONSE_MESSAGES._UPDATED_SUCCESSFULLY.replace('[ITEM]', 'Tag'),
                 data: {
-                    category
+                    tag
                 }
             })
         );
@@ -82,39 +83,39 @@ export async function DELETE(request: Request, args: IRequestArgs<{ id: string }
 
         const av = new ActionValidator({
             roleId: authData.roleId ?? null,
-            module: utils.CONST.ROLE_PERMISSION.MODULES.CATEGORY,
+            module: utils.CONST.ROLE_PERMISSION.MODULES.TAGS,
             action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.DELETE
         });
 
         await av.validate();
 
-        const cs = services.server.CategoryService;
+        const cs = services.server.TagService;
 
-        const category = await CategoryModel.findOne({
+        const tag = await TagModel.findOne({
             _id: args.params.id,
             ...(authData.shopId && {
                 shopId: authData.shopId
             }),
             status: {
-                $ne: utils.CONST.CATEGORY.STATUS.DELETED
+                $ne: utils.CONST.TAG.STATUS.DELETED
             }
         });
 
-        if (!category) {
+        if (!tag) {
             throw ErrorHandlingService.notFound({
-                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Category')
+                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Tag')
             });
         }
 
-        // Delete the category
-        await cs.deleteCategory(args.params.id);
+        // Delete the tag
+        await cs.deleteTag(args.params.id);
 
         return Response.json(
             utils.generateRes({
                 status: true,
-                message: utils.CONST.RESPONSE_MESSAGES._DELETED_SUCCESSFULLY.replace('[ITEM]', 'Category'),
+                message: utils.CONST.RESPONSE_MESSAGES._DELETED_SUCCESSFULLY.replace('[ITEM]', 'Tag'),
                 data: {
-                    category
+                    tag
                 }
             })
         );

@@ -17,6 +17,7 @@ const objectIdSchema = yup
 
 const addCategory = commonSchemas.addCategory.clone().shape({});
 const registerShop = commonSchemas.storeSchema.clone().shape({});
+const addTag = commonSchemas.addTag.clone().shape({});
 
 const updateUser = commonSchemas.addUser.clone().shape({
     _id: objectIdSchema.required('User id is a required field')
@@ -40,12 +41,25 @@ const categoriesPaginationSchema = commonSchemas.paginationSchema.clone().shape(
         .nullable()
 });
 
-const rolesPaginationSchema = commonSchemas.paginationSchema.clone().shape({
+const tagsPaginationSchema = commonSchemas.paginationSchema.clone().shape({
     status: yup
         .number()
-        // .oneOf([...Object.values(utils.CONST.REPORT.STATUS), -1])
+        .oneOf([...Object.values(utils.CONST.TAG.STATUS), -1])
         .optional()
         .nullable(),
+    categoryId: objectIdSchema
+        .transform((currentValue, originalValue) => {
+            if (originalValue === '-1') {
+                currentValue = null;
+                return;
+            }
+            return originalValue;
+        })
+        .optional()
+        .nullable()
+});
+
+const rolesPaginationSchema = commonSchemas.paginationSchema.clone().shape({
     type: yup
         .number()
         .oneOf([...Object.values(utils.CONST.ROLE_PERMISSION.TYPES)])
@@ -60,16 +74,24 @@ const updateRoleStatus = commonSchemas.addRole.clone().shape({
     _id: objectIdSchema.required('Role id is a required field')
 });
 
+const updateTag = commonSchemas.addTag.clone().shape({
+    _id: objectIdSchema.required('Tag id is a required field'),
+    categoryId: objectIdSchema.optional()
+});
+
 const serverSchemas = {
     storeSchema: commonSchemas.storeSchema,
     updateRoleStatus,
     categoriesPaginationSchema,
+    tagsPaginationSchema,
     register,
     updateUserStatus,
     profilesPaginationSchema,
     objectIdSchema,
     usersPaginationSchema,
     addCategory,
+    addTag,
+    updateTag,
     registerShop,
     updateUser,
     rolesPaginationSchema

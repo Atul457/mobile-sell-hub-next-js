@@ -29,7 +29,8 @@ type FormData = (typeof commonSchemas.addRole)['__outputType'];
 const USER = utils.CONST.ROLE.TYPES.SHOP;
 const { NUMERIC_BOOLEAN_STATUS, BOOLEAN_STATUS } = utils.CONST.APP_CONST;
 
-let modules: IRolePermission['module'][] = ['user', 'category', 'role'];
+let shopModules: IRolePermission['module'][] = ['category', 'tags'];
+let modules: IRolePermission['module'][] = ['user', 'role', ...shopModules];
 const rolePermission: IRolePermission['actions'] = ['read', 'create', 'update', 'delete'];
 
 const ManageRoleModal = () => {
@@ -96,8 +97,10 @@ const ManageRoleModal = () => {
     useEffect(() => {
         let selectAll = false;
         if (forShopOwner) {
-            const allUserPermissionsSelected = rolePermission.every((role) => watch(`category.${role}.` as any));
-            selectAll = allUserPermissionsSelected;
+            const allPermissionsSelected = shopModules.every((module) => {
+                return rolePermission.every((role) => watch(`${module}.${role}.` as any));
+            });
+            selectAll = allPermissionsSelected;
         } else {
             const allPermissionsSelected = modules.every((module) => {
                 return rolePermission.every((role) => watch(`${module}.${role}.` as any));
@@ -117,14 +120,13 @@ const ManageRoleModal = () => {
             }
 
             const roleId = role?._id as string;
-
             const formattedPermissions: Record<string, string[]> = {};
 
             // Iterate through each module
             modules.forEach((module_) => {
                 const selectedPermissions = rolePermission.filter((role) => watch(`${module_}.${role}` as any));
                 if (selectedPermissions.length > 0) {
-                    if (!(module_ != 'category' && forShopOwner)) {
+                    if (forShopOwner ? shopModules.includes(module_) : true) {
                         formattedPermissions[module_] = selectedPermissions;
                     }
                 }
@@ -289,7 +291,7 @@ const ManageRoleModal = () => {
                             }}
                         >
                             {modules.map((module_, moduleIndex) => {
-                                if (forShopOwner && module_ != 'category') {
+                                if (forShopOwner && !shopModules.includes(module_)) {
                                     return null;
                                 }
                                 const isReadChecked = watch(`${module_}.read` as any);

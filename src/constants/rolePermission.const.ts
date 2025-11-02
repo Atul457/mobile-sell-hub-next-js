@@ -6,7 +6,8 @@ const ROLE_PERMISSION = {
     MODULES: {
         USER: 'user' as IRolePermission['module'],
         CATEGORY: 'category' as IRolePermission['module'],
-        ROLE: 'role' as IRolePermission['module']
+        ROLE: 'role' as IRolePermission['module'],
+        TAGS: 'tags' as IRolePermission['module']
     },
     TYPES: ROLE.TYPES,
     NUMERIC_TYPES: ROLE.NUMERIC_TYPES,

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
 const unprotectedRoutes = ['/portal/login', '/shop-register'];
-const protectedRoutes = ['/portal', '/portal/users', '/portal/roles', '/portal/categories'];
+const protectedRoutes = ['/portal', '/portal/users', '/portal/roles', '/portal/categories', '/portal/tags'];
 
 export async function middleware(req: NextApiRequest) {
     let redirect = false;

@@ -193,6 +193,15 @@ const addCategory = yup.object().shape({
     status: yup.number().oneOf([0, 1, 2]).required('Status is a required field')
 });
 
+
+const addTag = yup.object().shape({
+    name: yup.string().required('Name is a required field'),
+    description: yup.string().optional(),
+    image: yup.string().nullable().optional(),
+    categoryId: yup.string().required('Category Id is a required field'),
+    status: yup.number().oneOf([0, 1, 2]).required('Status is a required field')
+});
+
 const registerStep2 = yup.object().shape({
     type: userTypeSchema,
     firstName: firstNameSchema,
@@ -271,7 +280,8 @@ const commonSchemas = {
     createAdminUsers,
     addCategory,
     storeSchema,
-    shopRegister
+    shopRegister,
+    addTag
 };
 
 export { commonSchemas };

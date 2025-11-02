@@ -53,7 +53,9 @@ const RESPONSE_MESSAGES = {
     ACCOUNT_CREATED: 'Your shop account is created.',
     NOT_ADMIN: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.ADMIN]}`,
     NOT_SHOP: `You are not a ${USER.NUMERIC_TYPES[USER.TYPES.SHOP]}`,
-    NO_RESULTS_FOUND: 'Sorry, no results found. Please check the spellings or try searching for something else.'
+    NO_RESULTS_FOUND: 'Sorry, no results found. Please check the spellings or try searching for something else.',
+
+    NOT_ALLOWED_TO_PERFORM_THIS_ACTION: 'You are not allowed to perform this action'
 };
 
 export { RESPONSE_MESSAGES };
