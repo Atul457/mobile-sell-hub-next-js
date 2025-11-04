@@ -7,7 +7,7 @@ export interface IShopRegister extends Document {
 
     business: {
         companyName: string;
-        companyNumber: string;
+        companyNumber?: string;
         addressStreet: string;
         addressSuburb: string;
         addressCity: string;
@@ -17,20 +17,15 @@ export interface IShopRegister extends Document {
     };
 
     admin: {
-        firstName: string;
-        lastName: string;
-        role: string;
-        email: string;
-        mobile: string;
-        password: string;
+        role?: string;
     };
 
     directors: {
         firstName: string;
-        middleName: string;
+        middleName?: string;
         lastName: string;
-        email: string;
-        mobile: string;
+        email?: string;
+        mobile?: string;
     }[];
 
     subscription: {
@@ -38,7 +33,7 @@ export interface IShopRegister extends Document {
         paymentMethod: string;
         billingName: string;
         billingEmail: string;
-        billingAddress: string;
+        billingAddress?: string;
         termsAccepted: boolean;
     };
 }
@@ -61,7 +56,7 @@ const ShopRegisterSchema: Schema<IShopRegister> = new Schema(
 
         business: {
             companyName: { type: String, required: true },
-            companyNumber: { type: String, required: true },
+            companyNumber: { type: String },
             addressStreet: { type: String, required: true },
             addressSuburb: { type: String, required: true },
             addressCity: { type: String, required: true },
@@ -71,12 +66,7 @@ const ShopRegisterSchema: Schema<IShopRegister> = new Schema(
         },
 
         admin: {
-            firstName: { type: String, required: true },
-            lastName: { type: String, required: true },
-            role: { type: String },
-            email: { type: String, required: true },
-            mobile: { type: String, required: true },
-            password: { type: String, required: true }
+            role: { type: String }
         },
 
         directors: [
@@ -84,8 +74,8 @@ const ShopRegisterSchema: Schema<IShopRegister> = new Schema(
                 firstName: { type: String, required: true },
                 middleName: { type: String },
                 lastName: { type: String, required: true },
-                email: { type: String, required: true },
-                mobile: { type: String, required: true }
+                email: { type: String },
+                mobile: { type: String }
             }
         ],
 
@@ -94,8 +84,7 @@ const ShopRegisterSchema: Schema<IShopRegister> = new Schema(
             paymentMethod: { type: String, required: true },
             billingName: { type: String, required: true },
             billingEmail: { type: String, required: true },
-            billingAddress: { type: String, required: true },
-            termsAccepted: { type: Boolean, default: false }
+            billingAddress: { type: String }
         }
     },
     { timestamps: true }

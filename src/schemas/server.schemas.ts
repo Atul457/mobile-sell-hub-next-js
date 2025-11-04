@@ -5,8 +5,6 @@ import { utils } from '@/utils/utils';
 
 import { commonSchemas } from './common.schemas';
 
-const register = commonSchemas.registerStep1.concat(commonSchemas.registerStep2).clone().shape({});
-
 const objectIdSchema = yup
     .string()
     .test(
@@ -16,7 +14,7 @@ const objectIdSchema = yup
     );
 
 const addCategory = commonSchemas.addCategory.clone().shape({});
-const registerShop = commonSchemas.storeSchema.clone().shape({});
+
 const addTag = commonSchemas.addTag.clone().shape({});
 
 const updateUser = commonSchemas.addUser.clone().shape({
@@ -80,11 +78,9 @@ const updateTag = commonSchemas.addTag.clone().shape({
 });
 
 const serverSchemas = {
-    storeSchema: commonSchemas.storeSchema,
     updateRoleStatus,
     categoriesPaginationSchema,
     tagsPaginationSchema,
-    register,
     updateUserStatus,
     profilesPaginationSchema,
     objectIdSchema,
@@ -92,9 +88,9 @@ const serverSchemas = {
     addCategory,
     addTag,
     updateTag,
-    registerShop,
     updateUser,
-    rolesPaginationSchema
+    rolesPaginationSchema,
+    createShopSchema: commonSchemas.createShopSchema
 };
 
 export { serverSchemas };

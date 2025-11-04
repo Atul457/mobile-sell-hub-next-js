@@ -22,69 +22,13 @@ import * as yup from 'yup';
 import CommonButton from '@/components/common/CommonButton';
 
 // your UI components + utils (project-specific)
+import Error from '@/@core/components/mui/Error';
 import CustomTextField from '@/@core/components/mui/TextField';
+import { commonSchemas } from '@/schemas/common.schemas';
 import { http } from '@/utils/http';
 import { utils } from '@/utils/utils';
 
-/* -------------------------
-   Validation Schema (Yup)
-   ------------------------- */
-
-const phoneSchema = yup
-    .string()
-    .matches(/^\d{7,15}$/, 'Phone number must be between 7 and 15 digits')
-    .nullable();
-
-const directorSchema = yup.object().shape({
-    firstName: yup.string(),
-    middleName: yup.string().nullable(),
-    lastName: yup.string(),
-    email: yup.string().email('Enter a valid email').nullable(),
-    mobile: phoneSchema.nullable()
-});
-
-const schema = yup.object().shape({
-    business: yup.object().shape({
-        companyName: yup.string().required('Company / Trading name is required'),
-        companyNumber: yup.string().nullable(),
-        addressStreet: yup.string().required('Street is required'),
-        addressSuburb: yup.string().required('Suburb is required'),
-        addressCity: yup.string().required('City is required'),
-        addressPostcode: yup.string().required('Postcode is required'),
-        businessEmail: yup.string().email('Enter a valid email').required('Business email is required'),
-        businessPhone: phoneSchema.required('Business contact number is required')
-    }),
-    admin: yup.object().shape({
-        firstName: yup.string().required('First name is required'),
-        lastName: yup.string().nullable(),
-        role: yup.string().nullable(),
-        email: yup.string().email('Enter a valid email').required('Admin email is required'),
-        mobile: phoneSchema.required('Mobile number is required'),
-        password: yup.string().required('Password is required').min(5, 'Password must be at least 5 characters long'),
-        confirmPassword: yup
-            .string()
-            .oneOf([yup.ref('password')], 'The passwords do not match')
-            .required('Confirm Password is required')
-    }),
-    directors: yup.array().of(directorSchema).max(3, 'You can add up to 3 directors').nullable(),
-    subscription: yup.object().shape({
-        plan: yup.string().oneOf(['monthly', 'annual']).required('Choose a subscription plan'),
-        paymentMethod: yup.string().oneOf(['card', 'bank']).required('Choose a payment method'),
-        billingName: yup.string().required('Billing contact name is required'),
-        billingEmail: yup.string().email('Enter a valid email').required('Billing contact email is required'),
-        billingAddress: yup.string().nullable(),
-        termsAccepted: yup
-            .boolean()
-            .oneOf([true], 'You must accept the Terms of Service & Privacy Policy')
-            .required('You must accept the Terms')
-    })
-});
-
-/* -------------------------
-   Types & Defaults
-   ------------------------- */
-
-type FormValues = yup.InferType<typeof schema>;
+type FormValues = yup.InferType<typeof commonSchemas.createShopSchema>;
 
 const DEFAULT_VALUES: FormValues = {
     business: {
@@ -123,7 +67,7 @@ const DEFAULT_VALUES: FormValues = {
 
 const STEPS = ['Business Information', 'Contact', 'Directors', 'Subscription & Billing'];
 
-export default function MultiStepStoreSignup() {
+export default function MultiStepStoreSignupMultiStepStoreSignup() {
     const [activeStep, setActiveStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -134,12 +78,12 @@ export default function MultiStepStoreSignup() {
         handleSubmit,
         trigger,
         setValue,
-        getValues,
+        reset,
         formState: { errors, isSubmitted }
     } = useForm<FormValues>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(commonSchemas.createShopSchema),
         defaultValues: DEFAULT_VALUES,
-        mode: 'onTouched'
+        mode: 'onChange'
     });
 
     // directors field array
@@ -173,29 +117,18 @@ export default function MultiStepStoreSignup() {
 
     const handleBack = () => setActiveStep((s) => Math.max(s - 1, 0));
 
-    const onSubmit = async (values: FormValues) => {
-        // final submit: send grouped payload to API
+    const onSubmit = async (data: FormValues) => {
         try {
             setLoading(true);
-            const payload = {
-                business: values.business,
-                admin: {
-                    ...values.admin,
-                    // remove confirmPassword before sending
-                    confirmPassword: undefined
-                },
-                directors: values.directors || [],
-                subscription: values.subscription
-            };
-
             await http({
                 url: 'shop-register',
                 method: 'POST',
-                data: payload
+                data
             });
-
-            // you can handle success redirect / toast here
             utils.toast.success({ message: 'Registration submitted successfully' });
+
+            setActiveStep(0);
+            reset(DEFAULT_VALUES);
         } catch (err) {
             const message = utils.error.getMessage(err);
             utils.toast.error({ message });
@@ -233,28 +166,40 @@ export default function MultiStepStoreSignup() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete='off' className='w-full registerform'>
-            <Box sx={{ mb: 3 }}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete='off' className='w-full registerform space-y-4'>
+            <Box>
                 <Stepper activeStep={activeStep} alternativeLabel>
-                    {STEPS.map((label) => (
+                    {STEPS.map((label, index) => (
                         <Step key={label}>
-                            <StepLabel>
-                                <Typography sx={{ color: '#000' }}>{label}</Typography>
+                            <StepLabel
+                                sx={{
+                                    mt: 0
+                                }}
+                            >
+                                <Typography
+                                    sx={{
+                                        ...(index <= activeStep && {
+                                            color: 'primary.main'
+                                        }),
+                                        fontWeight: 600
+                                    }}
+                                    variant='subtitle1'
+                                >
+                                    {label}
+                                </Typography>
                             </StepLabel>
                         </Step>
                     ))}
                 </Stepper>
             </Box>
 
-            <Box sx={{ paddingBlock: 2, borderBottom: '1px solid #000', mb: 4 }}>
-                <Typography variant='h6' sx={{ color: '#000' }}>
-                    {STEPS[activeStep]}
-                </Typography>
-            </Box>
+            <Typography variant='h5' className='mb-1 font-semibold'>
+                {STEPS[activeStep]}
+            </Typography>
 
             {/* ---------------- STEP 1: Business ---------------- */}
             {activeStep === 0 && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     <Controller
                         name='business.companyName'
                         control={control}
@@ -373,7 +318,6 @@ export default function MultiStepStoreSignup() {
                                 onChange={(e) => {
                                     handlePhoneInputChange('business.businessPhone', e.target.value);
                                 }}
-                                value={getValues('business.businessPhone') || ''}
                                 error={!!(errors as any)?.business?.businessPhone}
                                 helperText={(errors as any)?.business?.businessPhone?.message || ''}
                             />
@@ -384,7 +328,7 @@ export default function MultiStepStoreSignup() {
 
             {/* ---------------- STEP 2: Primary Contact / Admin ---------------- */}
             {activeStep === 1 && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     <Controller
                         name='admin.firstName'
                         control={control}
@@ -451,7 +395,6 @@ export default function MultiStepStoreSignup() {
                                 placeholder='Admin mobile number'
                                 inputProps={{ inputMode: 'numeric' }}
                                 onChange={(e) => handlePhoneInputChange('admin.mobile', e.target.value)}
-                                value={getValues('admin.mobile') || ''}
                                 error={!!(errors as any)?.admin?.mobile}
                                 helperText={(errors as any)?.admin?.mobile?.message || ''}
                             />
@@ -524,7 +467,7 @@ export default function MultiStepStoreSignup() {
 
             {/* ---------------- STEP 3: Directors ---------------- */}
             {activeStep === 2 && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography sx={{ color: '#000' }}>Directors (up to 3)</Typography>
                         <Box>
@@ -543,11 +486,9 @@ export default function MultiStepStoreSignup() {
                         {/* <CommonButton label="" size="small" onClick={handleAddDirector} /> */}
                     </Box>
 
-                    {directorsFields.length === 0 && (
-                        <Typography sx={{ color: '#000', opacity: 0.8 }}>
-                            No directors added yet. Add if applicable.
-                        </Typography>
-                    )}
+                    {!directorsFields.length ? (
+                        <Typography variant='caption'>No directors added yet. Add if applicable.</Typography>
+                    ) : null}
 
                     {directorsFields.map((dir, idx) => (
                         <Box key={dir.id} sx={{ border: '1px solid rgba(255,255,255,0.06)', p: 2, borderRadius: 2 }}>
@@ -633,7 +574,6 @@ export default function MultiStepStoreSignup() {
                                                 onChange={(e) =>
                                                     handlePhoneInputChange(`directors.${idx}.mobile`, e.target.value)
                                                 }
-                                                value={getValues(`directors.${idx}.mobile`) || ''}
                                                 error={!!(errors as any)?.directors?.[idx]?.mobile}
                                                 helperText={(errors as any)?.directors?.[idx]?.mobile?.message || ''}
                                             />
@@ -666,7 +606,7 @@ export default function MultiStepStoreSignup() {
 
             {/* ---------------- STEP 4: Subscription & Billing ---------------- */}
             {activeStep === 3 && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     <Controller
                         name='subscription.plan'
                         control={control}
@@ -756,31 +696,27 @@ export default function MultiStepStoreSignup() {
                             />
                         )}
                     />
-                    {(errors as any)?.subscription?.termsAccepted?.message && (
-                        <Typography sx={{ color: 'red' }}>
-                            {(errors as any)?.subscription?.termsAccepted?.message}
-                        </Typography>
+                    {errors?.subscription?.termsAccepted?.message && (
+                        <Error message={errors?.subscription?.termsAccepted?.message} />
                     )}
                 </Box>
             )}
 
             {/* ---------------- Actions ---------------- */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 4 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 3, mt: 4 }}>
                 <Box sx={{ minWidth: 120 }}>
-                    {activeStep > 0 && (
-                        <CommonButton label='Back' size='small' variant='contained' onClick={handleBack} />
-                    )}
+                    {activeStep > 0 && <CommonButton label='Back' variant='contained' onClick={handleBack} />}
                 </Box>
 
                 <Box sx={{ marginLeft: 'auto' }}>
                     {!isLastStep ? (
-                        <CommonButton label='Next' variant='contained' size='small' onClick={handleNext} />
+                        <CommonButton type='button' label='Next' variant='contained' onClick={handleNext} />
                     ) : (
                         <CommonButton
+                            type='button'
                             loading={loading}
                             label='Submit'
                             variant='contained'
-                            size='small'
                             onClick={handleSubmit(onSubmit)}
                         />
                     )}

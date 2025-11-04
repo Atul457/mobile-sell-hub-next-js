@@ -18,24 +18,15 @@ export async function POST(request: Request) {
         const body = await utils.getReqBody(request);
 
         // // Validate the request body
-        const validatedData = await serverSchemas.storeSchema.validate(body ?? {});
+        const validatedData = await serverSchemas.createShopSchema.validate(body ?? {});
 
-        const validatedUserData = await serverSchemas.register.validate(body ?? {});
-        const { firstName, lastName, email, password, phoneNumber } = validatedUserData;
+        const { firstName, lastName, email, password, mobile: phoneNumber } = validatedData.admin;
 
         const password_ = await utils.bcrypt.hashPassword(password);
+
         const existingUser = await UserModel.findOne({
-            $or: [
-                {
-                    email: new RegExp(email, 'gi'),
-                    status: { $ne: utils.CONST.USER.STATUS.DELETED }
-                },
-                {
-                    firstName: new RegExp(validatedUserData.firstName, 'gi'),
-                    lastName: new RegExp(validatedUserData.lastName, 'gi'),
-                    status: { $ne: utils.CONST.USER.STATUS.DELETED }
-                }
-            ]
+            email: new RegExp(email, 'i'),
+            status: { $ne: utils.CONST.USER.STATUS.DELETED }
         });
 
         if (existingUser) {
@@ -44,7 +35,7 @@ export async function POST(request: Request) {
             });
         }
 
-        const roleId = rs.getDefaultRole('defaultShopRole');
+        const roleId = await rs.getDefaultRole('defaultShopRole');
 
         const user = await us.createUser({
             firstName,
@@ -57,12 +48,13 @@ export async function POST(request: Request) {
             password: password_
         });
 
-        const { storeName } = validatedData;
+        const { companyName } = validatedData.business;
 
         if (user) {
             await sr.registerShop({
-                storeName,
-                userId: user?._id as Types.ObjectId
+                userId: user?._id as Types.ObjectId,
+                storeName: companyName,
+                ...validatedData
             });
         }
 

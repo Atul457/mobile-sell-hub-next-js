@@ -2,7 +2,7 @@
 // Type Imports
 import type { ChildrenType } from '@core/types';
 
-import 'react-perfect-scrollbar/dist/css/styles.css';
+// import 'react-perfect-scrollbar/dist/css/styles.css';
 // Style Imports
 import '@/app/globals.css';
 import '@assets/iconify-icons/generated-icons.css';

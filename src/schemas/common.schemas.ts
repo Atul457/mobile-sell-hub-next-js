@@ -121,12 +121,6 @@ const login = yup.object().shape({
     password: yup.string().trim().required('Password is a required field')
 });
 
-const registerStep1 = yup.object().shape({
-    email: emailSchema,
-    password: passwordSchema,
-    type: userTypeSchema
-});
-
 const updateProfileSchema = yup.object().shape({
     firstName: firstNameSchema,
     lastName: lastNameSchema,
@@ -204,19 +198,6 @@ const addTag = yup.object().shape({
     status: yup.number().oneOf([0, 1, 2]).required('Status is a required field')
 });
 
-const registerStep2 = yup.object().shape({
-    type: userTypeSchema,
-    firstName: firstNameSchema,
-    lastName: lastNameSchema,
-    address: addressSchema,
-    phoneNumber: phoneNumberSchema,
-    phoneNumber_: phoneNumberSchema_
-});
-
-const registerStep2WithAgree = registerStep2.clone().shape({
-    agree
-});
-
 const forgotPasswordSchema = yup.object().shape({
     email: emailSchema
 });
@@ -236,68 +217,93 @@ const addRole = yup.object().shape({
     markDefault: yup.number().oneOf(Object.values(utils.CONST.APP_CONST.BOOLEAN_STATUS)).nullable().optional()
 });
 
-const storeSchema = yup.object().shape({
-    storeName: yup.string().required('Store name is a required field')
-});
-const shopRegister = yup.object().shape({
-    firstName: yup.string().required('First name is a required field'),
-    lastName: yup.string().nullable(),
-    email: emailSchema,
-    phoneNumber: phoneNumberSchema,
-    phoneNumber_: phoneNumberSchema_,
-    password: yup
-        .string()
-        .required('New password is a required field')
-        .min(5, 'New password must be at least 5 characters long'),
-    confirmPassword: yup
-        .string()
-        .oneOf([yup.ref('password')], 'The passwords do not match')
-        .required('Confirm Password is a required field'),
-    storeName: yup.string().required('Store name is a required field'),
-    type: yup.number().required('Type is a required field')
-});
-
 const addProduct = yup.object().shape({
-  name: yup.string().required('Product name is a required field'),
-  description: yup.string().optional(),
-  image: yup.string().nullable().optional(),
-  status: yup.number().oneOf([0, 1, 2]).required('Status is a required field'),
-  lanes: yup
-    .array()
-    .of(
-      yup.object().shape({
-        categoryId: yup
-          .string()
-          .transform((value) => (value === '-1' ? null : value))
-          .required('Category is required'),
-        laneTitle: yup.string().optional(),
-        type: yup
-          .mixed<'radio' | 'checkbox'>()
-          .oneOf(['radio', 'checkbox'])
-          .required('Type is required (radio or checkbox)'),
-        options: yup
-          .array()
-          .of(
+    name: yup.string().required('Product name is a required field'),
+    description: yup.string().optional(),
+    image: yup.string().nullable().optional(),
+    status: yup.number().oneOf([0, 1, 2]).required('Status is a required field'),
+    lanes: yup
+        .array()
+        .of(
             yup.object().shape({
-              tagId: yup
-                .string()
-                .transform((value) => (value === '-1' ? null : value))
-                .required('Tag is required'),
-              price: yup
-                .number()
-                .typeError('Price must be a number')
-                .min(0, 'Price must be >= 0')
-                .required('Price is required')
+                categoryId: yup
+                    .string()
+                    .transform((value) => (value === '-1' ? null : value))
+                    .required('Category is required'),
+                laneTitle: yup.string().optional(),
+                type: yup
+                    .mixed<'radio' | 'checkbox'>()
+                    .oneOf(['radio', 'checkbox'])
+                    .required('Type is required (radio or checkbox)'),
+                options: yup
+                    .array()
+                    .of(
+                        yup.object().shape({
+                            tagId: yup
+                                .string()
+                                .transform((value) => (value === '-1' ? null : value))
+                                .required('Tag is required'),
+                            price: yup
+                                .number()
+                                .typeError('Price must be a number')
+                                .min(0, 'Price must be >= 0')
+                                .required('Price is required')
+                        })
+                    )
+                    .min(1, 'At least one option is required')
+                    .required('Options are required')
             })
-          )
-          .min(1, 'At least one option is required')
-          .required('Options are required')
-      })
-    )
-    .min(1, 'At least one lane is required')
-    .required('Lanes are required')
+        )
+        .min(1, 'At least one lane is required')
+        .required('Lanes are required')
 });
 
+const phoneSchema = yup
+    .string()
+    .matches(/^\d{7,15}$/, 'Phone number must be between 7 and 15 digits')
+    .optional();
+
+const directorSchema = yup.object().shape({
+    firstName: firstNameSchema,
+    middleName: yup.string().optional(),
+    lastName: lastNameSchema,
+    email: emailSchema.optional(),
+    mobile: phoneSchema.optional()
+});
+
+const createShopSchema = yup.object().shape({
+    business: yup.object().shape({
+        companyName: yup.string().required('Company / Trading name is required'),
+        companyNumber: yup.string().optional(),
+        addressStreet: yup.string().required('Street is required'),
+        addressSuburb: yup.string().required('Suburb is required'),
+        addressCity: yup.string().required('City is required'),
+        addressPostcode: yup.string().required('Postcode is required'),
+        businessEmail: yup.string().email('Enter a valid email').required('Business email is required'),
+        businessPhone: phoneSchema.required('Business contact number is required')
+    }),
+    admin: yup.object().shape({
+        firstName: yup.string().required('First name is required'),
+        lastName: yup.string().optional(),
+        role: yup.string().optional(),
+        email: yup.string().email('Enter a valid email').required('Admin email is required'),
+        mobile: phoneSchema.required('Mobile number is required'),
+        password: yup.string().required('Password is required').min(5, 'Password must be at least 5 characters long'),
+        confirmPassword: yup
+            .string()
+            .oneOf([yup.ref('password')], 'The passwords do not match')
+            .required('Confirm Password is required')
+    }),
+    directors: yup.array().of(directorSchema).max(3, 'You can add up to 3 directors'),
+    subscription: yup.object().shape({
+        plan: yup.string().oneOf(['monthly', 'annual']).required('Choose a subscription plan'),
+        paymentMethod: yup.string().oneOf(['card', 'bank']).required('Choose a payment method'),
+        billingName: yup.string().required('Billing contact name is required'),
+        billingEmail: yup.string().email('Enter a valid email').required('Billing contact email is required'),
+        billingAddress: yup.string().optional(),
+        termsAccepted: agree
+    })
+});
 
 const commonSchemas = {
     addProduct,
@@ -306,8 +312,6 @@ const commonSchemas = {
     addRole,
     agree,
     resetPassword,
-    registerStep1,
-    registerStep2,
     paginationSchema,
     addUser,
     statusSchema,
@@ -315,7 +319,6 @@ const commonSchemas = {
     updateProfileSchemaWithType,
     updateProfileSchema,
     forgotPasswordSchema,
-    registerStep2WithAgree,
     resetPasswordWithConfirm,
     updatePasswordWithConfirm,
     updatePassword,
@@ -324,9 +327,8 @@ const commonSchemas = {
     updateAdminProfileSchema,
     createAdminUsers,
     addCategory,
-    storeSchema,
-    shopRegister,
-    addTag
+    addTag,
+    createShopSchema
 };
 
 export { commonSchemas };
