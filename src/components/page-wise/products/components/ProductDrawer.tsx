@@ -270,7 +270,7 @@ const ProductDrawer = (props: IProductProps) => {
                                             sx={{ mb: 2 }}
                                             {...(errors.lanes?.[laneIndex]?.laneTitle && {
                                                 error: true,
-                                                helperText: errors.lanes?.[laneIndex]?.laneTitle.message
+                                                helperText: errors?.lanes?.[laneIndex]?.laneTitle?.message
                                             })}
                                         />
                                     )}
@@ -291,7 +291,7 @@ const ProductDrawer = (props: IProductProps) => {
                                             sx={{ mb: 2 }}
                                             {...(errors.lanes?.[laneIndex]?.categoryId && {
                                                 error: true,
-                                                helperText: errors.lanes?.[laneIndex]?.categoryId.message
+                                                helperText: errors.lanes?.[laneIndex]?.categoryId?.message
                                             })}
                                         >
                                             <MenuItem value='-1'>Select</MenuItem>
@@ -318,7 +318,7 @@ const ProductDrawer = (props: IProductProps) => {
                                             sx={{ mb: 2 }}
                                             {...(errors.lanes?.[laneIndex]?.type && {
                                                 error: true,
-                                                helperText: errors.lanes?.[laneIndex]?.type.message
+                                                helperText: errors.lanes?.[laneIndex]?.type?.message
                                             })}
                                         >
                                             <MenuItem value='radio'>Single select (radio)</MenuItem>
