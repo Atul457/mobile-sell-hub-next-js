@@ -22,6 +22,13 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
         action: 'read'
     },
     {
+        label: 'Products',
+        href: '/portal/products',
+        icon: 'tabler-clipboard-list',
+        module: 'products',
+        action: 'read'
+    },
+    {
         label: 'Platform Users',
         href: '/portal/users',
         icon: 'tabler-users',

@@ -13,30 +13,30 @@ import CustomTextField from '@/@core/components/mui/TextField';
 import themeConfig from '@/configs/themeConfig';
 import { CONST } from '@/constants';
 import { useConfigProviderContext } from '@/contexts/ConfigProvider';
-import { ITagPopulated } from '@/models/tag.model';
+import { IProduct } from '@/models/product.model';
 import { utils } from '@/utils/utils';
 
-import TagDrawer from './components/TagDrawer';
-import useTags from './hooks/useTags';
-import { tagsColumns } from './tagsColumns';
+import ProductDrawer from './components/ProductDrawer';
+import useProducts from './hooks/useProducts';
+import { productsColumns } from './productsColumns';
 import useCategories from '../categories/hooks/useCategories';
 
 const { NUMERIC_STATUS, STATUS } = utils.CONST.CATEGORY;
 
-type ITagsProps = {
-    categoryId?: ITagPopulated['id'];
+type IProductsProps = {
+    categoryId?: IProduct['id'];
 };
 
-const Tags = (props: ITagsProps) => {
+const Products = (props: IProductsProps) => {
     const { categories, list: listCategories } = useCategories();
-    const { tags, list, onSearch: onSearch_, update, empty } = useTags();
+    const { products, list, onSearch: onSearch_, update, empty } = useProducts();
 
-    const selectedTagRef = useRef<ITagPopulated | null>(null);
+    const selectedProductRef = useRef<IProduct | null>(null);
 
-    const [selected, setSelected] = useState<ITagPopulated | null>(null);
+    const [selected, setSelected] = useState<IProduct | null>(null);
     const [create, setCreate] = useState(false);
     const { permissions: _permissions } = useConfigProviderContext();
-    const [tagPermissions] = useState({
+    const [productPermissions] = useState({
         create: true,
         update: true,
         read: true,
@@ -45,18 +45,18 @@ const Tags = (props: ITagsProps) => {
 
     const dispatch = useAppDispatch();
 
-    const tagsColumns_ = useMemo(() => {
-        return tagsColumns({
-            permissions: tagPermissions,
-            onEditClick: (tag) => {
-                selectedTagRef.current = tag;
+    const productsColumns_ = useMemo(() => {
+        return productsColumns({
+            permissions: productPermissions,
+            onEditClick: (product) => {
+                selectedProductRef.current = product;
                 utils.dom.onModalOpen();
-                setSelected(tag);
+                setSelected(product);
             }
         });
-    }, [tagPermissions]);
+    }, [productPermissions]);
 
-    const loadCategoriesNTags = useCallback(async () => {
+    const loadCategoriesNProducts = useCallback(async () => {
         await listCategories({
             status: CONST.CATEGORY.STATUS.ACTIVE
         });
@@ -68,19 +68,13 @@ const Tags = (props: ITagsProps) => {
     }, [dispatch, props.categoryId]);
 
     useEffect(() => {
-        loadCategoriesNTags();
-    }, [loadCategoriesNTags]);
+        loadCategoriesNProducts();
+    }, [loadCategoriesNProducts]);
 
     // Handle type change
-    const handleTypeChange = (status: ITagPopulated['status'] | -1) => {
+    const handleTypeChange = (status: IProduct['status'] | -1) => {
         list({
             status
-        });
-    };
-
-    const handleCategoryChange = (categoryId: ITagPopulated['categoryId'] | -1) => {
-        list({
-            categoryId
         });
     };
 
@@ -104,19 +98,19 @@ const Tags = (props: ITagsProps) => {
         }
     };
 
-    const onUpdate = (tag: ITagPopulated) => {
-        if (selectedTagRef.current) {
+    const onUpdate = (product: IProduct) => {
+        if (selectedProductRef.current) {
             update(
-                selectedTagRef.current?._id as string,
+                selectedProductRef.current?._id as string,
                 {
-                    ...selectedTagRef.current,
-                    ...tag
-                } as ITagPopulated
+                    ...selectedProductRef.current,
+                    ...product
+                } as IProduct
             );
         }
     };
 
-    const onCreate = (_tag: ITagPopulated) => {
+    const onCreate = (_product: IProduct) => {
         list({});
     };
 
@@ -129,12 +123,12 @@ const Tags = (props: ITagsProps) => {
 
     return (
         <>
-            <TagDrawer
+            <ProductDrawer
                 create={create}
                 categories={categories.data?.categories ?? []}
                 onUpdate={onUpdate}
                 onCreate={onCreate}
-                tag={selected}
+                product={selected}
                 onClose={onClose}
             />
 
@@ -149,7 +143,7 @@ const Tags = (props: ITagsProps) => {
                                 fontSize: (theme) => theme.typography.h3
                             }}
                         >
-                            List of All Tags
+                            List of All Products
                         </Typography>
                     }
                     action={
@@ -162,7 +156,7 @@ const Tags = (props: ITagsProps) => {
                                         MenuProps: themeConfig.components.select.MenuProps,
                                         multiple: false,
                                         onChange: (e) => {
-                                            handleCategoryChange(e.target.value as ITagPopulated['categoryId']);
+                                            handleTypeChange(Number(e.target.value) as IProduct['status']);
                                         }
                                     }}
                                     label={null}
@@ -170,39 +164,7 @@ const Tags = (props: ITagsProps) => {
                                         paddingInlineEnd: 0,
                                         width: 200
                                     }}
-                                    value={tags.data.categoryId}
-                                    onChange={(e) => {
-                                        handleCategoryChange(e.target.value as ITagPopulated['categoryId']);
-                                    }}
-                                >
-                                    <MenuItem value={-1}>Select Category</MenuItem>
-                                    {(categories.data.categories ?? []).map((category) => {
-                                        return (
-                                            <MenuItem key={category._id as string} value={category._id as string}>
-                                                {category.name}
-                                            </MenuItem>
-                                        );
-                                    })}
-                                </CustomTextField>
-                            </FormControl>
-
-                            <FormControl size='small'>
-                                <CustomTextField
-                                    select
-                                    type='select'
-                                    SelectProps={{
-                                        MenuProps: themeConfig.components.select.MenuProps,
-                                        multiple: false,
-                                        onChange: (e) => {
-                                            handleTypeChange(Number(e.target.value) as ITagPopulated['status']);
-                                        }
-                                    }}
-                                    label={null}
-                                    sx={{
-                                        paddingInlineEnd: 0,
-                                        width: 200
-                                    }}
-                                    value={tags.data.status}
+                                    value={products.data.status}
                                     onChange={(e) => {
                                         handleTypeChange(Number(e.target.value) as 0 | 1 | 2);
                                     }}
@@ -221,7 +183,7 @@ const Tags = (props: ITagsProps) => {
                                 defaultValue=''
                                 onChange={(e) => onSearch(e.target.value)}
                                 name='name'
-                                placeholder='Enter tag name or description'
+                                placeholder='Enter product name or description'
                             />
 
                             <Button onClick={() => setCreate(true)}>Add</Button>
@@ -230,7 +192,7 @@ const Tags = (props: ITagsProps) => {
                 />
                 <CardContent sx={{ padding: 0 }}>
                     <DataGrid
-                        loading={[categories.status, tags.status].includes('loading')}
+                        loading={[products.status, categories.status].includes('loading')}
                         sx={{
                             [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
                                 outline: 'transparent'
@@ -242,22 +204,22 @@ const Tags = (props: ITagsProps) => {
                         autoHeight
                         sortingMode='server'
                         rowSelection={false}
-                        rows={tags.data?.tags}
-                        columns={tagsColumns_}
-                        rowCount={tags.data.totalCount}
+                        rows={products.data?.products}
+                        columns={productsColumns_}
+                        rowCount={products.data.totalCount}
                         disableColumnMenu
                         pageSizeOptions={[10, 25, 50]}
                         paginationMode='server'
                         paginationModel={{
-                            page: tags.data.page - 1,
-                            pageSize: tags.data.limit
+                            page: products.data.page - 1,
+                            pageSize: products.data.limit
                         }}
                         onPaginationModelChange={onPaginationModalChange}
                         onSortModelChange={handleSortModelChange}
                         slots={{
                             noRowsOverlay: () => (
                                 <CustomNoRowsOverlay
-                                    message={empty ? 'It seems there are no tags in the system.' : undefined}
+                                    message={empty ? 'It seems there are no products in the system.' : undefined}
                                 />
                             )
                         }}
@@ -268,4 +230,4 @@ const Tags = (props: ITagsProps) => {
     );
 };
 
-export default Tags;
+export default Products;

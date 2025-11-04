@@ -1,5 +1,5 @@
 import Categories from '@/components/page-wise/categories/Categories';
 
-export default function Reports_() {
+export default function Categories_() {
     return <Categories />;
 }

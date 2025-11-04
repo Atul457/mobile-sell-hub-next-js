@@ -7,7 +7,6 @@ interface ICategoryService {
     getCategoryById(id: string): Promise<ICategory | null>;
     updateCategory(id: string, data: Partial<ICategory>): Promise<ICategory | null>;
     deleteCategory(id: string): Promise<ICategory | null>;
-    findCategoryBySlug(slug: string): Promise<ICategory | null>;
     getBaseCategories(): Promise<ICategory[]>;
 }
 
@@ -39,10 +38,6 @@ class CategoryService implements ICategoryService {
 
     async deleteCategory(id: string): Promise<ICategory | null> {
         return this.categoryModel.findByIdAndUpdate(id, { status: 2 }, { new: true }); // Soft delete
-    }
-
-    async findCategoryBySlug(slug: string): Promise<ICategory | null> {
-        return this.categoryModel.findOne({ slug, status: 1 });
     }
 }
 

@@ -193,12 +193,14 @@ const addCategory = yup.object().shape({
     status: yup.number().oneOf([0, 1, 2]).required('Status is a required field')
 });
 
-
 const addTag = yup.object().shape({
     name: yup.string().required('Name is a required field'),
     description: yup.string().optional(),
     image: yup.string().nullable().optional(),
-    categoryId: yup.string().required('Category Id is a required field'),
+    categoryId: yup
+        .string()
+        .transform((value) => (value === '-1' ? null : value))
+        .required('Category Id is a required field'),
     status: yup.number().oneOf([0, 1, 2]).required('Status is a required field')
 });
 
@@ -255,7 +257,50 @@ const shopRegister = yup.object().shape({
     type: yup.number().required('Type is a required field')
 });
 
+const addProduct = yup.object().shape({
+  name: yup.string().required('Product name is a required field'),
+  description: yup.string().optional(),
+  image: yup.string().nullable().optional(),
+  status: yup.number().oneOf([0, 1, 2]).required('Status is a required field'),
+  lanes: yup
+    .array()
+    .of(
+      yup.object().shape({
+        categoryId: yup
+          .string()
+          .transform((value) => (value === '-1' ? null : value))
+          .required('Category is required'),
+        laneTitle: yup.string().optional(),
+        type: yup
+          .mixed<'radio' | 'checkbox'>()
+          .oneOf(['radio', 'checkbox'])
+          .required('Type is required (radio or checkbox)'),
+        options: yup
+          .array()
+          .of(
+            yup.object().shape({
+              tagId: yup
+                .string()
+                .transform((value) => (value === '-1' ? null : value))
+                .required('Tag is required'),
+              price: yup
+                .number()
+                .typeError('Price must be a number')
+                .min(0, 'Price must be >= 0')
+                .required('Price is required')
+            })
+          )
+          .min(1, 'At least one option is required')
+          .required('Options are required')
+      })
+    )
+    .min(1, 'At least one lane is required')
+    .required('Lanes are required')
+});
+
+
 const commonSchemas = {
+    addProduct,
     login,
     querySchema,
     addRole,
