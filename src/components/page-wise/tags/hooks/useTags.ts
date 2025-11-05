@@ -55,7 +55,7 @@ const useTags = () => {
 
     const list = useCallback(async (args: Partial<ICPaginationArgs>) => {
         try {
-            const cs = new TagService();
+            const ts = new TagService();
             const currentTagsStateData = tagsRef.current.data;
 
             const payload = {
@@ -82,7 +82,7 @@ const useTags = () => {
                 payload: tagsRef.current
             });
 
-            const response = await cs.list(payload);
+            const response = await ts.list(payload);
 
             tagsRef.current = {
                 ...tagsRef.current,

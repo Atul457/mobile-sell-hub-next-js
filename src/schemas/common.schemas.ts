@@ -1,6 +1,13 @@
 import * as yup from 'yup';
 
+import { CONST } from '@/constants';
 import { utils } from '@/utils/utils';
+
+const {
+    USER: { STATUS: USER_STATUS }
+} = CONST;
+
+const USER_STATUSES = Object.values(USER_STATUS).filter((status) => status !== USER_STATUS.DELETED);
 
 const agree = yup
     .boolean()
@@ -16,16 +23,6 @@ const permissionsSchema = yup.object().shape({
 });
 
 const statusSchema = yup.number().oneOf([0, 1, 3]).nullable();
-
-const addressMetaSchema = yup.object().shape({
-    city: yup.string().trim().required('city is a required field'),
-    appartment: yup.string().nullable(),
-    zipCode: yup.string().trim().required('zipCode is a required field'),
-    state: yup.string().trim().required('state is a required field'),
-    country: yup.string().nullable(),
-    lat: yup.number().nullable(),
-    long: yup.number().nullable()
-});
 
 const firstNameSchema = yup
     .string()
@@ -127,17 +124,9 @@ const updateProfileSchema = yup.object().shape({
     address: addressSchema.transform((c) => (c ? c : null)),
     phoneNumber: phoneNumberSchema,
     phoneNumber_: phoneNumberSchema_,
-    addressMeta: addressMetaSchema.when('type', (type, schema) => {
-        const object = utils.CONST.USER.TYPES;
-        const isSubAdminUser = object.ADMIN === type?.[0];
-        return !isSubAdminUser ? schema.nullable().optional() : yup.string().optional().nullable();
-    }),
     type: userTypeSchema_,
-    roleId: yup.string().when('address', (type, schema) => {
-        const object = utils.CONST.USER.TYPES;
-        const isSubAdminUser = object.ADMIN === type?.[0];
-        return isSubAdminUser ? schema.required() : schema.optional().nullable();
-    })
+    status: yup.number().oneOf(USER_STATUSES),
+    roleId: yup.string().required('Role is a required field')
 });
 
 const updateAdminProfileSchema = yup.object().shape({
@@ -153,9 +142,6 @@ const updateProfileSchemaWithType = updateProfileSchema.clone().shape({
 const addUser = updateProfileSchema.clone().shape({
     email: emailSchema,
     role: yup.string().optional(),
-    addressMeta: addressMetaSchema.when('address', (address, schema) => {
-        return address[0] ? schema : schema.optional().nullable();
-    }),
     status: statusSchema
 });
 
@@ -164,7 +150,6 @@ const createAdminUsers = addUser.clone().shape({
     firstName: firstNameSchema,
     lastName: lastNameSchema,
     phoneNumber_: phoneNumberSchema_,
-    addressMeta: yup.string().nullable().optional(),
     roleId: yup.string().required()
 });
 

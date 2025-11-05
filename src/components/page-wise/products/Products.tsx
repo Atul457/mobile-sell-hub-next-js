@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, CardContent, CardHeader, FormControl, MenuItem, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, FormControl, MenuItem, Typography } from '@mui/material';
 import { DataGrid, gridClasses, GridSortModel } from '@mui/x-data-grid';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -185,8 +185,6 @@ const Products = (props: IProductsProps) => {
                                 name='name'
                                 placeholder='Enter product name or description'
                             />
-
-                            <Button onClick={() => setCreate(true)}>Add</Button>
                         </div>
                     }
                 />

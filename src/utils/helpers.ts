@@ -104,18 +104,6 @@ const checkAdmin = (type: IUser['type']) => {
     return type === CONST.USER.TYPES.ADMIN;
 };
 
-const formatAddress = (addressMeta?: Partial<IUser['addressMeta']>): IUser['addressMeta'] => {
-    let addressMeta_ = (addressMeta ?? {}) as IUser['addressMeta'];
-    return {
-        city: addressMeta_?.city ?? '',
-        appartment: addressMeta_?.appartment ?? null,
-        country: addressMeta_?.country ?? null,
-        state: addressMeta_?.state ?? '',
-        zipCode: addressMeta_?.zipCode ?? '',
-        lat: addressMeta_?.lat ?? null,
-        long: addressMeta_?.long ?? null
-    };
-};
 
 const getUserDetails = (user: IUser, forJwt = false) => {
     let commonKeysValues: Partial<IUser> = {
@@ -129,8 +117,6 @@ const getUserDetails = (user: IUser, forJwt = false) => {
     if (!forJwt) {
         commonKeysValues['address'] = user.address ?? null;
         commonKeysValues['phoneNumber'] = user.phoneNumber;
-        commonKeysValues['addressMeta'] = formatAddress(user.addressMeta);
-        commonKeysValues['designation'] = user.designation;
         commonKeysValues['status'] = user.status;
         commonKeysValues['role'] = user.role;
         commonKeysValues['shopId'] = user.shopId;
@@ -247,8 +233,7 @@ const user = {
     getUserStatusVariant,
     getUserDetails,
     getFullName,
-    profilePictureChange,
-    formatAddress
+    profilePictureChange
 };
 
 const role = {

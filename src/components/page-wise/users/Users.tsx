@@ -211,7 +211,7 @@ const Users = (props: IUsersProps) => {
     return (
         <>
             <AddUserDrawer
-                user={selectedAdminUser}
+                user={selectedAdminUser || selected}
                 roles={roles}
                 visible={create}
                 onUpdate={onUpdate}

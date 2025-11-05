@@ -36,7 +36,6 @@ export interface IUser {
     type: IUserTypeNumeric;
     profilePicture: string | null;
     role: IUserModel['role'];
-    addressMeta: IUserModel['addressMeta'];
 }
 
 export interface IInitialUserSliceState extends IReduxInitialKeyState {

@@ -1,5 +1,6 @@
 import { CategoryService } from './client/Category.service';
 import { ConfigService } from './client/Config.service';
+import { ProductService } from './client/Product.service';
 import { TagService } from './client/Tag.service';
 import { UserService } from './client/User.service';
 import { UsersService } from './client/Users.service';
@@ -10,6 +11,7 @@ import MailService from './Mail.service';
 import sCategoryService from './server/Category.service';
 import FileService from './server/File.service';
 import sMailService from './server/Mail.service';
+import sProductService from './server/Product.service';
 import RoleService from './server/Role.service';
 import RolePermissionService from './server/RolePermission.service';
 import sShopRegisterService from './server/ShopRegister.service';
@@ -26,6 +28,7 @@ export const services = {
     StripeService,
     server: {
         CategoryService: sCategoryService,
+        ProductService: sProductService,
         TagService: sTagService,
         ShopRegisterService: sShopRegisterService,
         FileService,
@@ -40,6 +43,7 @@ export const services = {
         ConfigService,
         UsersService,
         CategoryService,
-        TagService
+        TagService,
+        ProductService
     }
 };

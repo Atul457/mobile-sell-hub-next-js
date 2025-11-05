@@ -52,7 +52,7 @@ const UserPreview = (props: ICommonUserDetailsProps) => {
                     maxWidth: 'calc(100% - 48px)'
                 }}
             >
-                <Link href={`/${props.type === 'user' ? 'users' : 'profiles'}/${user._id}`} className='leading-1 flex'>
+                <Link href={`/portal/users/${user._id}`} className='leading-1 flex'>
                     <Typography
                         variant='body2'
                         sx={{
