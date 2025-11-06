@@ -29,6 +29,13 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
         action: 'read'
     },
     {
+        label: 'Branding',
+        href: '/portal/branding',
+        icon: 'tabler-brand-google-fit',
+        module: 'branding',
+        action: 'read'
+    },
+    {
         label: 'Platform Users',
         href: '/portal/users',
         icon: 'tabler-users',
@@ -61,7 +68,8 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
                 href: '/portal/roles/admin'
             }
         ]
-    }
+    },
+
 ];
 
 export default verticalMenuData;
