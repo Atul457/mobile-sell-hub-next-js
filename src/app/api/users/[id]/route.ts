@@ -98,27 +98,19 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
         const body = await utils.getReqBody(request);
 
         const validatedData = await commonSchemas.updateProfileSchema.validate(body);
-        const { firstName, phoneNumber, lastName, address, addressMeta, type, roleId } = validatedData;
+        const { firstName, phoneNumber, lastName, address, status, roleId } = validatedData;
 
         const us = services.server.UserService;
-
-        const isAdmin = utils.helpers.user.checkAdmin(type as IUser['type']);
-
-        if (!isAdmin) {
-            throw ErrorHandlingService.forbidden({
-                message: utils.CONST.RESPONSE_MESSAGES.UN_AUTHORIZED
-            });
-        }
 
         let user = await us.updateUser(userId, {
             phoneNumber,
             firstName,
             lastName,
             address,
+            status: status as IUser["status"],
             ...(roleId && {
                 roleId: roleId as unknown as Schema.Types.ObjectId
-            }),
-            addressMeta: utils.helpers.user.formatAddress(addressMeta)
+            })
         });
 
         const updatedUser = utils.helpers.user.getUserDetails(user ?? new UserModel());
@@ -127,7 +119,7 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
             utils.generateRes({
                 status: true,
                 data: updatedUser,
-                message: utils.CONST.RESPONSE_MESSAGES._UPDATED_SUCCESSFULLY.replace('[ITEM]', 'Profile')
+                message: utils.CONST.RESPONSE_MESSAGES._UPDATED_SUCCESSFULLY.replace('[ITEM]', 'User')
             })
         );
     });

@@ -4,7 +4,7 @@ import { object } from '@/utils/object';
 import { IPaginationArgs } from '../types';
 
 class TagService {
-    async list(args: IPaginationArgs) {
+    async list(args: IPaginationArgs & { categoryId?: string }) {
         try {
             const response = await http({
                 url: `tags?${object.objectToUrlParams(args)}`,

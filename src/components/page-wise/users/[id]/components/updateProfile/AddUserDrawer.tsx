@@ -14,6 +14,7 @@ import CommonTooltip from '@/components/common/CommonTooltip';
 
 import CustomTextField from '@/@core/components/mui/TextField';
 import themeConfig from '@/configs/themeConfig';
+import { CONST } from '@/constants';
 import { IRolePopulated } from '@/models/role.model';
 import { IUser } from '@/models/user.model';
 import { commonSchemas } from '@/schemas/common.schemas';
@@ -30,6 +31,14 @@ type IUsers = {
 
 type FormData = (typeof commonSchemas.createAdminUsers)['__outputType'];
 
+const { OBJECT_STATUSES } = CONST.USER;
+
+const USER_STATUS_SELECT_OPTIONS = [
+    [OBJECT_STATUSES.ACTIVE.VALUE, OBJECT_STATUSES.ACTIVE.LABEL],
+    [OBJECT_STATUSES.INACTIVE.VALUE, OBJECT_STATUSES.INACTIVE.LABEL],
+    [OBJECT_STATUSES.PENDING.VALUE, OBJECT_STATUSES.PENDING.LABEL]
+];
+
 const USER_TYPES = utils.CONST.USER.TYPES;
 const DEFAULT_VALUE = {
     type: USER_TYPES.SHOP,
@@ -39,7 +48,8 @@ const DEFAULT_VALUE = {
     address: '',
     phoneNumber: '',
     phoneNumber_: '',
-    roleId: '0'
+    roleId: '0',
+    status: OBJECT_STATUSES.ACTIVE.VALUE
 };
 
 const AddUserDrawer = (props: IUsers) => {
@@ -66,7 +76,7 @@ const AddUserDrawer = (props: IUsers) => {
     useEffect(() => {
         if (visible) {
             if (props.user) {
-                const { role: _, addressMeta: __, ...rest } = props.user;
+                const { role: _, ...rest } = props.user;
                 reset({
                     ...rest,
                     phoneNumber_: rest.phoneNumber ?? '',
@@ -276,6 +286,36 @@ const AddUserDrawer = (props: IUsers) => {
                             />
                         )}
                     />
+
+                    <Controller
+                        name='status'
+                        control={control}
+                        render={({ field }) => (
+                            <CustomTextField
+                                {...field}
+                                fullWidth
+                                label='Status'
+                                sx={{
+                                    paddingInlineEnd: 0
+                                }}
+                                select
+                                SelectProps={{
+                                    MenuProps: themeConfig.components.select.MenuProps,
+                                    multiple: false
+                                }}
+                            >
+                                <MenuItem value='0'>Select</MenuItem>
+                                {USER_STATUS_SELECT_OPTIONS.map((currentStatus) => {
+                                    return (
+                                        <MenuItem key={currentStatus[0]} value={currentStatus[0]}>
+                                            {currentStatus[1]}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </CustomTextField>
+                        )}
+                    />
+
                     <Controller
                         name='roleId'
                         control={control}

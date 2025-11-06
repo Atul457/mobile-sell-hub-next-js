@@ -5,12 +5,13 @@ import { IShopRegister } from './shopRegister.model';
 import { ITag } from './tag.model';
 
 export interface IProductLaneOption {
-    tagId: ITag["id"]; // Reference to Tag
+    tagId: ITag['id']; // Reference to Tag
     price: number; // Price for this specific option
+    name?: string;
 }
 
 export interface IProductLane {
-    categoryId: ICategory["id"];
+    categoryId: ICategory['id'];
     laneTitle?: string;
     type: 'radio' | 'checkbox';
     options: IProductLaneOption[]; // Array of { tagId, price }
@@ -22,7 +23,7 @@ export interface IProduct extends Document {
     image?: string | null;
     lanes: IProductLane[];
     status: 0 | 1 | 2;
-    shopId: IShopRegister["id"];
+    shopId: IShopRegister['id'];
 }
 
 const ProductLaneOptionSchema = new Schema({

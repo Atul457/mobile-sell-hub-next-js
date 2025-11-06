@@ -50,13 +50,15 @@ export async function POST(request: Request) {
 
         const { companyName } = validatedData.business;
 
-        if (user) {
-            await sr.registerShop({
-                userId: user?._id as Types.ObjectId,
-                storeName: companyName,
-                ...validatedData
-            });
-        }
+        const shop = await sr.registerShop({
+            userId: user?._id as Types.ObjectId,
+            storeName: companyName,
+            ...validatedData
+        });
+
+        us.updateUser(user._id as string, {
+            shopId: shop._id as any
+        });
 
         return Response.json(
             utils.generateRes({

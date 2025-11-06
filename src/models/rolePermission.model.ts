@@ -6,7 +6,11 @@ export interface IRolePermission extends Document {
     /** @info 1 => ADMIN, 2 => MANAGER, 3 => STAFF, 4 => TEST ADMINISTRATOR */
     role?: 1 | 2 | 3 | 4;
     roleId: Schema.Types.ObjectId;
+<<<<<<< HEAD
     module: 'user' | 'role' | 'category' | 'tags' | 'products' | 'branding';
+=======
+    module: 'user' | 'role' | 'category' | 'tags' | 'product';
+>>>>>>> 0799820a76f68740a72dd1821d79aa68859e0f84
     actions: IRolePermissionActions[];
 }
 

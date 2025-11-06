@@ -15,11 +15,14 @@ export async function POST(request: Request) {
 
         const uss = services.server.UserSessionService;
 
-        const { ADMIN, SHOP } = utils.CONST.USER.TYPES;
+        const { USER } = utils.CONST;
+        const { ADMIN, SHOP } = USER.TYPES;
+        const { PENDING, ACTIVE } = USER.STATUS;
 
         const existingUser = await UserModel.findOne({
             email: new RegExp(email, 'gi'),
-            type: { $in: [ADMIN, SHOP] }
+            type: { $in: [ADMIN, SHOP] },
+            status: { $in: [PENDING, ACTIVE] }
         });
 
         if (!existingUser) {
@@ -33,6 +36,12 @@ export async function POST(request: Request) {
         if (!passwordMatched) {
             throw ErrorHandlingService.badRequest({
                 message: utils.CONST.RESPONSE_MESSAGES.INVALID_CREDENTIALS
+            });
+        }
+
+        if (existingUser.status === PENDING) {
+            throw ErrorHandlingService.badRequest({
+                message: utils.CONST.RESPONSE_MESSAGES.NOT_ALLOWED_TO_LOGIN
             });
         }
 

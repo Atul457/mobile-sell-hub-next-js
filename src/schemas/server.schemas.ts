@@ -57,6 +57,14 @@ const tagsPaginationSchema = commonSchemas.paginationSchema.clone().shape({
         .nullable()
 });
 
+const productsPaginationSchema = commonSchemas.paginationSchema.clone().shape({
+    status: yup
+        .number()
+        .oneOf([...Object.values(utils.CONST.PRODUCT.STATUS), -1])
+        .optional()
+        .nullable(),
+});
+
 const rolesPaginationSchema = commonSchemas.paginationSchema.clone().shape({
     type: yup
         .number()
@@ -80,6 +88,7 @@ const updateTag = commonSchemas.addTag.clone().shape({
 const serverSchemas = {
     updateRoleStatus,
     categoriesPaginationSchema,
+    productsPaginationSchema,
     tagsPaginationSchema,
     updateUserStatus,
     profilesPaginationSchema,
@@ -90,7 +99,8 @@ const serverSchemas = {
     updateTag,
     updateUser,
     rolesPaginationSchema,
-    createShopSchema: commonSchemas.createShopSchema
+    createShopSchema: commonSchemas.createShopSchema,
+    addProduct: commonSchemas.addProduct,
 };
 
 export { serverSchemas };

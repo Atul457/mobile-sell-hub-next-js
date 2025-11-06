@@ -1,6 +1,6 @@
 import { IRequestArgs } from '@/app/api/types';
 import { dbConfig } from '@/configs/dbConfig';
-import TagModel, { ITag } from '@/models/tag.model';
+import ProductModel, { IProduct } from '@/models/product.model';
 import { serverSchemas } from '@/schemas/server.schemas';
 import { ErrorHandlingService } from '@/services/ErrorHandling.service';
 import { services } from '@/services/index.service';
@@ -18,13 +18,13 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
 
         const av = new ActionValidator({
             roleId: authData.roleId ?? null,
-            module: utils.CONST.ROLE_PERMISSION.MODULES.TAGS,
+            module: utils.CONST.ROLE_PERMISSION.MODULES.PRODUCT,
             action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.UPDATE
         });
 
         await av.validate();
 
-        const ts = services.server.TagService;
+        const ps = services.server.ProductService;
 
         // Get the request body
         const body = await utils.getReqBody(request);
@@ -32,11 +32,9 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
         // Validate the request body
         await serverSchemas.objectIdSchema.required().validate(args.params.id);
 
-        const validatedData = await serverSchemas.addTag.validate(body ?? {});
+        const validatedData = await serverSchemas.addProduct.validate(body ?? {});
 
-        const { name, image, description, status, categoryId } = validatedData;
-
-        const existingTag = await TagModel.findOne({
+        const existingProduct = await ProductModel.findOne({
             _id: args.params.id,
             ...(authData.shopId && {
                 shopId: authData.shopId
@@ -46,27 +44,24 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
             }
         });
 
-        if (!existingTag) {
+        if (!existingProduct) {
             throw ErrorHandlingService.notFound({
-                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Tag')
+                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Product')
             });
         }
 
-        // Update the tag
-        const tag = await ts.updateTag(args.params.id, {
-            name,
-            image,
-            description,
-            status: status as ITag["status"],
-            categoryId
+        // Update the product
+        const product = await ps.updateProduct(args.params.id, {
+            ...validatedData,
+            status: validatedData.status as IProduct['status']
         });
 
         return Response.json(
             utils.generateRes({
                 status: true,
-                message: utils.CONST.RESPONSE_MESSAGES._UPDATED_SUCCESSFULLY.replace('[ITEM]', 'Tag'),
+                message: utils.CONST.RESPONSE_MESSAGES._UPDATED_SUCCESSFULLY.replace('[ITEM]', 'Product'),
                 data: {
-                    tag
+                    product
                 }
             })
         );
@@ -83,15 +78,15 @@ export async function DELETE(request: Request, args: IRequestArgs<{ id: string }
 
         const av = new ActionValidator({
             roleId: authData.roleId ?? null,
-            module: utils.CONST.ROLE_PERMISSION.MODULES.TAGS,
+            module: utils.CONST.ROLE_PERMISSION.MODULES.PRODUCT,
             action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.DELETE
         });
 
         await av.validate();
 
-        const cs = services.server.TagService;
+        const cs = services.server.ProductService;
 
-        const tag = await TagModel.findOne({
+        const product = await ProductModel.findOne({
             _id: args.params.id,
             ...(authData.shopId && {
                 shopId: authData.shopId
@@ -101,21 +96,21 @@ export async function DELETE(request: Request, args: IRequestArgs<{ id: string }
             }
         });
 
-        if (!tag) {
+        if (!product) {
             throw ErrorHandlingService.notFound({
-                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Tag')
+                message: utils.CONST.RESPONSE_MESSAGES._NOT_FOUND.replace('[ITEM]', 'Product')
             });
         }
 
-        // Delete the tag
-        await cs.deleteTag(args.params.id);
+        // Delete the product
+        await cs.deleteProduct(args.params.id);
 
         return Response.json(
             utils.generateRes({
                 status: true,
-                message: utils.CONST.RESPONSE_MESSAGES._DELETED_SUCCESSFULLY.replace('[ITEM]', 'Tag'),
+                message: utils.CONST.RESPONSE_MESSAGES._DELETED_SUCCESSFULLY.replace('[ITEM]', 'Product'),
                 data: {
-                    tag
+                    product
                 }
             })
         );
