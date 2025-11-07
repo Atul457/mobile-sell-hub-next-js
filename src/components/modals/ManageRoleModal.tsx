@@ -29,7 +29,7 @@ type FormData = (typeof commonSchemas.addRole)['__outputType'];
 const USER = utils.CONST.ROLE.TYPES.SHOP;
 const { NUMERIC_BOOLEAN_STATUS, BOOLEAN_STATUS } = utils.CONST.APP_CONST;
 
-let shopModules: IRolePermission['module'][] = ['category', 'tags', 'products', 'branding'];
+let shopModules: IRolePermission['module'][] = ['category', 'tags', 'product', 'branding'];
 let modules: IRolePermission['module'][] = ['user', 'role', ...shopModules];
 const rolePermission: IRolePermission['actions'] = ['read', 'create', 'update', 'delete'];
 
