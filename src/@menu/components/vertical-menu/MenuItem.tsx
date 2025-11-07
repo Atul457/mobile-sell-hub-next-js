@@ -103,8 +103,18 @@ const MenuItem: ForwardRefRenderFunction<HTMLLIElement, MenuItemProps> = (props,
         const href = rest.href || (component && typeof component !== 'string' && component.props.href);
 
         if (href) {
-            // Check if the current url matches any of the children urls
-            if (pathname === href || subUrls?.find((url) => pathname.includes(url))) {
+            // Build regex patterns from subUrls
+            const matchFound = subUrls?.some((pattern) => {
+                // Convert string pattern into regex — escaping special chars except *
+                const regexPattern = pattern
+                    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // Escape regex chars
+                    .replace(/\\\*/g, '.*'); // Allow wildcard * support if you want
+
+                const regex = new RegExp(`^${regexPattern}$`);
+                return regex.test(pathname);
+            });
+
+            if (pathname === href || matchFound) {
                 setActive(true);
             } else {
                 setActive(false);

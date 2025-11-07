@@ -232,11 +232,27 @@ const addProduct = yup.object().shape({
                                 .number()
                                 .typeError('Price must be a number')
                                 .min(0, 'Price must be >= 0')
-                                .required('Price is required')
+                                .required('Price is required'),
+                            name: yup.string()
                         })
                     )
-                    .min(1, 'At least one option is required')
-                    .required('Options are required')
+                    .when('categoryId', {
+                        is: (val: string | null | undefined) => !!val && val !== '-1',
+                        then: (schema) =>
+                            schema.min(1, 'At least one option is required').required('Options are required'),
+                        otherwise: (schema) => schema.optional().notRequired()
+                    })
+                    .required('Options are required'),
+                selectedTagIds: yup.array().of(yup.string().required()).min(0).optional(),
+                presentTagOptions: yup
+                    .array()
+                    .of(
+                        yup.object().shape({
+                            tagId: yup.string().required('Tag is required'),
+                            name: yup.string().required('Tag name is required')
+                        })
+                    )
+                    .optional()
             })
         )
         .min(1, 'At least one lane is required')

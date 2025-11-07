@@ -1,8 +1,9 @@
 'use client';
 
-import { Card, CardContent, CardHeader, FormControl, MenuItem, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, FormControl, MenuItem, Typography } from '@mui/material';
 import { DataGrid, gridClasses, GridSortModel } from '@mui/x-data-grid';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import CustomNoRowsOverlay from '@/components/common/CommonCustomMessage';
 
@@ -16,7 +17,6 @@ import { useConfigProviderContext } from '@/contexts/ConfigProvider';
 import { IProduct } from '@/models/product.model';
 import { utils } from '@/utils/utils';
 
-import ProductDrawer from './components/ProductDrawer';
 import useProducts from './hooks/useProducts';
 import { productsColumns } from './productsColumns';
 import useCategories from '../categories/hooks/useCategories';
@@ -28,13 +28,10 @@ type IProductsProps = {
 };
 
 const Products = (props: IProductsProps) => {
+    const router = useRouter();
     const { categories, list: listCategories } = useCategories();
-    const { products, list, onSearch: onSearch_, update, empty } = useProducts();
+    const { products, list, onSearch: onSearch_, empty } = useProducts();
 
-    const selectedProductRef = useRef<IProduct | null>(null);
-
-    const [selected, setSelected] = useState<IProduct | null>(null);
-    const [create, setCreate] = useState(false);
     const { permissions: _permissions } = useConfigProviderContext();
     const [productPermissions] = useState({
         create: true,
@@ -49,9 +46,7 @@ const Products = (props: IProductsProps) => {
         return productsColumns({
             permissions: productPermissions,
             onEditClick: (product) => {
-                selectedProductRef.current = product;
-                utils.dom.onModalOpen();
-                setSelected(product);
+                router.push(`products/${product._id}`);
             }
         });
     }, [productPermissions]);
@@ -98,42 +93,11 @@ const Products = (props: IProductsProps) => {
         }
     };
 
-    const onUpdate = (product: IProduct) => {
-        if (selectedProductRef.current) {
-            update(
-                selectedProductRef.current?._id as string,
-                {
-                    ...selectedProductRef.current,
-                    ...product
-                } as IProduct
-            );
-        }
-    };
-
-    const onCreate = (_product: IProduct) => {
-        list({});
-    };
-
-    // Modal close handler
-    const onClose = () => {
-        utils.dom.onModalClose();
-        setSelected(null);
-        setCreate(false);
-    };
-
     return (
         <>
-            <ProductDrawer
-                create={create}
-                categories={categories.data?.categories ?? []}
-                onUpdate={onUpdate}
-                onCreate={onCreate}
-                product={selected}
-                onClose={onClose}
-            />
-
             <Card style={{ width: '100%' }}>
                 <CardHeader
+                    className='max-md:block max-md:!items-start max-md:space-y-2'
                     sx={{ padding: 3 }}
                     title={
                         <Typography
@@ -147,7 +111,7 @@ const Products = (props: IProductsProps) => {
                         </Typography>
                     }
                     action={
-                        <div className='flex flex-wrap space-x-2'>
+                        <div className='flex md:flex-wrap max-md:space-y-2 md:space-x-2 max-md:flex-col'>
                             <FormControl size='small'>
                                 <CustomTextField
                                     select
@@ -160,9 +124,9 @@ const Products = (props: IProductsProps) => {
                                         }
                                     }}
                                     label={null}
+                                    className='max-md:w-full md:w-[200px]'
                                     sx={{
-                                        paddingInlineEnd: 0,
-                                        width: 200
+                                        paddingInlineEnd: 0
                                     }}
                                     value={products.data.status}
                                     onChange={(e) => {
@@ -175,16 +139,18 @@ const Products = (props: IProductsProps) => {
                                 </CustomTextField>
                             </FormControl>
 
-                            <CustomTextField
-                                label={null}
-                                sx={{
-                                    width: 300
-                                }}
-                                defaultValue=''
-                                onChange={(e) => onSearch(e.target.value)}
-                                name='name'
-                                placeholder='Enter product name or description'
-                            />
+                            <div className='flex'>
+                                <CustomTextField
+                                    label={null}
+                                    className='md:w-[300px] max-md:flex-grow'
+                                    defaultValue=''
+                                    onChange={(e) => onSearch(e.target.value)}
+                                    name='name'
+                                    placeholder='Enter product name or description'
+                                />
+
+                                <Button onClick={() => router.push('products/create')}>Add</Button>
+                            </div>
                         </div>
                     }
                 />

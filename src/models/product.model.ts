@@ -15,6 +15,8 @@ export interface IProductLane {
     laneTitle?: string;
     type: 'radio' | 'checkbox';
     options: IProductLaneOption[]; // Array of { tagId, price }
+    presentTagOptions?: Omit<IProductLaneOption, 'price'>[];
+    selectedTagIds?: string[];
 }
 
 export interface IProduct extends Document {
@@ -35,7 +37,7 @@ const ProductLaneSchema: Schema = new Schema({
     categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
     laneTitle: { type: String },
     type: { type: String, enum: ['radio', 'checkbox'], required: true },
-    options: { type: [ProductLaneOptionSchema], required: true }
+    options: { type: [ProductLaneOptionSchema], required: true, id: false }
 });
 
 const ProductSchema: Schema<IProduct> = new Schema(
@@ -43,7 +45,7 @@ const ProductSchema: Schema<IProduct> = new Schema(
         name: { type: String, required: true },
         description: { type: String },
         image: { type: String, default: null },
-        lanes: { type: [ProductLaneSchema], required: true },
+        lanes: { type: [ProductLaneSchema], required: true, id: false },
         status: { type: Number, enum: [0, 1, 2], default: 1 },
         shopId: { type: Schema.Types.ObjectId, ref: 'ShopRegister' }
     },

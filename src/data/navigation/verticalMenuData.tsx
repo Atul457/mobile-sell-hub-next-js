@@ -25,12 +25,18 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
         label: 'Products',
         href: '/portal/products',
         icon: 'tabler-clipboard-list',
-        module: 'product',
-        action: 'read',
         options: [
             {
+                label: 'List',
+                href: '/portal/products',
+                module: 'product',
+                action: 'read'
+            },
+            {
                 label: 'Create',
-                href: '/portal/products/create'
+                href: '/portal/products/create',
+                module: 'product',
+                action: 'create'
             }
         ]
     },
@@ -74,8 +80,7 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
                 href: '/portal/roles/admin'
             }
         ]
-    },
-
+    }
 ];
 
 export default verticalMenuData;

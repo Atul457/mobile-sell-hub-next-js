@@ -62,7 +62,7 @@ const productsPaginationSchema = commonSchemas.paginationSchema.clone().shape({
         .number()
         .oneOf([...Object.values(utils.CONST.PRODUCT.STATUS), -1])
         .optional()
-        .nullable(),
+        .nullable()
 });
 
 const rolesPaginationSchema = commonSchemas.paginationSchema.clone().shape({
@@ -100,7 +100,7 @@ const serverSchemas = {
     updateUser,
     rolesPaginationSchema,
     createShopSchema: commonSchemas.createShopSchema,
-    addProduct: commonSchemas.addProduct,
+    addProduct: commonSchemas.addProduct
 };
 
 export { serverSchemas };

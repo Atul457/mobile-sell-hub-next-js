@@ -12,7 +12,8 @@ const CustomNoRowsOverlay: React.FC<CustomNoRowsOverlayProps> = ({ message }) =>
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: '100%'
+                height: '100%',
+                width: '100%'
             }}
         >
             <Typography variant='h6' color='textSecondary'>

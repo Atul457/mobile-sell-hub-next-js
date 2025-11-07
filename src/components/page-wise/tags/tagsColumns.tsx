@@ -67,7 +67,7 @@ export const tagsColumns = (props: ITagsColumns): GridColDef<ITagPopulated>[] =>
                         }}
                         title={utils.helpers.getValue(params.row.categoryId)}
                     >
-                        {utils.helpers.getValue(params.row.category?.name ?? "")}
+                        {utils.helpers.getValue(params.row.category?.name ?? '')}
                     </Typography>
                 </Box>
             )

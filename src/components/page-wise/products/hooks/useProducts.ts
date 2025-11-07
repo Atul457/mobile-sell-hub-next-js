@@ -61,7 +61,7 @@ const useProducts = () => {
                 limit: args.limit ?? currentProductsStateData.limit,
                 sort: args.sort ?? currentProductsStateData.sort,
                 order: args.order ?? currentProductsStateData.order,
-                status: args.status ?? currentProductsStateData.status,
+                status: args.status ?? currentProductsStateData.status
             };
 
             productsRef.current = {

@@ -69,7 +69,6 @@ const TagDrawer = (props: ITagProps) => {
     };
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
-
         try {
             if (!tag && !props.create) throw utils.CONST.RESPONSE_MESSAGES.SOMETHING_WENT_WRONG;
 

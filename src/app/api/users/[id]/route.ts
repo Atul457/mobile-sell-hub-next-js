@@ -107,7 +107,7 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
             firstName,
             lastName,
             address,
-            status: status as IUser["status"],
+            status: status as IUser['status'],
             ...(roleId && {
                 roleId: roleId as unknown as Schema.Types.ObjectId
             })

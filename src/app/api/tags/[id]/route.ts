@@ -57,7 +57,7 @@ export async function PATCH(request: Request, args: IRequestArgs<{ id: string }>
             name,
             image,
             description,
-            status: status as ITag["status"],
+            status: status as ITag['status'],
             categoryId
         });
 

@@ -65,7 +65,7 @@ const useTags = () => {
                 sort: args.sort ?? currentTagsStateData.sort,
                 order: args.order ?? currentTagsStateData.order,
                 status: args.status ?? currentTagsStateData.status,
-                categoryId: args.categoryId ?? currentTagsStateData.categoryId,
+                categoryId: args.categoryId ?? currentTagsStateData.categoryId
             };
 
             tagsRef.current = {

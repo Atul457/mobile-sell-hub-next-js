@@ -104,7 +104,6 @@ const checkAdmin = (type: IUser['type']) => {
     return type === CONST.USER.TYPES.ADMIN;
 };
 
-
 const getUserDetails = (user: IUser, forJwt = false) => {
     let commonKeysValues: Partial<IUser> = {
         type: user.type,

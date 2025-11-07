@@ -69,8 +69,8 @@ export async function GET(request: NextRequest) {
                     pipeline: [
                         {
                             $project: {
-                                '_id': 1,
-                                'name': 1
+                                _id: 1,
+                                name: 1
                             }
                         }
                     ]
