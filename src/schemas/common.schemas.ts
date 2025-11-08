@@ -172,6 +172,8 @@ const addCategory = yup.object().shape({
     status: yup.number().oneOf([0, 1, 2]).required('Status is a required field')
 });
 
+const addProductCategory = addCategory.clone();
+
 const addTag = yup.object().shape({
     name: yup.string().required('Name is a required field'),
     description: yup.string().optional(),
@@ -207,6 +209,11 @@ const addProduct = yup.object().shape({
     description: yup.string().optional(),
     image: yup.string().nullable().optional(),
     status: yup.number().oneOf([0, 1, 2]).required('Status is a required field'),
+    price: yup.number().typeError('Price must be a number').min(0, 'Price must be >= 0').required('Price is required'),
+    categoryId: yup
+        .string()
+        .transform((value) => (value === '-1' ? null : value))
+        .required('Category is required'),
     lanes: yup
         .array()
         .of(
@@ -215,7 +222,7 @@ const addProduct = yup.object().shape({
                     .string()
                     .transform((value) => (value === '-1' ? null : value))
                     .required('Category is required'),
-                laneTitle: yup.string().optional(),
+                laneTitle: yup.string().required('Title is required'),
                 type: yup
                     .mixed<'radio' | 'checkbox'>()
                     .oneOf(['radio', 'checkbox'])
@@ -329,7 +336,8 @@ const commonSchemas = {
     createAdminUsers,
     addCategory,
     addTag,
-    createShopSchema
+    createShopSchema,
+    addProductCategory
 };
 
 export { commonSchemas };

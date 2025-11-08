@@ -15,7 +15,7 @@ import LabelStyled from '@/@core/components/mui/Label';
 import CustomTextField from '@/@core/components/mui/TextField';
 import themeConfig from '@/configs/themeConfig';
 import { useModal } from '@/contexts/ModalProvider';
-import { IRolePermission } from '@/models/rolePermission.model';
+import { IRolePermission } from '@/models/role-permission.model';
 import { commonSchemas } from '@/schemas/common.schemas';
 import { RoleService } from '@/services/client/Role.service';
 import { utils } from '@/utils/utils';
@@ -29,8 +29,9 @@ type FormData = (typeof commonSchemas.addRole)['__outputType'];
 const USER = utils.CONST.ROLE.TYPES.SHOP;
 const { NUMERIC_BOOLEAN_STATUS, BOOLEAN_STATUS } = utils.CONST.APP_CONST;
 
-let shopModules: IRolePermission['module'][] = ['category', 'tags', 'product', 'branding'];
-let modules: IRolePermission['module'][] = ['user', 'role', ...shopModules];
+let shopModules: IRolePermission['module'][] = ['category', 'tags', 'product', 'branding', 'product-category'];
+let modules: IRolePermission['module'][] = ['user', 'role'];
+
 const rolePermission: IRolePermission['actions'] = ['read', 'create', 'update', 'delete'];
 
 const ManageRoleModal = () => {
@@ -121,12 +122,13 @@ const ManageRoleModal = () => {
 
             const roleId = role?._id as string;
             const formattedPermissions: Record<string, string[]> = {};
+            const modules_ = [...shopModules, ...modules];
 
             // Iterate through each module
-            modules.forEach((module_) => {
+            modules_.forEach((module_) => {
                 const selectedPermissions = rolePermission.filter((role) => watch(`${module_}.${role}` as any));
                 if (selectedPermissions.length > 0) {
-                    if (forShopOwner ? shopModules.includes(module_) : true) {
+                    if (forShopOwner ? shopModules.includes(module_) : modules.includes(module_)) {
                         formattedPermissions[module_] = selectedPermissions;
                     }
                 }
@@ -161,7 +163,9 @@ const ManageRoleModal = () => {
     const handleSelectAll = () => {
         setSelectAll(!selectAll);
 
-        modules.forEach((module_) => {
+        const modules_ = forShopOwner ? shopModules : modules;
+
+        modules_.forEach((module_) => {
             rolePermission.forEach((role) => {
                 setValue(`${module_}.${role}` as any, !selectAll, {
                     shouldValidate: isSubmitted_
@@ -290,10 +294,13 @@ const ManageRoleModal = () => {
                                 rowGap: 3
                             }}
                         >
-                            {modules.map((module_, moduleIndex) => {
+                            {[...new Set([...modules, ...shopModules])].map((module_, moduleIndex) => {
                                 if (forShopOwner && !shopModules.includes(module_)) {
                                     return null;
+                                } else if (!forShopOwner && !modules.includes(module_)) {
+                                    return null;
                                 }
+
                                 const isReadChecked = watch(`${module_}.read` as any);
                                 return (
                                     <Box
@@ -313,7 +320,7 @@ const ManageRoleModal = () => {
                                                 fontSize: (theme) => theme.typography.fontSize
                                             }}
                                         >
-                                            {utils.string.capitalize(module_)}
+                                            {utils.string.capitalize(module_.split('-').join(' '))}
                                         </Typography>
                                         <Box
                                             className='flex'

@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 
-import RolePermissionModel, { IRolePermission } from '@/models/rolePermission.model';
+import RolePermissionModel, { IRolePermission } from '@/models/role-permission.model';
 import { utils } from '@/utils/utils';
 
 import { ErrorHandlingService } from '../ErrorHandling.service';

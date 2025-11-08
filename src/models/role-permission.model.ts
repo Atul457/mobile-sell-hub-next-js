@@ -3,10 +3,10 @@ import { Document, Model, model, models, Schema } from 'mongoose';
 type IRolePermissionActions = 'create' | 'read' | 'update' | 'delete';
 
 export interface IRolePermission extends Document {
-    /** @info 1 => ADMIN, 2 => MANAGER, 3 => STAFF, 4 => TEST ADMINISTRATOR */
-    role?: 1 | 2 | 3 | 4;
+    /** @info 1 => ADMIN, 2 => SHOP */
+    role?: 1 | 2;
     roleId: Schema.Types.ObjectId;
-    module: 'user' | 'role' | 'category' | 'tags' | 'product' | 'branding';
+    module: 'user' | 'role' | 'category' | 'tags' | 'product' | 'branding' | 'product-category';
     actions: IRolePermissionActions[];
 }
 
@@ -23,7 +23,7 @@ const RolePermissionSchema: Schema<IRolePermission> = new Schema(
         },
         module: {
             type: String,
-            enum: ['user', 'role', 'category', 'tags', 'branding'],
+            enum: ['user', 'role', 'category', 'tags', 'branding', 'product-category'],
             required: true
         },
         actions: {

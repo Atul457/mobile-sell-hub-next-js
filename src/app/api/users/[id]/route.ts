@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 import { dbConfig } from '@/configs/dbConfig';
 // import FileModel from '@/models/file.model'
-import { IRolePermission } from '@/models/rolePermission.model';
+import { IRolePermission } from '@/models/role-permission.model';
 import UserModel, { IUser } from '@/models/user.model';
 // import UserModel, { IUser } from '@/models/user.model'
 import UserSessionModel from '@/models/userSession.model';

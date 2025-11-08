@@ -1,4 +1,4 @@
-import { IRolePermission } from '@/models/rolePermission.model';
+import { IRolePermission } from '@/models/role-permission.model';
 
 type IUploadUserProfilePictureArgs = {
     file: File | null;

@@ -1,7 +1,8 @@
 import { Document, Model, model, models, Schema } from 'mongoose';
 
 import { ICategory } from './category.model';
-import { IShopRegister } from './shopRegister.model';
+import { IProductCategory } from './product-category.model';
+import { IShopRegister } from './shop-register.model';
 import { ITag } from './tag.model';
 
 export interface IProductLaneOption {
@@ -22,6 +23,8 @@ export interface IProductLane {
 export interface IProduct extends Document {
     name: string;
     description?: string;
+    price: number;
+    categoryId: IProductCategory['id'];
     image?: string | null;
     lanes: IProductLane[];
     status: 0 | 1 | 2;
@@ -44,10 +47,16 @@ const ProductSchema: Schema<IProduct> = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String },
+        price: { type: Number, required: true },
         image: { type: String, default: null },
         lanes: { type: [ProductLaneSchema], required: true, id: false },
         status: { type: Number, enum: [0, 1, 2], default: 1 },
-        shopId: { type: Schema.Types.ObjectId, ref: 'ShopRegister' }
+        shopId: { type: Schema.Types.ObjectId, ref: 'ShopRegister' },
+        categoryId: {
+            type: Schema.Types.ObjectId,
+            ref: 'ProductCategory',
+            required: true
+        }
     },
     { timestamps: true }
 );

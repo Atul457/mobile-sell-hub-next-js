@@ -9,7 +9,8 @@ const protectedRoutes = [
     '/portal/roles',
     '/portal/categories',
     '/portal/tags',
-    '/portal/products'
+    '/portal/products',
+    '/portal/product-categories'
 ];
 
 export async function middleware(req: NextApiRequest) {

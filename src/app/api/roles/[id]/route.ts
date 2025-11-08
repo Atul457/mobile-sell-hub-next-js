@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 
 import { dbConfig } from '@/configs/dbConfig';
 import RoleModel, { IRole } from '@/models/role.model';
-import { IRolePermission } from '@/models/rolePermission.model';
+import { IRolePermission } from '@/models/role-permission.model';
 import { serverSchemas } from '@/schemas/server.schemas';
 import { ErrorHandlingService } from '@/services/ErrorHandling.service';
 import { services } from '@/services/index.service';

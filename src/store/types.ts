@@ -1,4 +1,4 @@
-import { IRolePermission } from '@/models/rolePermission.model';
+import { IRolePermission } from '@/models/role-permission.model';
 import { IUser as IUserModel } from '@/models/user.model';
 import { utils } from '@/utils/utils';
 

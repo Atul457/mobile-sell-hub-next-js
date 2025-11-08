@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 
-import ShopRegisterModel, { IShopRegister } from '@/models/shopRegister.model';
+import ShopRegisterModel, { IShopRegister } from '@/models/shop-register.model';
 import { string } from '@/utils/string';
 
 import { ErrorHandlingService } from '../ErrorHandling.service';

@@ -1,4 +1,4 @@
-import { IRolePermission } from '@/models/rolePermission.model';
+import { IRolePermission } from '@/models/role-permission.model';
 
 import { ROLE } from './role.const';
 
@@ -8,7 +8,8 @@ const ROLE_PERMISSION = {
         CATEGORY: 'category' as IRolePermission['module'],
         PRODUCT: 'product' as IRolePermission['module'],
         ROLE: 'role' as IRolePermission['module'],
-        TAGS: 'tags' as IRolePermission['module']
+        TAGS: 'tags' as IRolePermission['module'],
+        PRODUCT_CATEGORY: 'product-category' as IRolePermission['module']
     },
     TYPES: ROLE.TYPES,
     NUMERIC_TYPES: ROLE.NUMERIC_TYPES,

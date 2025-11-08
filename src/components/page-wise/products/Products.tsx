@@ -19,7 +19,7 @@ import { utils } from '@/utils/utils';
 
 import useProducts from './hooks/useProducts';
 import { productsColumns } from './productsColumns';
-import useCategories from '../categories/hooks/useCategories';
+import useProductCategories from '../product-categories/hooks/useProductCategories';
 
 const { NUMERIC_STATUS, STATUS } = utils.CONST.CATEGORY;
 
@@ -29,7 +29,7 @@ type IProductsProps = {
 
 const Products = (props: IProductsProps) => {
     const router = useRouter();
-    const { categories, list: listCategories } = useCategories();
+    const { productCategories, list: listCategories } = useProductCategories();
     const { products, list, onSearch: onSearch_, empty } = useProducts();
 
     const { permissions: _permissions } = useConfigProviderContext();
@@ -70,6 +70,12 @@ const Products = (props: IProductsProps) => {
     const handleTypeChange = (status: IProduct['status'] | -1) => {
         list({
             status
+        });
+    };
+
+    const handleCategoryChange = (categoryId: IProduct['categoryId'] | -1) => {
+        list({
+            categoryId
         });
     };
 
@@ -120,6 +126,37 @@ const Products = (props: IProductsProps) => {
                                         MenuProps: themeConfig.components.select.MenuProps,
                                         multiple: false,
                                         onChange: (e) => {
+                                            handleCategoryChange(e.target.value as IProduct['categoryId']);
+                                        }
+                                    }}
+                                    label={null}
+                                    sx={{
+                                        paddingInlineEnd: 0,
+                                        width: 200
+                                    }}
+                                    value={products.data.categoryId}
+                                    onChange={(e) => {
+                                        handleCategoryChange(e.target.value as IProduct['categoryId']);
+                                    }}
+                                >
+                                    <MenuItem value={-1}>Select Category</MenuItem>
+                                    {(productCategories.data.productCategories ?? []).map((category) => {
+                                        return (
+                                            <MenuItem key={category._id as string} value={category._id as string}>
+                                                {category.name}
+                                            </MenuItem>
+                                        );
+                                    })}
+                                </CustomTextField>
+                            </FormControl>
+                            <FormControl size='small'>
+                                <CustomTextField
+                                    select
+                                    type='select'
+                                    SelectProps={{
+                                        MenuProps: themeConfig.components.select.MenuProps,
+                                        multiple: false,
+                                        onChange: (e) => {
                                             handleTypeChange(Number(e.target.value) as IProduct['status']);
                                         }
                                     }}
@@ -139,7 +176,7 @@ const Products = (props: IProductsProps) => {
                                 </CustomTextField>
                             </FormControl>
 
-                            <div className='flex'>
+                            <div className='flex md:space-x-2'>
                                 <CustomTextField
                                     label={null}
                                     className='md:w-[300px] max-md:flex-grow'
@@ -156,7 +193,7 @@ const Products = (props: IProductsProps) => {
                 />
                 <CardContent sx={{ padding: 0 }}>
                     <DataGrid
-                        loading={[products.status, categories.status].includes('loading')}
+                        loading={[products.status, productCategories.status].includes('loading')}
                         sx={{
                             [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
                                 outline: 'transparent'

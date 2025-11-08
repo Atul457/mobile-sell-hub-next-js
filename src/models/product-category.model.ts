@@ -2,7 +2,7 @@ import { Document, Model, model, models, Schema } from 'mongoose';
 
 import { IShopRegister } from './shop-register.model';
 
-export interface ICategory extends Document {
+export interface IProductCategory extends Document {
     name: string;
     description?: string;
     shopId: IShopRegister['_id'];
@@ -15,7 +15,7 @@ export interface ICategory extends Document {
 // Store productCount, and tagsCount
 /** @TODO - */
 
-const CategorySchema: Schema<ICategory> = new Schema(
+const ProductCategorySchema: Schema<IProductCategory> = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String },
@@ -29,7 +29,8 @@ const CategorySchema: Schema<ICategory> = new Schema(
     { timestamps: true }
 );
 
-const CategoryModel =
-    (models?.Category as Model<ICategory>) || model<ICategory>('Category', CategorySchema, 'categories');
+const ProductCategoryModel =
+    (models?.ProductCategory as Model<IProductCategory>) ||
+    model<IProductCategory>('ProductCategory', ProductCategorySchema, 'productCategories');
 
-export default CategoryModel;
+export default ProductCategoryModel;

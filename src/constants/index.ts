@@ -4,6 +4,7 @@ import { FILE_MANAGER } from './fileManager.const';
 import { HTTP_RESPONSE_CODE } from './httpCodes.const';
 import { MAIL } from './mail.const';
 import { PRODUCT } from './product.const';
+import { PRODUCT_CATEGORY } from './product-category.const';
 import { REDUX } from './redux.const';
 import { RESPONSE_MESSAGES } from './responseMessages.const';
 import { ROLE } from './role.const';
@@ -18,6 +19,7 @@ const CONST = {
     CATEGORY,
     TAG,
     PRODUCT,
+    PRODUCT_CATEGORY,
     MAIL,
     APP_CONST,
     FILE_MANAGER,

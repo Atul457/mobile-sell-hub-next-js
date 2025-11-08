@@ -13,13 +13,13 @@ import type {
 import type { ChipProps } from '@mui/material/Chip';
 import type { ReactElement, ReactNode } from 'react';
 
-import { IRolePermission } from '@/models/rolePermission.model';
+import { IRolePermission } from '@/models/role-permission.model';
 
 type ICustomVerticalMenuItemDataType = {
     icon?: ReactElement | string;
     subUrls?: string[];
     href: string;
-    module?: IRolePermission['module'];
+    module?: IRolePermission['module'] | IRolePermission['module'][];
     clickAction?: 'logout';
     action?: IRolePermission['actions'][0];
     options?: (VerticalMenuItemDataType | VerticalSubMenuDataType)[];

@@ -8,24 +8,38 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
         icon: 'tabler-smart-home'
     },
     {
-        label: 'Categories',
-        href: '/portal/categories',
-        icon: 'tabler-stack',
-        module: 'category',
-        action: 'read'
-    },
-    {
         label: 'Tags',
         href: '/portal/tags',
         icon: 'tabler-tag',
-        module: 'tags',
-        action: 'read'
+        module: ['category', 'tags'],
+        options: [
+            {
+                label: 'Categories',
+                href: '/portal/categories',
+                module: 'category',
+                action: 'read'
+            },
+            {
+                label: 'List',
+                href: '/portal/tags',
+                module: 'tags',
+                action: 'read'
+            }
+        ]
     },
     {
         label: 'Products',
         href: '/portal/products',
         icon: 'tabler-clipboard-list',
+        action: 'read',
+        module: ['product-category', 'product'],
         options: [
+            {
+                label: 'Categories',
+                href: '/portal/product-categories',
+                module: 'product-category',
+                action: 'read'
+            },
             {
                 label: 'List',
                 href: '/portal/products',
@@ -39,13 +53,6 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
                 action: 'create'
             }
         ]
-    },
-    {
-        label: 'Branding',
-        href: '/portal/branding',
-        icon: 'tabler-brand-google-fit',
-        module: 'branding',
-        action: 'read'
     },
     {
         label: 'Platform Users',
@@ -80,6 +87,13 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
                 href: '/portal/roles/admin'
             }
         ]
+    },
+    {
+        label: 'Branding',
+        href: '/portal/branding',
+        icon: 'tabler-brand-google-fit',
+        module: 'branding',
+        action: 'read'
     }
 ];
 

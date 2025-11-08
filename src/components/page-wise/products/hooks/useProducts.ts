@@ -11,6 +11,7 @@ export interface IInitialProductsSliceState extends IReduxInitialKeyState {
     data: IBasePagination & {
         products: IProduct[];
         status: IProduct['status'] | -1;
+        categoryId: IProduct['categoryId'] | -1;
     };
 }
 
@@ -18,6 +19,7 @@ type IProductsAction = { type: 'GET'; payload: Partial<IInitialProductsSliceStat
 
 type ICPaginationArgs = IPaginationArgs & {
     status: IProduct['status'] | -1;
+    categoryId: IProduct['categoryId'] | -1;
 };
 
 const initialProductsState: IInitialProductsSliceState = {
@@ -25,7 +27,8 @@ const initialProductsState: IInitialProductsSliceState = {
     data: {
         ...utils.CONST.REDUX.BASE_PAGINATION,
         products: [],
-        status: -1
+        status: -1,
+        categoryId: -1
     }
 };
 
@@ -61,7 +64,8 @@ const useProducts = () => {
                 limit: args.limit ?? currentProductsStateData.limit,
                 sort: args.sort ?? currentProductsStateData.sort,
                 order: args.order ?? currentProductsStateData.order,
-                status: args.status ?? currentProductsStateData.status
+                status: args.status ?? currentProductsStateData.status,
+                categoryId: args.categoryId ?? currentProductsStateData.categoryId
             };
 
             productsRef.current = {

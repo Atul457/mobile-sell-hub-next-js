@@ -5,15 +5,12 @@ import { utils } from '@/utils/utils';
 
 import { commonSchemas } from './common.schemas';
 
-const objectIdSchema = yup
-    .string()
-    .test(
-        'is-object-id',
-        '${path} is invalid ObjectId',
-        (value) => value === undefined || mongoose.Types.ObjectId.isValid(value)
-    );
+const objectIdSchema = yup.string().test('is-object-id', '${path} is invalid ObjectId', (value) => {
+    return !value || mongoose.Types.ObjectId.isValid(value);
+});
 
 const addCategory = commonSchemas.addCategory.clone().shape({});
+const addProductCategory = commonSchemas.addProductCategory.clone().shape({});
 
 const addTag = commonSchemas.addTag.clone().shape({});
 
@@ -49,7 +46,7 @@ const tagsPaginationSchema = commonSchemas.paginationSchema.clone().shape({
         .transform((currentValue, originalValue) => {
             if (originalValue === '-1') {
                 currentValue = null;
-                return;
+                return currentValue;
             }
             return originalValue;
         })
@@ -61,6 +58,24 @@ const productsPaginationSchema = commonSchemas.paginationSchema.clone().shape({
     status: yup
         .number()
         .oneOf([...Object.values(utils.CONST.PRODUCT.STATUS), -1])
+        .optional()
+        .nullable(),
+    categoryId: objectIdSchema
+        .transform((currentValue, originalValue) => {
+            if (originalValue === '-1') {
+                currentValue = null;
+                return currentValue;
+            }
+            return originalValue;
+        })
+        .optional()
+        .nullable()
+});
+
+const productCategoriesPaginationSchema = commonSchemas.paginationSchema.clone().shape({
+    status: yup
+        .number()
+        .oneOf([...Object.values(utils.CONST.PRODUCT_CATEGORY.STATUS), -1])
         .optional()
         .nullable()
 });
@@ -100,7 +115,9 @@ const serverSchemas = {
     updateUser,
     rolesPaginationSchema,
     createShopSchema: commonSchemas.createShopSchema,
-    addProduct: commonSchemas.addProduct
+    addProduct: commonSchemas.addProduct,
+    productCategoriesPaginationSchema,
+    addProductCategory
 };
 
 export { serverSchemas };

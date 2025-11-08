@@ -21,6 +21,7 @@ import { utils } from '@/utils/utils';
 
 import LaneForm from './components/LaneForm';
 import useCategories from '../categories/hooks/useCategories';
+import useProductCategories from '../product-categories/hooks/useProductCategories';
 
 const { CONST } = utils;
 const { NUMERIC_STATUS, STATUS } = CONST.CATEGORY;
@@ -39,18 +40,20 @@ const DEFAULT_LANE: FormData['lanes'][0] = {
 
 const DEFAULT_VALUE: FormData = {
     name: '',
+    price: 0,
+    categoryId: '-1',
     description: '',
     status: STATUS.ACTIVE,
-    lanes: [DEFAULT_LANE as any]
+    lanes: [DEFAULT_LANE]
 };
 
 export default function Product({ id }: IProductProps) {
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
-    const [productLoading, setProductLoading] = useState(false);
     const [product, setProduct] = useState<IProduct | null>(null);
     const { categories, list: listCategories } = useCategories();
+    const { productCategories, list: listProductCategories } = useProductCategories();
     const [categoryIdTagsMap, setCategoryIdTagsMap] = useState(new Map<string, ITag[]>());
 
     const {
@@ -69,7 +72,6 @@ export default function Product({ id }: IProductProps) {
 
     const loadProductAndCategories = useCallback(async () => {
         try {
-            setProductLoading(true);
             const promises: Promise<any>[] = [];
 
             if (id) {
@@ -81,6 +83,7 @@ export default function Product({ id }: IProductProps) {
             }
 
             promises.push(listCategories({ status: STATUS.ACTIVE }));
+            promises.push(listProductCategories({ status: STATUS.ACTIVE }));
 
             const [productResponse] = await Promise.all(promises);
 
@@ -91,8 +94,6 @@ export default function Product({ id }: IProductProps) {
             }
         } catch (error) {
             console.error(error);
-        } finally {
-            setProductLoading(false);
         }
     }, [id, setProduct, reset]);
 
@@ -168,7 +169,7 @@ export default function Product({ id }: IProductProps) {
         }
     };
 
-    if (id && categories.status !== 'loading' && !productLoading && !product) {
+    if (id && categories.status !== 'loading' && !product) {
         return (
             <Box className='min-h-[80dvh] h-fulll w-full'>
                 <CustomNoRowsOverlay message='Seems like we are unable to load the product' />
@@ -178,7 +179,7 @@ export default function Product({ id }: IProductProps) {
 
     return (
         <div className='space-y-4'>
-            <Typography variant='h3'>{!id ? 'Create' : 'Update'} Product</Typography>
+            <Typography variant='h3'>{id ? 'Update' : 'Create'} Product</Typography>
 
             {categories.status === 'loading' ? (
                 <Box className='min-h-[70dvh] flex items-center justify-center'>
@@ -199,6 +200,47 @@ export default function Product({ id }: IProductProps) {
                                         placeholder='Enter name'
                                         error={!!errors.name}
                                         helperText={errors.name?.message}
+                                    />
+                                )}
+                            />
+
+                            {/* Product Category */}
+                            <Controller
+                                name='categoryId'
+                                control={control}
+                                render={({ field }) => (
+                                    <CustomTextField
+                                        {...field}
+                                        select
+                                        label='Category'
+                                        placeholder='Select category'
+                                        fullWidth
+                                        sx={{ mb: 2 }}
+                                        error={!!errors.categoryId}
+                                        helperText={errors.categoryId?.message}
+                                    >
+                                        <MenuItem value='-1'>Select</MenuItem>
+                                        {productCategories.data.productCategories.map((cat) => (
+                                            <MenuItem key={cat._id as string} value={cat._id as string}>
+                                                {cat.name}
+                                            </MenuItem>
+                                        ))}
+                                    </CustomTextField>
+                                )}
+                            />
+
+                            {/* 🔹 Product Price */}
+                            <Controller
+                                name='price'
+                                control={control}
+                                render={({ field }) => (
+                                    <CustomTextField
+                                        {...field}
+                                        type='number'
+                                        label='Price'
+                                        placeholder='Enter price'
+                                        error={!!errors.price}
+                                        helperText={errors.price?.message}
                                     />
                                 )}
                             />
@@ -278,7 +320,7 @@ export default function Product({ id }: IProductProps) {
 
                     <div className='w-full flex justify-end'>
                         <CommonButton
-                            label={!id ? 'Create' : 'Update'}
+                            label={id ? 'Update' : 'Create'}
                             loading={loading}
                             variant='contained'
                             onClick={handleSubmit(onSubmit)}

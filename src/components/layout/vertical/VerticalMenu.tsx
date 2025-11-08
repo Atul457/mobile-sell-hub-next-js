@@ -81,11 +81,14 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
             >
                 {menuData.map((item, index) => {
                     if (item.module && item.action) {
-                        // if (!permissions[item.module]?.includes(item.action)) {
-                        //   return null
-                        // }
-
-                        if (!permissions[item.module]?.includes('read')) {
+                        if (Array.isArray(item.module)) {
+                            const havePermissionOfOneModule = item.module.some((module) => {
+                                return Boolean(permissions[module]);
+                            });
+                            if (!havePermissionOfOneModule) {
+                                return null;
+                            }
+                        } else if (!permissions[item.module]?.includes('read')) {
                             return null;
                         }
                     }
@@ -99,6 +102,15 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
                                 icon={typeof item.icon === 'string' ? <i className={item.icon} /> : item.icon}
                             >
                                 {item.options.map((currOption, index_) => {
+                                    if (currOption.module && currOption.action) {
+                                        if (
+                                            typeof currOption.module === 'string' &&
+                                            !permissions[currOption.module]?.includes('read')
+                                        ) {
+                                            return null;
+                                        }
+                                    }
+
                                     return (
                                         <MenuItem
                                             key={`subMenuItem${index_}`}

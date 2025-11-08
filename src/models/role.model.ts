@@ -1,6 +1,6 @@
 import { Document, Model, model, models, Schema } from 'mongoose';
 
-import { IRolePermission } from './rolePermission.model';
+import { IRolePermission } from './role-permission.model';
 import { IUser } from './user.model';
 
 export interface IRole extends Document {

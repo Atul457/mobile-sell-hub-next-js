@@ -1,8 +1,8 @@
-import mongoose, { PipelineStage } from 'mongoose';
+import { PipelineStage } from 'mongoose';
 import { NextRequest } from 'next/server';
 
 import { dbConfig } from '@/configs/dbConfig';
-import ProductModel, { IProduct } from '@/models/product.model';
+import ProductCategoryModel from '@/models/product-category.model';
 import { serverSchemas } from '@/schemas/server.schemas';
 import { services } from '@/services/index.service';
 import { ActionValidator } from '@/services/server/ActionValidator.service';
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
         const av = new ActionValidator({
             roleId: authData.roleId ?? null,
-            module: utils.CONST.ROLE_PERMISSION.MODULES.PRODUCT,
+            module: utils.CONST.ROLE_PERMISSION.MODULES.PRODUCT_CATEGORY,
             action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.READ
         });
 
@@ -33,16 +33,15 @@ export async function GET(request: NextRequest) {
             query = null,
             sort = 'createdAt',
             order = 'desc',
-            status = -1,
-            categoryId
-        } = await serverSchemas.productsPaginationSchema.validate({
+            status = -1
+        } = await serverSchemas.productCategoriesPaginationSchema.validate({
             ...(body ?? {})
         });
 
         const stages: PipelineStage[] = [
             {
                 $match: {
-                    status: { $ne: utils.CONST.PRODUCT.STATUS.DELETED },
+                    status: { $ne: utils.CONST.PRODUCT_CATEGORY.STATUS.DELETED },
                     ...(query && {
                         name: { $regex: new RegExp(query, 'gi') },
                         description: { $regex: new RegExp(query, 'gi') }
@@ -54,19 +53,19 @@ export async function GET(request: NextRequest) {
                           }
                         : {
                               shopId: { $exists: false }
-                          }),
-                    ...(categoryId && {
-                        categoryId: new mongoose.Types.ObjectId(categoryId)
-                    })
+                          })
                 }
             }
         ];
 
-        const totalCount_ = await ProductModel.aggregate([...stages, { $group: { _id: null, n: { $sum: 1 } } }]);
+        const totalCount_ = await ProductCategoryModel.aggregate([
+            ...stages,
+            { $group: { _id: null, n: { $sum: 1 } } }
+        ]);
 
         const totalCount = totalCount_.length > 0 ? totalCount_[0].n : 0;
 
-        const products = await ProductModel.aggregate([
+        const productCategories = await ProductCategoryModel.aggregate([
             ...stages,
             {
                 $addFields: {
@@ -91,7 +90,7 @@ export async function GET(request: NextRequest) {
                     limit,
                     query,
                     totalCount,
-                    products
+                    productCategories
                 }
             })
         );
@@ -108,24 +107,27 @@ export async function POST(request: Request) {
 
         const av = new ActionValidator({
             roleId: authData.roleId ?? null,
-            module: utils.CONST.ROLE_PERMISSION.MODULES.PRODUCT,
+            module: utils.CONST.ROLE_PERMISSION.MODULES.PRODUCT_CATEGORY,
             action: utils.CONST.ROLE_PERMISSION.PERMISSIONS.CREATE
         });
 
         await av.validate();
 
-        const ps = services.server.ProductService;
+        const pcs = services.server.ProductCategoryService;
 
         // Get the request body
         const body = await utils.getReqBody(request);
 
         // Validate the request body
-        const validatedData = await serverSchemas.addProduct.validate(body ?? {});
+        const validatedData = await serverSchemas.addProductCategory.validate(body ?? {});
 
-        // Create the product
-        const product = await ps.createProduct({
-            ...validatedData,
-            status: validatedData.status as IProduct['status'],
+        const { name, image, description } = validatedData;
+
+        // Create the product category
+        const productCategory = await pcs.createProductCategory({
+            name,
+            image,
+            description,
             ...(authData.shopId && {
                 shopId: authData.shopId
             })
@@ -134,9 +136,9 @@ export async function POST(request: Request) {
         return Response.json(
             utils.generateRes({
                 status: true,
-                message: utils.CONST.RESPONSE_MESSAGES._ADDED_SUCCESSFULLY.replace('[ITEM]', 'Product'),
+                message: utils.CONST.RESPONSE_MESSAGES._ADDED_SUCCESSFULLY.replace('[ITEM]', 'Product Category'),
                 data: {
-                    product
+                    productCategory
                 }
             })
         );

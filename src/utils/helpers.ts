@@ -6,7 +6,7 @@ import { ICommonChipProps } from '@/components/common/CommonChip';
 import themeConfig from '@/configs/themeConfig';
 import { CONST } from '@/constants';
 import { IRolePopulated } from '@/models/role.model';
-import { IRolePermission } from '@/models/rolePermission.model';
+import { IRolePermission } from '@/models/role-permission.model';
 import { IUser } from '@/models/user.model';
 import FileValidatorService from '@/services/FileValidator.service';
 import { file as fileUtil } from '@/utils/file';
