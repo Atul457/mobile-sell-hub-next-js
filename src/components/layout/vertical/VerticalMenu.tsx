@@ -83,12 +83,12 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
                     if (item.module && item.action) {
                         if (Array.isArray(item.module)) {
                             const havePermissionOfOneModule = item.module.some((module) => {
-                                return Boolean(permissions[module]);
+                                return permissions[module]?.includes(item.action!);
                             });
                             if (!havePermissionOfOneModule) {
                                 return null;
                             }
-                        } else if (!permissions[item.module]?.includes('read')) {
+                        } else if (!permissions[item.module]?.includes(item.action)) {
                             return null;
                         }
                     }
@@ -105,7 +105,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
                                     if (currOption.module && currOption.action) {
                                         if (
                                             typeof currOption.module === 'string' &&
-                                            !permissions[currOption.module]?.includes('read')
+                                            !permissions[currOption.module]?.includes(currOption.action)
                                         ) {
                                             return null;
                                         }

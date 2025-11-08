@@ -12,6 +12,7 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
         href: '/portal/tags',
         icon: 'tabler-tag',
         module: ['category', 'tags'],
+        action: 'read',
         options: [
             {
                 label: 'Categories',
