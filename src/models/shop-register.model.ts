@@ -36,6 +36,17 @@ export interface IShopRegister extends Document {
         billingAddress?: string;
         termsAccepted: boolean;
     };
+
+    branding: {
+        primaryColor: string;
+        secondaryColor: string;
+        backgroundColor: string;
+        primaryTextColor: string;
+        secondaryTextColor: string;
+        thankYouMessage?: string;
+        headerText?: string;
+        footerText?: string;
+    };
 }
 
 const ShopRegisterSchema: Schema<IShopRegister> = new Schema(
@@ -85,6 +96,17 @@ const ShopRegisterSchema: Schema<IShopRegister> = new Schema(
             billingName: { type: String, required: true },
             billingEmail: { type: String, required: true },
             billingAddress: { type: String }
+        },
+
+        branding: {
+            primaryColor: { type: String, required: true },
+            secondaryColor: { type: String, required: true },
+            backgroundColor: { type: String, required: true },
+            primaryTextColor: { type: String, required: true },
+            secondaryTextColor: { type: String, required: true },
+            thankYouMessage: { type: String },
+            headerText: { type: String },
+            footerText: { type: String }
         }
     },
     { timestamps: true }

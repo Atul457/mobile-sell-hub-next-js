@@ -7,7 +7,7 @@ import themeConfig from '@/configs/themeConfig';
 import { CONST } from '@/constants';
 import { IRolePopulated } from '@/models/role.model';
 import { IRolePermission } from '@/models/role-permission.model';
-import { IUser } from '@/models/user.model';
+import { IUser, IUserPopulated } from '@/models/user.model';
 import FileValidatorService from '@/services/FileValidator.service';
 import { file as fileUtil } from '@/utils/file';
 
@@ -104,8 +104,8 @@ const checkAdmin = (type: IUser['type']) => {
     return type === CONST.USER.TYPES.ADMIN;
 };
 
-const getUserDetails = (user: IUser, forJwt = false) => {
-    let commonKeysValues: Partial<IUser> = {
+const getUserDetails = (user: IUserPopulated, forJwt = false) => {
+    let commonKeysValues: Partial<IUserPopulated> = {
         type: user.type,
         profilePicture: user.profilePicture ?? null,
         firstName: user.firstName,
@@ -119,6 +119,7 @@ const getUserDetails = (user: IUser, forJwt = false) => {
         commonKeysValues['status'] = user.status;
         commonKeysValues['role'] = user.role;
         commonKeysValues['shopId'] = user.shopId;
+        commonKeysValues['shop'] = user.shop;
     } else {
         commonKeysValues['id'] = user._id;
     }

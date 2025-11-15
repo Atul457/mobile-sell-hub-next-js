@@ -39,9 +39,21 @@ export async function GET(request: Request, args: IRequestArgs<{ id: string }>) 
             {
                 $match: {
                     _id: userId,
-                    status: {
-                        $ne: utils.CONST.USER.STATUS.DELETED
-                    }
+                    status: { $ne: utils.CONST.USER.STATUS.DELETED }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'shop_register', // ✅ must come first
+                    localField: 'shopId',
+                    foreignField: '_id',
+                    as: 'shop'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$shop',
+                    preserveNullAndEmptyArrays: true // ✅ optional, avoids errors if no shop found
                 }
             }
         ]);

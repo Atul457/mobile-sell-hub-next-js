@@ -9,11 +9,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'custom-blue-1': '#00214A',
-        'custom-blue-2': '#00142C'
+        'custom-blue-1': '#0D0D0D',
+        'custom-blue-2': '#1A1A1A'
       },
       backgroundImage: {
-        'custom-gradient': 'linear-gradient(to bottom, #00214A, #00142C)'
+        'custom-gradient': 'linear-gradient(to bottom, #0D0D0D, #1A1A1A)'
       }
     }
   }

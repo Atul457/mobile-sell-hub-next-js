@@ -101,6 +101,7 @@ const updateTag = commonSchemas.addTag.clone().shape({
 });
 
 const serverSchemas = {
+    branding: commonSchemas.branding,
     updateRoleStatus,
     categoriesPaginationSchema,
     productsPaginationSchema,

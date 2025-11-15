@@ -1,7 +1,9 @@
 import { CategoryService } from './client/Category.service';
 import { ConfigService } from './client/Config.service';
+import { DashboardService } from './client/Dashboard.service';
 import { ProductService } from './client/Product.service';
 import { ProductCategoryService } from './client/ProductCategory.service';
+import { ShopService } from './client/Shop.service';
 import { TagService } from './client/Tag.service';
 import { UserService } from './client/User.service';
 import { UsersService } from './client/Users.service';
@@ -42,12 +44,14 @@ export const services = {
         RoleService
     },
     client: {
+        ShopService,
         UserService,
         ConfigService,
         UsersService,
         CategoryService,
         TagService,
         ProductService,
-        ProductCategoryService
+        ProductCategoryService,
+        DashboardService
     }
 };

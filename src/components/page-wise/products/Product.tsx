@@ -1,13 +1,13 @@
 'use client';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Divider, MenuItem, Typography } from '@mui/material';
+import { Box, Card, CardContent, Divider, MenuItem, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 
 import CommonButton from '@/components/common/CommonButton';
-import CustomNoRowsOverlay from '@/components/common/CommonCustomMessage';
+import CommonNotFound from '@/components/common/CommonNotFound';
 import Loader from '@/components/Loader';
 
 import CustomTextField from '@/@core/components/mui/TextField';
@@ -50,7 +50,7 @@ const DEFAULT_VALUE: FormData = {
 export default function Product({ id }: IProductProps) {
     const router = useRouter();
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState<IProduct | null>(null);
     const { categories, list: listCategories } = useCategories();
     const { productCategories, list: listProductCategories } = useProductCategories();
@@ -60,7 +60,7 @@ export default function Product({ id }: IProductProps) {
         control,
         handleSubmit,
         reset,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         watch
     } = useForm<FormData>({
         resolver: yupResolver(commonSchemas.addProduct),
@@ -92,8 +92,11 @@ export default function Product({ id }: IProductProps) {
                 setProduct(product);
                 reset(product);
             }
+
+            setLoading(false);
         } catch (error) {
-            console.error(error);
+            utils.toast.error({ message: utils.error.getMessage(error) });
+            setLoading(false);
         }
     }, [id, setProduct, reset]);
 
@@ -149,8 +152,6 @@ export default function Product({ id }: IProductProps) {
         try {
             if (!product && id) throw utils.CONST.RESPONSE_MESSAGES.SOMETHING_WENT_WRONG;
 
-            setLoading(true);
-
             const ps = new ProductService();
             data.lanes = data.lanes.map((l) => ({
                 ...l,
@@ -158,22 +159,28 @@ export default function Product({ id }: IProductProps) {
             }));
 
             const response = product?._id ? await ps.update(product._id as string, data) : await ps.create(data);
-
             utils.toast.success({ message: response.message! });
-
             router.push('/portal/products');
         } catch (error) {
             utils.toast.error({ message: utils.error.getMessage(error) });
-        } finally {
-            setLoading(false);
         }
     };
 
-    if (id && categories.status !== 'loading' && !product) {
+    if (loading) {
         return (
-            <Box className='min-h-[80dvh] h-fulll w-full'>
-                <CustomNoRowsOverlay message='Seems like we are unable to load the product' />
+            <Box className='min-h-[300px] flex items-center justify-center'>
+                <Loader size='md' />
             </Box>
+        );
+    }
+
+    if (id && !product) {
+        return (
+            <Card>
+                <CardContent>
+                    <CommonNotFound description='Seems like we are unable to load the product' withoutImage={true} />
+                </CardContent>
+            </Card>
         );
     }
 
@@ -321,7 +328,7 @@ export default function Product({ id }: IProductProps) {
                     <div className='w-full flex justify-end'>
                         <CommonButton
                             label={id ? 'Update' : 'Create'}
-                            loading={loading}
+                            loading={isSubmitting}
                             variant='contained'
                             onClick={handleSubmit(onSubmit)}
                         />

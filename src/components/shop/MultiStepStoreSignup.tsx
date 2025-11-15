@@ -25,7 +25,7 @@ import CommonButton from '@/components/common/CommonButton';
 import Error from '@/@core/components/mui/Error';
 import CustomTextField from '@/@core/components/mui/TextField';
 import { commonSchemas } from '@/schemas/common.schemas';
-import { http } from '@/utils/http';
+import { ShopService } from '@/services/client/Shop.service';
 import { utils } from '@/utils/utils';
 
 type FormValues = yup.InferType<typeof commonSchemas.createShopSchema>;
@@ -121,11 +121,8 @@ export default function MultiStepStoreSignupMultiStepStoreSignup() {
     const onSubmit = async (data: FormValues) => {
         try {
             setLoading(true);
-            await http({
-                url: 'shop-register',
-                method: 'POST',
-                data
-            });
+            const ss = new ShopService();
+            await ss.register(data);
             utils.toast.success({ message: 'Thank you for registering your shop with 73 Inc.' });
             setSucessSection(true);
             setActiveStep(0);

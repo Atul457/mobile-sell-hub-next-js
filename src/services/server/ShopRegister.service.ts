@@ -6,7 +6,9 @@ import { string } from '@/utils/string';
 import { ErrorHandlingService } from '../ErrorHandling.service';
 
 interface IShopRegisterService {
-    registerShop(data: Partial<IShopRegister>): Promise<IShopRegister>;
+    registerShop(data: Partial<IShopRegister>): Promise<IShopRegister | null>;
+    update(id: string, data: Partial<IShopRegister>): Promise<IShopRegister | null>;
+    get(id: string): Promise<IShopRegister | null>;
 }
 
 class ShopRegisterService implements IShopRegisterService {
@@ -45,6 +47,14 @@ class ShopRegisterService implements IShopRegisterService {
 
         const shop = new this.shopRegisterModel({ ...data, slug });
         return shop.save();
+    }
+
+    async update(id: string, data: Partial<IShopRegister>): Promise<IShopRegister | null> {
+        return this.shopRegisterModel.findByIdAndUpdate(id, data, { new: true });
+    }
+
+    async get(id: string): Promise<IShopRegister | null> {
+        return this.shopRegisterModel.findById(id);
     }
 }
 

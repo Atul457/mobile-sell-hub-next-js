@@ -46,13 +46,28 @@ const Loader = (props: ILoaderProps) => {
 
     if ((props as ILoaderWithPageLoader).isPageLoader) {
         Wrapper = (
-            <main className={clsx('flex justify-center items-center h-screen w-screen')}>
-                <div className='follow-the-leader-line'>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+            <main className={clsx('flex justify-center items-center h-screen w-screen bg-white')}>
+                <div className='loader'>
+                    <div className='box box-1'>
+                        <div className='side-left'></div>
+                        <div className='side-right'></div>
+                        <div className='side-top'></div>
+                    </div>
+                    <div className='box box-2'>
+                        <div className='side-left'></div>
+                        <div className='side-right'></div>
+                        <div className='side-top'></div>
+                    </div>
+                    <div className='box box-3'>
+                        <div className='side-left'></div>
+                        <div className='side-right'></div>
+                        <div className='side-top'></div>
+                    </div>
+                    <div className='box box-4'>
+                        <div className='side-left'></div>
+                        <div className='side-right'></div>
+                        <div className='side-top'></div>
+                    </div>
                 </div>
             </main>
         );

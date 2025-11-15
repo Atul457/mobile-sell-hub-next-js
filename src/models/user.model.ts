@@ -1,8 +1,9 @@
 import { Document, Model, model, models, Schema } from 'mongoose';
 
 import { IRolePermission } from './role-permission.model';
+import { IShopRegister } from './shop-register.model';
 
-export interface IUser extends Document {
+export interface IBaseUser {
     firstName: string;
     lastName: string;
     email: string;
@@ -20,6 +21,12 @@ export interface IUser extends Document {
     phoneNumber: string;
     profilePicture: string | null;
 }
+
+export interface IUserPopulated extends IBaseUser, Document {
+    shop?: IShopRegister;
+}
+
+export interface IUser extends IBaseUser, Document {}
 
 const UserSchema: Schema<IUser> = new Schema(
     {

@@ -313,7 +313,19 @@ const createShopSchema = yup.object().shape({
     })
 });
 
+const branding = yup.object({
+    primaryColor: yup.string().required('Primary color is required'),
+    secondaryColor: yup.string().required('Secondary color is required'),
+    backgroundColor: yup.string().required('Background color is required'),
+    primaryTextColor: yup.string().required('Primary text color is required'),
+    secondaryTextColor: yup.string().required('Secondary text color is required'),
+    thankYouMessage: yup.string(),
+    headerText: yup.string(),
+    footerText: yup.string()
+});
+
 const commonSchemas = {
+    branding,
     addProduct,
     login,
     querySchema,
